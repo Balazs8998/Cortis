@@ -2,6 +2,7 @@
 *.iml
 
 .env
+docker-compose.yml
 
 dataSources.xml
 dataSources.local.xml
