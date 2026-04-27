@@ -20,6 +20,7 @@ Example:
 
 ```sql
 id UUID PRIMARY KEY DEFAULT gen_random_uuid()
+```
 Magyar
 
 A pgcrypto kriptográfiai függvényeket és biztonságos UUID generálást biztosít.
@@ -31,8 +32,9 @@ Biztonságosabb publikus azonosítók, mint a sima növekvő számok
 Jobb API-khoz és elosztott rendszerekhez
 
 Példa:
-
+```
 id UUID PRIMARY KEY DEFAULT gen_random_uuid()
+```
 2. citext
 English
 
@@ -94,11 +96,11 @@ Fuzzy matching
 Ranking similar results
 
 Example:
-
+```
 SELECT *
 FROM tool
 WHERE tool_name % 'dril 10';
-
+```
 This may match:
 
 drill 10
@@ -115,11 +117,11 @@ Rugalmas egyezéshez
 Hasonló találatok rangsorolásához
 
 Példa:
-
+```
 SELECT *
 FROM tool
 WHERE tool_name % 'dril 10';
-
+```
 Lehetséges találatok:
 
 drill 10
@@ -133,10 +135,10 @@ unaccent removes accent sensitivity during search.
 Useful when users type names without accents.
 
 Example:
-
+```
 Balazs = Balázs
 Muller = Müller
-
+```
 Useful for international systems.
 
 Magyar
@@ -146,10 +148,10 @@ Az unaccent figyelmen kívül hagyja az ékezeteket keresés közben.
 Hasznos, ha a felhasználó ékezet nélkül ír be neveket.
 
 Példa:
-
+```
 Balazs = Balázs
 Muller = Müller
-
+```
 Nemzetközi rendszereknél különösen hasznos.
 
 ------------------------------------------------------------------------------------
