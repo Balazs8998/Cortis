@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS company.tool_inventory
     quantity          INTEGER     NOT NULL DEFAULT 0 CHECK (quantity >= 0),
     location          TEXT        NOT NULL DEFAULT 'pending',
     tool_master_id    uuid        NOT NULL,
+
     order_code        TEXT        NOT NULL,
     link              TEXT,
     catalog           TEXT,
@@ -16,7 +17,7 @@ CREATE TABLE IF NOT EXISTS company.tool_inventory
     created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at        TIMESTAMPTZ,
     updated_by        TEXT        NOT NULL DEFAULT current_setting('app.current_user', true),
-    deleted_at        TEXT,
+    deleted_at        TIMESTAMPTZ,
     FOREIGN KEY (tool_master_id) REFERENCES specification.tool_master (id)
 
 );
@@ -30,6 +31,7 @@ CREATE TABLE IF NOT EXISTS company.interface_inventory
     quantity               INTEGER     NOT NULL DEFAULT 0 CHECK (quantity >= 0),
     location               TEXT        NOT NULL DEFAULT 'pending',
     interface_master_id    uuid        NOT NULL,
+
     order_code             TEXT        NOT NULL,
     link                   TEXT,
     catalog                TEXT,
@@ -37,7 +39,7 @@ CREATE TABLE IF NOT EXISTS company.interface_inventory
     created_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at             TIMESTAMPTZ,
     updated_by             TEXT        NOT NULL DEFAULT current_setting('app.current_user', true),
-    deleted_at             TEXT,
+    deleted_at             TIMESTAMPTZ,
     FOREIGN KEY (interface_master_id) REFERENCES specification.interface_master (id)
 );
 
@@ -50,6 +52,7 @@ CREATE TABLE company.holder_inventory
     quantity            INTEGER     NOT NULL DEFAULT 0 CHECK (quantity >= 0),
     location            TEXT        NOT NULL DEFAULT 'pending',
     holder_master_id    uuid     NOT NULL,
+
     link                TEXT,
     catalog             TEXT,
     order_code          TEXT        NOT NULL,
@@ -57,7 +60,7 @@ CREATE TABLE company.holder_inventory
     created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at          TIMESTAMPTZ,
     updated_by          TEXT        NOT NULL DEFAULT current_setting('app.current_user', true),
-    deleted_at          TEXT,
+    deleted_at          TIMESTAMPTZ,
     FOREIGN KEY (holder_master_id) REFERENCES specification.holder_master (id)
 );
 
@@ -70,6 +73,7 @@ CREATE TABLE company.machine_inventory
     machine_code         TEXT        NOT NULL,
     location             TEXT        NOT NULL DEFAULT 'pending',
     machine_master_id    uuid     NOT NULL,
+
     link                 TEXT,
     catalog              TEXT,
     order_code           TEXT        NOT NULL,
@@ -77,7 +81,7 @@ CREATE TABLE company.machine_inventory
     created_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at           TIMESTAMPTZ,
     updated_by           TEXT        NOT NULL DEFAULT current_setting('app.current_user', true),
-    deleted_at           TEXT,
+    deleted_at           TIMESTAMPTZ,
     FOREIGN KEY (machine_master_id) REFERENCES specification.machine_master (id)
 );
 
@@ -100,7 +104,7 @@ CREATE TABLE company.material
     created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at            TIMESTAMPTZ,
     updated_by            TEXT        NOT NULL DEFAULT current_setting('app.current_user', true),
-    deleted_at            TEXT
+    deleted_at            TIMESTAMPTZ
 );
  */
 
