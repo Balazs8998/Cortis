@@ -1,0 +1,359 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class category {
+   category_name: text
+   id: uuid
+}
+class engine_version {
+   release_date: text
+   deployed_date: text
+   is_stable: integer
+   description: text
+   module: text
+   version: text
+}
+class holder_feature_definition {
+   feature_definition_name: text
+   scope: text
+   value_type: text
+   unit_default: text
+   category: text
+   description: text
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class holder_inventory {
+   company_holder_code: text
+   holder_name: text
+   holder_code: text
+   quantity: integer
+   location: text
+   holder_master_id: uuid
+   link: text
+   catalog: text
+   order_code: text
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class holder_master {
+   holder_code: text
+   holder_type_id: uuid
+   holder_keyword: integer
+   manufacturer: text
+   description: text
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class holder_type {
+   type: text
+   is_interface: integer
+   description: text
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class holder_type_mounting_feature_requirement {
+   type_id: uuid
+   requirement_feature_id: uuid
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class interface_feature_definition {
+   feature_definition_name: text
+   scope: text
+   value_type: text
+   unit_default: text
+   category: text
+   description: text
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class interface_inventory {
+   company_interface_code: text
+   interface_name: text
+   interface_code: text
+   quantity: integer
+   location: text
+   interface_master_id: uuid
+   order_code: text
+   link: text
+   catalog: text
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class interface_master {
+   interface_code: text
+   interface_type_id: uuid
+   interface_keyword: integer
+   manufacturer: text
+   description: text
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class interface_type {
+   type: text
+   description: text
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class interface_type_mounting_feature_requirement {
+   type_id: uuid
+   requirement_feature_id: uuid
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class keyword {
+   keyword: text
+   id: uuid
+}
+class language {
+   name: text
+   code: text
+   id: uuid
+}
+class machine_feature_definition {
+   feature_definition_name: text
+   scope: text
+   value_type: text
+   unit_default: text
+   category: text
+   description: text
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class machine_inventory {
+   company_machine_code: text
+   machine_name: text
+   machine_code: text
+   location: text
+   machine_master_id: uuid
+   link: text
+   catalog: text
+   order_code: text
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class machine_master {
+   machine_code: text
+   machine_type_id: uuid
+   machine_keyword: integer
+   manufacturer: text
+   description: text
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class machine_tool_station_category {
+   type_id: uuid
+   station_code: text
+   name: text
+   is_interface: boolean
+   is_holder: boolean
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class machine_type {
+   type: text
+   description: text
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class machine_type_mounting_feature_requirement {
+   machine_type_id: uuid
+   requirement_feature_id: uuid
+   tool_station_id: uuid
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class permissions {
+   code: text
+   description: text
+   id: uuid
+}
+class role_permissions {
+   role_id: uuid
+   permission_id: uuid
+}
+class roles {
+   name: text
+   is_admin: integer
+   id: uuid
+}
+class text {
+   translation_text: text
+   keyword_id: uuid
+   language_id: uuid
+   category_id: uuid
+   id: uuid
+}
+class tool_feature_definition {
+   feature_definition_name: text
+   scope: text
+   value_type: text
+   unit_default: text
+   category: text
+   description: text
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class tool_inventory {
+   company_tool_code: text
+   name: text
+   tool_code: text
+   quantity: integer
+   location: text
+   tool_master_id: uuid
+   order_code: text
+   link: text
+   catalog: text
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class tool_master {
+   tool_code: text
+   tool_type_id: uuid
+   substrate: text
+   tool_keyword: integer
+   manufacturer: text
+   description: text
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class tool_type {
+   type: text
+   description: text
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class tool_type_mounting_feature_requirement {
+   type_id: uuid
+   requirement_feature_id: uuid
+   is_required: integer
+   context: text
+   created_by: text
+   created_at: timestamp with time zone
+   updated_at: timestamp with time zone
+   updated_by: text
+   deleted_at: text
+   id: uuid
+}
+class user_roles {
+   user_id: uuid
+   role_id: uuid
+}
+class users {
+   username: text
+   password_hash: text
+   chip_code: text
+   is_active: integer
+   created_at: text
+   id: uuid
+}
+
+holder_inventory                             -[#595959,plain]-^  holder_master                               : "holder_master_id:id"
+holder_master                                -[#595959,plain]-^  holder_type                                 : "holder_type_id:id"
+holder_type_mounting_feature_requirement     -[#595959,plain]-^  holder_feature_definition                   : "requirement_feature_id:id"
+holder_type_mounting_feature_requirement     -[#595959,plain]-^  holder_type                                 : "type_id:id"
+interface_inventory                          -[#595959,plain]-^  interface_master                            : "interface_master_id:id"
+interface_master                             -[#595959,plain]-^  interface_type                              : "interface_type_id:id"
+interface_type_mounting_feature_requirement  -[#595959,plain]-^  interface_feature_definition                : "requirement_feature_id:id"
+interface_type_mounting_feature_requirement  -[#595959,plain]-^  interface_type                              : "type_id:id"
+machine_inventory                            -[#595959,plain]-^  machine_master                              : "machine_master_id:id"
+machine_master                               -[#595959,plain]-^  machine_type                                : "machine_type_id:id"
+machine_type_mounting_feature_requirement    -[#595959,plain]-^  machine_feature_definition                  : "requirement_feature_id:id"
+machine_type_mounting_feature_requirement    -[#595959,plain]-^  machine_tool_station_category               : "tool_station_id:id"
+machine_type_mounting_feature_requirement    -[#595959,plain]-^  machine_type                                : "machine_type_id:id"
+role_permissions                             -[#595959,plain]-^  permissions                                 : "permission_id:id"
+role_permissions                             -[#595959,plain]-^  roles                                       : "role_id:id"
+text                                         -[#595959,plain]-^  category                                    : "category_id:id"
+text                                         -[#595959,plain]-^  keyword                                     : "keyword_id:id"
+text                                         -[#595959,plain]-^  language                                    : "language_id:id"
+tool_inventory                               -[#595959,plain]-^  tool_master                                 : "tool_master_id:id"
+tool_master                                  -[#595959,plain]-^  tool_type                                   : "tool_type_id:id"
+tool_type_mounting_feature_requirement       -[#595959,plain]-^  tool_feature_definition                     : "requirement_feature_id:id"
+tool_type_mounting_feature_requirement       -[#595959,plain]-^  tool_type                                   : "type_id:id"
+user_roles                                   -[#595959,plain]-^  roles                                       : "role_id:id"
+user_roles                                   -[#595959,plain]-^  users                                       : "user_id:id"
+@enduml
