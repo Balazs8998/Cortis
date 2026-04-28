@@ -29,9 +29,10 @@ CREATE TABLE IF NOT EXISTS core.feature_definition
 CREATE TABLE IF NOT EXISTS core.entity_feature
 (
     id          uuid PRIMARY KEY     DEFAULT gen_random_uuid(),
-    entity_type TEXT        NOT NULL,
+    entity_type TEXT        NOT NULL CHECK (entity_type IN
+                                            ('tool', 'holder', 'interface', 'machine', 'machine_station')),
     feature_id  uuid,
-    role        TEXT        NOT NULL,
+    role        TEXT        NOT NULL CHECK (role IN ('geometry', 'mounting', 'constraint', 'cutting')),
 
     created_by  TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -39,6 +40,6 @@ CREATE TABLE IF NOT EXISTS core.entity_feature
     updated_by  TEXT                 DEFAULT current_setting('app.current_user', true),
     deleted_at  TIMESTAMPTZ,
     FOREIGN KEY (feature_id) REFERENCES core.feature_definition (id),
-    UNIQUE (feature_id, entity_type)
+    UNIQUE (feature_id, entity_type, role)
 
 );
