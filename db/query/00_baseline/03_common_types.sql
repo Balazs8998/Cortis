@@ -8,13 +8,13 @@
 -- Global enum types
 -- =========================================================
 
-CREATE TYPE record_status AS ENUM (
+CREATE TYPE core.record_status AS ENUM (
     'active',
     'inactive',
     'archived'
     );
 
-create type entity_type as enum(
+create type core.entity_type as enum(
     'tool',
     'holder',
     'interface',
@@ -22,7 +22,7 @@ create type entity_type as enum(
     'machine_station'
     );
 
-create type feature_role_type as enum(
+create type core.role_type as enum(
     'geometry',
     'mounting',
     'constraint',
