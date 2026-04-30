@@ -3,6 +3,7 @@
 
 .env
 docker-compose.yml
+.codex
 
 dataSources.xml
 dataSources.local.xml
