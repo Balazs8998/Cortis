@@ -51,10 +51,25 @@ FROM core.feature_definition f
                          ('holder')
 ) AS e(entity_type)
 WHERE f.name IN (
-                 '',
                  'insert_shape',
                  'relief_angle',
                  'tolerance_class',
                  'mounting_type'
     )
 ON CONFLICT DO NOTHING;
+
+insert into core.entity_feature(entity_type, feature_id, role)
+select e.entity_type::core.entity_type, f.id, 'mounting'::core.role_type
+from core.feature_definition f
+         cross join (values ('tool'),
+                            ('holder'),
+                            ('interface'),
+                            ('machine_station')
+
+) as e(entity_type)
+where f.name in (
+                 'inner_diameter',
+                 'outer_diameter',
+                 'mounting_length'
+    )
+on conflict do nothing ;
