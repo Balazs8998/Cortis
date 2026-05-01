@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS company.tool_inventory
     created_by     TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at     TIMESTAMPTZ,
-    updated_by     TEXT                 DEFAULT current_setting('app.current_user', true),
+    updated_by     TEXT,
     deleted_at     TIMESTAMPTZ,
     FOREIGN KEY (tool_master_id) REFERENCES specification.tool_master (id)
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS company.interface_inventory
     created_by          TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at          TIMESTAMPTZ,
-    updated_by          TEXT                 DEFAULT current_setting('app.current_user', true),
+    updated_by          TEXT,
     deleted_at          TIMESTAMPTZ,
     FOREIGN KEY (interface_master_id) REFERENCES specification.interface_master (id)
 );
@@ -53,7 +53,7 @@ CREATE TABLE company.holder_inventory
     created_by       TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at       TIMESTAMPTZ,
-    updated_by       TEXT                 DEFAULT current_setting('app.current_user', true),
+    updated_by       TEXT,
     deleted_at       TIMESTAMPTZ,
     FOREIGN KEY (holder_master_id) REFERENCES specification.holder_master (id)
 );
@@ -72,7 +72,7 @@ CREATE TABLE company.machine_inventory
     created_by        TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at        TIMESTAMPTZ,
-    updated_by        TEXT                 DEFAULT current_setting('app.current_user', true),
+    updated_by        TEXT,
     deleted_at        TIMESTAMPTZ,
     FOREIGN KEY (machine_master_id) REFERENCES specification.machine_master (id)
 );
@@ -95,7 +95,7 @@ CREATE TABLE company.material
     created_by            TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at            TIMESTAMPTZ,
-    updated_by            TEXT        NOT NULL DEFAULT current_setting('app.current_user', true),
+    updated_by            TEXT,
     deleted_at            TIMESTAMPTZ
 );
  */

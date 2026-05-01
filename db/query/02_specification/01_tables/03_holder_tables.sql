@@ -8,8 +8,8 @@ CREATE TABLE IF NOT EXISTS specification.holder_type
 
     created_by   TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_by   TEXT                 DEFAULT current_setting('app.current_user', true),
+    updated_at   TIMESTAMPTZ,
+    updated_by   TEXT,
     deleted_at   TIMESTAMPTZ
 );
 
@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS specification.holder_master
 
     created_by        TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_by        TEXT                 DEFAULT current_setting('app.current_user', true),
+    updated_at        TIMESTAMPTZ,
+    updated_by        TEXT,
     deleted_at        TIMESTAMPTZ,
 
     FOREIGN KEY (type_id) REFERENCES specification.holder_type (id),
@@ -47,8 +47,8 @@ CREATE TABLE IF NOT EXISTS specification.holder_type_mounting_feature_requiremen
 
     created_by             TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_by             TEXT                 DEFAULT current_setting('app.current_user', true),
+    updated_at             TIMESTAMPTZ,
+    updated_by             TEXT,
     deleted_at             TEXT,
 
     FOREIGN KEY (type_id) REFERENCES specification.holder_type (id),

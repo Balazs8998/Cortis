@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS specification.entity_feature_value
 
     created_by        TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_by        TEXT                 DEFAULT current_setting('app.current_user', true),
+    updated_at        TIMESTAMPTZ,
+    updated_by        TEXT,
     deleted_at        TIMESTAMPTZ,
 
     FOREIGN KEY (entity_feature_id) REFERENCES core.entity_feature (id),

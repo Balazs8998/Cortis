@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS specification.interface_type
     created_by  TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at  TIMESTAMPTZ,
-    updated_by  TEXT        NOT NULL DEFAULT current_setting('app.current_user', true),
+    updated_by  TEXT,
     deleted_at  TIMESTAMPTZ
 );
 
@@ -28,8 +28,8 @@ CREATE TABLE IF NOT EXISTS specification.interface_master
 
     created_by        TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_by        TEXT                 DEFAULT current_setting('app.current_user', true),
+    updated_at        TIMESTAMPTZ,
+    updated_by        TEXT,
     deleted_at        TIMESTAMPTZ,
 
     FOREIGN KEY (type_id) REFERENCES specification.interface_type (id),
@@ -45,8 +45,8 @@ CREATE TABLE IF NOT EXISTS specification.interface_type_mounting_feature_require
 
     created_by             TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_by             TEXT                 DEFAULT current_setting('app.current_user', true),
+    updated_at             TIMESTAMPTZ,
+    updated_by             TEXT,
     deleted_at             TEXT,
 
     FOREIGN KEY (type_id) REFERENCES specification.interface_type (id),

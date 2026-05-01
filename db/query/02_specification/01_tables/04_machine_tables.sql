@@ -28,8 +28,8 @@ CREATE TABLE IF NOT EXISTS specification.machine_master
 
     created_by        TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_by        TEXT                 DEFAULT current_setting('app.current_user', true),
+    updated_at        TIMESTAMPTZ,
+    updated_by        TEXT,
     deleted_at        TIMESTAMPTZ,
 
     FOREIGN KEY (type_id) REFERENCES specification.machine_type (id),
@@ -49,8 +49,8 @@ CREATE TABLE IF NOT EXISTS specification.machine_tool_station_category
 
     created_by   TEXT                               DEFAULT current_setting('app.current_user', true),
     created_at   TIMESTAMPTZ               NOT NULL DEFAULT now(),
-    updated_at   TIMESTAMPTZ               NOT NULL DEFAULT now(),
-    updated_by   TEXT                               DEFAULT current_setting('app.current_user', true),
+    updated_at   TIMESTAMPTZ,
+    updated_by   TEXT,
     deleted_at   TIMESTAMPTZ,
     UNIQUE (type_id, station_type)
 );
@@ -67,8 +67,8 @@ CREATE TABLE IF NOT EXISTS specification.machine_station_feature_requirement
 
     created_by             TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_by             TEXT                 DEFAULT current_setting('app.current_user', true),
+    updated_at             TIMESTAMPTZ,
+    updated_by             TEXT,
     deleted_at             TEXT,
 
     FOREIGN KEY (machine_type_id) REFERENCES specification.machine_type (id),
