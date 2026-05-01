@@ -39,41 +39,22 @@ CREATE TABLE IF NOT EXISTS specification.machine_master
 
 CREATE TABLE IF NOT EXISTS specification.machine_tool_station_category
 (
-    id           uuid PRIMARY KEY     DEFAULT gen_random_uuid(),
+    id           uuid PRIMARY KEY                   DEFAULT gen_random_uuid(),
 
-    type_id      uuid        NOT NULL,
-    station_code TEXT        NOT NULL,
-    name         TEXT        NOT NULL,
-    is_interface BOOLEAN     NOT NULL DEFAULT false,
-    is_holder    BOOLEAN     NOT NULL DEFAULT false,
+    type_id      uuid                      NOT NULL,
+    station_type core.machine_station_type NOT NULL,
+    name         TEXT                      NOT NULL,
+    is_interface BOOLEAN                   NOT NULL DEFAULT false,
+    is_holder    BOOLEAN                   NOT NULL DEFAULT false,
 
-    created_by   TEXT                 DEFAULT current_setting('app.current_user', true),
-    created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_by   TEXT                 DEFAULT current_setting('app.current_user', true),
+    created_by   TEXT                               DEFAULT current_setting('app.current_user', true),
+    created_at   TIMESTAMPTZ               NOT NULL DEFAULT now(),
+    updated_at   TIMESTAMPTZ               NOT NULL DEFAULT now(),
+    updated_by   TEXT                               DEFAULT current_setting('app.current_user', true),
     deleted_at   TIMESTAMPTZ,
-    UNIQUE (type_id, station_code)
+    UNIQUE (type_id, station_type)
 );
 
-CREATE TABLE IF NOT EXISTS specification.machine_station_feature_requirement
-(
-    id                     uuid PRIMARY KEY     DEFAULT gen_random_uuid(),
-
-    machine_type_id        uuid        NOT NULL,
-    requirement_feature_id uuid        NOT NULL,
-    tool_station_id        uuid        NOT NULL,
-
-    created_by             TEXT                 DEFAULT current_setting('app.current_user', true),
-    created_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_by             TEXT                 DEFAULT current_setting('app.current_user', true),
-    deleted_at             TEXT,
-
-    FOREIGN KEY (machine_type_id) REFERENCES specification.machine_type (id),
-    FOREIGN KEY (requirement_feature_id) REFERENCES core.entity_feature (id),
-    FOREIGN KEY (tool_station_id) REFERENCES specification.machine_tool_station_category (id),
-    UNIQUE (machine_type_id, requirement_feature_id)
-);
 
 
 CREATE TABLE IF NOT EXISTS specification.machine_station_feature_requirement

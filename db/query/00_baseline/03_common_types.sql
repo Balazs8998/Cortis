@@ -27,7 +27,14 @@ create type core.role_type as enum(
     'mounting',
     'constraint',
     'cutting'
-    )
+    );
+
+create type core.machine_station_type as enum(
+    'turning_tool_station',
+    'cross_driven_tool_station',
+    'front_axial_tool_station',
+    'backside_axial_tool_station'
+    );
 
 
 -- =========================================================

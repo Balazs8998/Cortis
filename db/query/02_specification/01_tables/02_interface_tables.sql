@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS specification.interface_type
 (
     id          uuid PRIMARY KEY     DEFAULT gen_random_uuid(),
+
     type        TEXT        NOT NULL UNIQUE,
     description TEXT,
 
@@ -15,6 +16,7 @@ CREATE TABLE IF NOT EXISTS specification.interface_type
 CREATE TABLE IF NOT EXISTS specification.interface_master
 (
     id                uuid PRIMARY KEY     DEFAULT gen_random_uuid(),
+
     manufacturer_code TEXT        NOT NULL,
     type_id           uuid        NOT NULL,
     manufacturer      TEXT        NOT NULL DEFAULT 'unknown',
