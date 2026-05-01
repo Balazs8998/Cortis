@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS core.feature_definition
     created_by TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ,
-    updated_by TEXT                 DEFAULT current_setting('app.current_user', true),
+    updated_by TEXT,
     deleted_at TIMESTAMPTZ
 );
 
@@ -38,8 +38,7 @@ CREATE TABLE IF NOT EXISTS core.entity_feature
     created_by  TEXT                      DEFAULT current_setting('app.current_user', true),
     created_at  TIMESTAMPTZ      NOT NULL DEFAULT now(),
     updated_at  TIMESTAMPTZ,
-    updated_by  TEXT                      DEFAULT current_setting('app.current_user', true),
-    deleted_at  TIMESTAMPTZ,
+    updated_by  TEXT,
     FOREIGN KEY (feature_id) REFERENCES core.feature_definition (id),
     UNIQUE (feature_id, entity_type, role)
 

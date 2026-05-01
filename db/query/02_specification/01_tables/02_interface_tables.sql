@@ -50,6 +50,6 @@ CREATE TABLE IF NOT EXISTS specification.interface_type_mounting_feature_require
     deleted_at             TEXT,
 
     FOREIGN KEY (type_id) REFERENCES specification.interface_type (id),
-    FOREIGN KEY (requirement_feature_id) REFERENCES core.feature_definition (id),
+    FOREIGN KEY (requirement_feature_id) REFERENCES core.entity_feature(id),
     UNIQUE (type_id, requirement_feature_id)
 );

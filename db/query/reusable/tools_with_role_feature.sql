@@ -1,4 +1,4 @@
-SELECT tm.code,
+SELECT tm.manufacturer_code,
 
        MAX(efv.value_text) FILTER (WHERE fd.name = 'insert_shape')        AS insert_shape,
     MAX(efv.value_text) FILTER (WHERE fd.name = 'relief_angle')        AS relief_angle,
@@ -17,4 +17,4 @@ FROM specification.entity_feature_value efv
 
 WHERE efv.entity_id = 'b485d55a-cabd-4218-8bda-469a624f608d'
 
-GROUP BY tm.code;
+GROUP BY tm.manufacturer_code;

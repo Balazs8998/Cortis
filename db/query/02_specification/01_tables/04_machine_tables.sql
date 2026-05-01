@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS specification.machine_station_feature_requirement
     deleted_at             TEXT,
 
     FOREIGN KEY (machine_type_id) REFERENCES specification.machine_type (id),
-    FOREIGN KEY (requirement_feature_id) REFERENCES core.feature_definition (id),
+    FOREIGN KEY (requirement_feature_id) REFERENCES core.entity_feature (id),
     FOREIGN KEY (tool_station_id) REFERENCES specification.machine_tool_station_category (id),
     UNIQUE (machine_type_id, requirement_feature_id)
 );

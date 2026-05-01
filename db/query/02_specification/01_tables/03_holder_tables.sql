@@ -52,6 +52,6 @@ CREATE TABLE IF NOT EXISTS specification.holder_type_mounting_feature_requiremen
     deleted_at             TEXT,
 
     FOREIGN KEY (type_id) REFERENCES specification.holder_type (id),
-    FOREIGN KEY (requirement_feature_id) REFERENCES core.feature_definition (id),
+    FOREIGN KEY (requirement_feature_id) REFERENCES core.entity_feature (id),
     UNIQUE (type_id, requirement_feature_id)
 );

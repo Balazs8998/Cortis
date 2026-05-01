@@ -9,8 +9,8 @@ CREATE TABLE IF NOT EXISTS personal.users
 
     created_by    TEXT                 DEFAULT COALESCE(current_setting('app.current_user', true), 'system'),
     created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_by    TEXT                 DEFAULT COALESCE(current_setting('app.current_user', true), 'system'),
+    updated_at    TIMESTAMPTZ,
+    updated_by    TEXT,
     deleted_at    TIMESTAMPTZ
 );
 
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS personal.roles
     created_by TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ,
-    updated_by TEXT        NOT NULL DEFAULT current_setting('app.current_user', true),
+    updated_by TEXT,
     deleted_at TIMESTAMPTZ
 );
 
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS personal.permissions
     created_by  TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at  TIMESTAMPTZ,
-    updated_by  TEXT        NOT NULL DEFAULT current_setting('app.current_user', true),
+    updated_by  TEXT,
     deleted_at  TIMESTAMPTZ
 );
 
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS personal.user_roles
     created_by TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ,
-    updated_by TEXT        NOT NULL DEFAULT current_setting('app.current_user', true),
+    updated_by TEXT,
     deleted_at TIMESTAMPTZ,
     PRIMARY KEY (user_id, role_id)
 );
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS personal.role_permissions
     created_by    TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at    TIMESTAMPTZ,
-    updated_by    TEXT        NOT NULL DEFAULT current_setting('app.current_user', true),
+    updated_by    TEXT,
     deleted_at    TIMESTAMPTZ,
     PRIMARY KEY (role_id, permission_id)
 );
