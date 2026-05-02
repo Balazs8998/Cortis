@@ -36,6 +36,12 @@ create type core.machine_station_type as enum(
     'backside_axial_tool_station'
     );
 
+create type core.mounting_requirement_basis as enum (
+    'geometry',
+    'form',
+    'form_and_geometry'
+    );
+
 
 -- =========================================================
 -- Global domain types

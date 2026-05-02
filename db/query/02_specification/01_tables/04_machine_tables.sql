@@ -32,8 +32,7 @@ CREATE TABLE IF NOT EXISTS specification.machine_master
     updated_by        TEXT,
     deleted_at        TIMESTAMPTZ,
 
-    FOREIGN KEY (type_id) REFERENCES specification.machine_type (id),
-    UNIQUE (type_id, manufacturer_code)
+    FOREIGN KEY (type_id) REFERENCES specification.machine_type (id)
 );
 
 

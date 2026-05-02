@@ -32,8 +32,7 @@ CREATE TABLE IF NOT EXISTS specification.interface_master
     updated_by        TEXT,
     deleted_at        TIMESTAMPTZ,
 
-    FOREIGN KEY (type_id) REFERENCES specification.interface_type (id),
-    UNIQUE (type_id, manufacturer_code)
+    FOREIGN KEY (type_id) REFERENCES specification.interface_type (id)
 );
 
 CREATE TABLE IF NOT EXISTS specification.interface_type_mounting_feature_requirement

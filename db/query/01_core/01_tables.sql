@@ -2,19 +2,19 @@
 
 CREATE TABLE IF NOT EXISTS core.engine_version
 (
-    module        TEXT    NOT NULL,
-    version       TEXT    NOT NULL DEFAULT '0.0.1',
-    release_date  TEXT    NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-    deployed_date TEXT,
-    is_stable     BOOLEAN NOT NULL,
+    module        TEXT        NOT NULL,
+    version       TEXT        NOT NULL DEFAULT '0.0.1',
+    release_date  TIMESTAMPTZ NOT NULL DEFAULT now(),
+    deployed_date TIMESTAMPTZ,
+    is_stable     BOOLEAN     NOT NULL,
     description   TEXT,
 
-    PRIMARY KEY (module, version)
+    CONSTRAINT ev_pkey PRIMARY KEY (module, version)
 );
 
 CREATE TABLE IF NOT EXISTS core.feature_definition
 (
-    id         uuid PRIMARY KEY     DEFAULT gen_random_uuid(),
+    id         uuid     DEFAULT gen_random_uuid(),
 
     name       TEXT        NOT NULL UNIQUE,
     unit       TEXT        NOT NULL,
@@ -24,7 +24,9 @@ CREATE TABLE IF NOT EXISTS core.feature_definition
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ,
     updated_by TEXT,
-    deleted_at TIMESTAMPTZ
+    deleted_at TIMESTAMPTZ,
+
+    CONSTRAINT fd_pkey primary key (id)
 );
 
 CREATE TABLE IF NOT EXISTS core.entity_feature

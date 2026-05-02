@@ -12,6 +12,7 @@ FROM (
              ('tool', 'inner_diameter', 'geometry'),
              ('tool', 'outer_diameter', 'geometry'),
 
+
              ('holder', 'height', 'geometry'),
              ('holder', 'depth', 'geometry'),
              ('holder', 'radius', 'geometry'),
@@ -32,6 +33,8 @@ FROM (
              ('tool', 'shank_diameter', 'mounting'),
              ('tool', 'shank_length', 'mounting'),
              ('tool', 'mounting_length', 'mounting'),
+             ('tool', 'outer_diameter', 'mounting'),
+
 
              ('holder', 'connection_type', 'mounting'),
              ('holder', 'interface_type', 'mounting'),
@@ -40,6 +43,8 @@ FROM (
              ('holder', 'shank_diameter', 'mounting'),
              ('holder', 'shank_length', 'mounting'),
              ('holder', 'mounting_length', 'mounting'),
+             ('holder', 'outer_diameter', 'mounting'),
+             ('holder', 'inner_diameter', 'mounting'),
 
              ('interface', 'connection_type', 'mounting'),
              ('interface', 'interface_type', 'mounting'),
@@ -48,6 +53,10 @@ FROM (
              ('interface', 'shank_diameter', 'mounting'),
              ('interface', 'shank_length', 'mounting'),
              ('interface', 'mounting_length', 'mounting'),
+             ('interface', 'outer_diameter', 'mounting'),
+             ('interface', 'inner_diameter', 'mounting'),
+
+
 
              -- machine_station constraints
              ('machine_station', 'max_tool_diameter', 'constraint'),

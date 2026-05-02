@@ -32,8 +32,25 @@ CREATE TABLE IF NOT EXISTS specification.tool_master
     updated_by        TEXT,
     deleted_at        TIMESTAMPTZ,
 
-    FOREIGN KEY (type_id) REFERENCES specification.tool_type (id),
-    UNIQUE (type_id, manufacturer_code)
+    FOREIGN KEY (type_id) REFERENCES specification.tool_type (id)
+);
+
+create table if not exists specification.tool_type_mounting_option
+(
+    id                uuid primary key                         default gen_random_uuid(),
+
+    type_id           uuid                            not null,
+    option_name       text                            not null,
+    requirement_basis core.mounting_requirement_basis not null,
+
+    created_by        text                                     default current_setting('app.current_user', true),
+    created_at        timestamptz                     not null default now(),
+    updated_at        timestamptz,
+    updated_by        text,
+    deleted_at        timestamptz,
+
+    foreign key (type_id) references specification.tool_type (id),
+    unique (type_id, option_name)
 );
 
 CREATE TABLE IF NOT EXISTS specification.tool_type_mounting_feature_requirement
