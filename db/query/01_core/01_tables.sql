@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS core.engine_version
 
 CREATE TABLE IF NOT EXISTS core.feature_definition
 (
-    id         uuid     DEFAULT gen_random_uuid(),
+    id         uuid                 DEFAULT gen_random_uuid(),
 
     name       TEXT        NOT NULL UNIQUE,
     unit       TEXT        NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS core.feature_definition
 
 CREATE TABLE IF NOT EXISTS core.entity_feature
 (
-    id          uuid PRIMARY KEY          DEFAULT gen_random_uuid(),
+    id          uuid                      DEFAULT gen_random_uuid(),
 
     entity_type core.entity_type NOT NULL,
     feature_id  uuid             NOT NULL,
@@ -42,6 +42,10 @@ CREATE TABLE IF NOT EXISTS core.entity_feature
     updated_at  TIMESTAMPTZ,
     updated_by  TEXT,
     FOREIGN KEY (feature_id) REFERENCES core.feature_definition (id),
-    UNIQUE (feature_id, entity_type, role)
+
+    constraint ef_pkey primary key (id),
+    constraint ef_feature_id_entity_type_role_key unique (feature_id, entity_type, role),
+    constraint ef_feature_definition_id_fkey foreign key (feature_id) references core.feature_definition (id)
+
 
 );

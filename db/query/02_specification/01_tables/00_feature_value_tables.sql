@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS specification.entity_feature_value
 (
-    id                uuid PRIMARY KEY     DEFAULT gen_random_uuid(),
+    id                uuid                 DEFAULT gen_random_uuid(),
 
-    entity_id         uuid        NOT NULL,
+    entity_id         uuid        NOT NULL, -- tool, holder, interface, machine id;
     entity_feature_id uuid        NOT NULL,
 
     value_number      NUMERIC,
@@ -14,11 +14,9 @@ CREATE TABLE IF NOT EXISTS specification.entity_feature_value
     updated_by        TEXT,
     deleted_at        TIMESTAMPTZ,
 
-    FOREIGN KEY (entity_feature_id) REFERENCES core.entity_feature (id),
-
-    CHECK ( value_text IS NOT NULL
-        OR value_number IS NOT NULL),
-
-    UNIQUE (entity_id, entity_feature_id)
+    constraint efv_pkey primary key (id),
+    constraint efv_text_or_number_check CHECK ( value_text IS NOT NULL OR value_number IS NOT NULL),
+    constraint efv_entity_id_entity_feature_id_key UNIQUE (entity_id, entity_feature_id),
+    constraint efv_entity_feature_id_fkey foreign key (entity_feature_id) references core.entity_feature
 );
 
