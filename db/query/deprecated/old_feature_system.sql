@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS specification.tool_feature_definition
     description                  TEXT,
     created_by                   TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at                   TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at                   TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_by                   TEXT                 DEFAULT current_setting('app.current_user', true),
+    updated_at                   TIMESTAMPTZ ,
+    updated_by                   TEXT            ,
     deleted_at                   TEXT
     );
 
@@ -30,8 +30,8 @@ CREATE TABLE IF NOT EXISTS specification.interface_feature_definition
     description                       TEXT,
     created_by                        TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at                        TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at                        TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_by                        TEXT                 DEFAULT current_setting('app.current_user', true),
+    updated_at                        TIMESTAMPTZ ,
+    updated_by                        TEXT              ,
     deleted_at                        TEXT
     );
 
@@ -50,8 +50,8 @@ CREATE TABLE IF NOT EXISTS specification.holder_feature_definition
     description                    TEXT,
     created_by                     TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at                     TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at                     TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_by                     TEXT                 DEFAULT current_setting('app.current_user', true),
+    updated_at                     TIMESTAMPTZ ,
+    updated_by                     TEXT                 ,
     deleted_at                     TEXT
 );
 
@@ -70,8 +70,8 @@ CREATE TABLE IF NOT EXISTS specification.machine_feature_definition
     description                     TEXT,
     created_by                      TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at                      TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at                      TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_by                      TEXT                 DEFAULT current_setting('app.current_user', true),
+    updated_at                      TIMESTAMPTZ ,
+    updated_by                      TEXT                 ,
     deleted_at                      TEXT
 );
 

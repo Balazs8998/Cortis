@@ -95,7 +95,7 @@ CREATE TABLE company.machine_inventory
 CREATE TABLE company.material
 (
     id                    uuid PRIMARY KEY     DEFAULT gen_random_uuid(),
-    company_material_code TEXT        NOT NULL DEFAULT 'pending' UNIQUE,
+    company_material_code TEXT        NOT NULL DEFAULT 'pending'
     material_name         TEXT,
     material_code         TEXT        NOT NULL,
     quantity              INTEGER     NOT NULL DEFAULT 0 CHECK (quantity >= 0),

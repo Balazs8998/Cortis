@@ -2,15 +2,16 @@ CREATE TABLE IF NOT EXISTS specification.tool_type
 (
     id          uuid                 DEFAULT gen_random_uuid(),
 
-    "type"      TEXT        NOT NULL,
+    name      TEXT        NOT NULL,
     description TEXT,
 
     created_by  TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at  TIMESTAMPTZ,
-    updated_by  TEXT        NOT NULL DEFAULT current_setting('app.current_user', true),
+    updated_by  TEXT,
     deleted_at  TIMESTAMPTZ,
 
+    CONSTRAINT tt_name_key UNIQUE (name),
     constraint tt_pkey primary key (id)
 );
 
@@ -21,7 +22,7 @@ CREATE TABLE IF NOT EXISTS specification.tool_master
 
     manufacturer_code TEXT        NOT NULL,
     type_id           uuid        NOT NULL,
-    manufacturer      TEXT        NOT NULL DEFAULT 'unknown',
+    manufacturer      TEXT        NOT NULL ,
     description       TEXT,
 
     order_code        TEXT,

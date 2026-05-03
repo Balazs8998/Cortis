@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS specification.interface_type
 (
     id          uuid                 DEFAULT gen_random_uuid(),
 
-    "type"        TEXT        NOT NULL UNIQUE,
+    name        TEXT        NOT NULL UNIQUE,
     description TEXT,
 
     created_by  TEXT                 DEFAULT current_setting('app.current_user', true),
@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS specification.interface_type
     updated_by  TEXT,
     deleted_at  TIMESTAMPTZ,
 
+    CONSTRAINT it_name_key UNIQUE (name),
     constraint it_pkey primary key (id)
 );
 
@@ -21,7 +22,7 @@ CREATE TABLE IF NOT EXISTS specification.interface_master
 
     manufacturer_code TEXT        NOT NULL,
     type_id           uuid        NOT NULL,
-    manufacturer      TEXT        NOT NULL DEFAULT 'unknown',
+    manufacturer      TEXT        NOT NULL,
     description       TEXT,
 
     order_code        TEXT,

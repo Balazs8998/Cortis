@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS specification.holder_type
 (
     id           uuid                 DEFAULT gen_random_uuid(),
 
-    "type"         TEXT        NOT NULL UNIQUE,
+    name       TEXT        NOT NULL UNIQUE,
     is_interface BOOLEAN     NOT NULL default true,
     description  TEXT,
 
@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS specification.holder_type
     updated_by   TEXT,
     deleted_at   TIMESTAMPTZ,
 
+    CONSTRAINT ht_name_key UNIQUE (name),
     constraint ht_pkey primary key (id)
 );
 
@@ -22,7 +23,7 @@ CREATE TABLE IF NOT EXISTS specification.holder_master
 
     manufacturer_code TEXT        NOT NULL,
     type_id           uuid        NOT NULL,
-    manufacturer      TEXT        NOT NULL DEFAULT 'unknown',
+    manufacturer      TEXT        NOT NULL,
     description       TEXT,
 
     link              TEXT,
