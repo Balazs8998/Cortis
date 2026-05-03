@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS specification.tool_type
 (
     id          uuid                 DEFAULT gen_random_uuid(),
 
-    name      TEXT        NOT NULL,
+    name        TEXT        NOT NULL,
     description TEXT,
 
     created_by  TEXT                 DEFAULT current_setting('app.current_user', true),
@@ -12,30 +12,36 @@ CREATE TABLE IF NOT EXISTS specification.tool_type
     deleted_at  TIMESTAMPTZ,
 
     CONSTRAINT tt_name_key UNIQUE (name),
+
     constraint tt_pkey primary key (id)
 );
 
 
 CREATE TABLE IF NOT EXISTS specification.tool_master
 (
-    id                uuid                 DEFAULT gen_random_uuid(),
+    id                 uuid                 DEFAULT gen_random_uuid(),
 
-    manufacturer_code TEXT        NOT NULL,
-    type_id           uuid        NOT NULL,
-    manufacturer      TEXT        NOT NULL ,
-    description       TEXT,
+    manufacturer_code  TEXT        NOT NULL,
+    type_id            uuid        NOT NULL,
+    mounting_option_id uuid        not null,
+    manufacturer       TEXT        NOT NULL,
+    description        TEXT,
 
-    order_code        TEXT,
-    link              TEXT,
-    catalog           TEXT,
+    order_code         TEXT,
+    link               TEXT,
+    catalog            TEXT,
 
-    created_by        TEXT                 DEFAULT current_setting('app.current_user', true),
-    created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at        TIMESTAMPTZ,
-    updated_by        TEXT,
-    deleted_at        TIMESTAMPTZ,
+    created_by         TEXT                 DEFAULT current_setting('app.current_user', true),
+    created_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at         TIMESTAMPTZ,
+    updated_by         TEXT,
+    deleted_at         TIMESTAMPTZ,
 
     constraint tm_pkey primary key (id),
+
+    constraint tm_mounting_option_id_fkey foreign key (type_id, mounting_option_id)
+        references specification.tool_type_mounting_option (type_id, id),
+
     constraint tm_tool_type_id_fkey foreign key (type_id) references specification.tool_type (id)
 );
 
@@ -54,13 +60,17 @@ create table if not exists specification.tool_type_mounting_option
     deleted_at        timestamptz,
 
     constraint ttmo_pkey primary key (id),
-    constraint ttmo_type_id_option_name_key unique (type_id, option_name),
+
+    constraint ttmo_type_id_requirement_basis_key unique (type_id, requirement_basis),
+
+    constraint ttmo_type_id_id_key unique (type_id, id),
+
     constraint ttmo_tool_type_id_fkey foreign key (type_id) references specification.tool_type (id)
 );
 
 CREATE TABLE IF NOT EXISTS specification.tool_mounting_feature_requirement
 (
-    id                     uuid PRIMARY KEY     DEFAULT gen_random_uuid(),
+    id                     uuid                 DEFAULT gen_random_uuid(),
 
     mounting_option_id     uuid        not null,
     requirement_feature_id uuid        NOT NULL,
@@ -70,6 +80,8 @@ CREATE TABLE IF NOT EXISTS specification.tool_mounting_feature_requirement
     updated_at             TIMESTAMPTZ,
     updated_by             TEXT,
     deleted_at             TEXT,
+
+    constraint tmfr_pkey primary key (id),
 
     constraint tmfr_tool_mounting_feature_requirement_id_fkey foreign key (mounting_option_id)
         references specification.tool_mounting_feature_requirement,
