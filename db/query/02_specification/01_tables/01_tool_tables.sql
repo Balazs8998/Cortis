@@ -84,9 +84,10 @@ CREATE TABLE IF NOT EXISTS specification.tool_mounting_feature_requirement
     constraint tmfr_pkey primary key (id),
 
     constraint tmfr_tool_mounting_feature_requirement_id_fkey foreign key (mounting_option_id)
-        references specification.tool_mounting_feature_requirement,
+        references specification.tool_type_mounting_option (id), -- ellenőrizni
 
     constraint tmfr_entity_feature_id_fkey foreign key (requirement_feature_id)
         references core.entity_feature (id)
 
 );
+

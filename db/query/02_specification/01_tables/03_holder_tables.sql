@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS specification.holder_master
 
     constraint hm_pkey primary key (id),
 
-    constraint hm_mounting_option_id foreign key (type_id, mounting_option_id)
+    constraint hm_mounting_option_id_fkey foreign key (type_id, mounting_option_id)
         references specification.holder_type_mounting_option (type_id, id),
 
     constraint hm_holder_type_id_fkey foreign key (type_id) references specification.holder_type (id)
@@ -71,7 +71,7 @@ create table if not exists specification.holder_type_mounting_option
         references specification.holder_type (id)
 );
 
-CREATE TABLE IF NOT EXISTS specification.holder_type_mounting_feature_requirement
+CREATE TABLE IF NOT EXISTS specification.holder_mounting_feature_requirement
 (
     id                     uuid                 DEFAULT gen_random_uuid(),
 
