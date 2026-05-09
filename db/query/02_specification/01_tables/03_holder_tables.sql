@@ -68,7 +68,7 @@ create table if not exists specification.holder_type_mounting_option
     constraint htmo_type_id_id_key unique (type_id, id),
 
     constraint htmo_holder_type_id_fkey foreign key (type_id)
-        references specification.tool_type (id)
+        references specification.holder_type (id)
 );
 
 CREATE TABLE IF NOT EXISTS specification.holder_type_mounting_feature_requirement
