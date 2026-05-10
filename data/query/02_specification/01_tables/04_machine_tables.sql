@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS specification.machine_type
 (
     id          uuid                 DEFAULT gen_random_uuid(),
 
-    name        TEXT        NOT NULL UNIQUE,
+    name        TEXT        NOT NULL ,
     description TEXT,
 
     created_by  TEXT                 DEFAULT current_setting('app.current_user', true),
