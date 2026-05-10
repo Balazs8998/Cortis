@@ -65,8 +65,7 @@ CREATE TABLE IF NOT EXISTS specification.interface_type_mounting_feature_require
     constraint itmfr_entity_feature_id_fkey foreign key (requirement_feature_id)
         references core.entity_feature(id),
 
-    constraint itmfr_type_id_requirement_feature_id_key UNIQUE (type_id, requirement_feature_id),
-
-    constraint itmfr_type_id_id_key UNIQUE (type_id, id)
+    constraint itmfr_type_id_requirement_feature_id_key UNIQUE (type_id, requirement_feature_id)
 
 );
+
