@@ -37,5 +37,6 @@ Defines which feature is required for the given mounting option.
 
 | Name | Type | Columns | Description |
 |---|---|---|---|
+| tmfr_mounting_option_id_requirement_feature_id_key | UNIQUE | mounting_option_id, requirement_feature_id | ensures that the same feature requirement can only exist once within a mounting option |
 | tmfr_tool_mounting_feature_requirement_id_fkey | FOREIGN KEY | mounting_option_id | provides relationship to the `specification.tool_type_mounting_option` table |
 | tmfr_entity_feature_id_fkey | FOREIGN KEY | requirement_feature_id | provides relationship to the `core.entity_feature` table |

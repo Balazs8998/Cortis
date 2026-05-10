@@ -37,5 +37,6 @@ Meghatározza, hogy az adott szerelési opcióhoz mely feature szükséges.
 
 | Név | Típus | Oszlopok | Leírás |
 |---|---|---|---|
+| tmfr_mounting_option_id_requirement_feature_id_key | UNIQUE | mounting_option_id, requirement_feature_id | biztosítja, hogy ugyanaz a feature követelmény egy szerelési opcióhoz csak egyszer szerepelhessen |
 | tmfr_tool_mounting_feature_requirement_id_fkey | FOREIGN KEY | mounting_option_id | kapcsolatot biztosít a specification.tool_type_mounting_option táblával |
 | tmfr_entity_feature_id_fkey | FOREIGN KEY | requirement_feature_id | kapcsolatot biztosít a core.entity_feature táblával |
