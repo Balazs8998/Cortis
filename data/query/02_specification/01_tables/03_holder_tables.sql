@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS specification.holder_type
 (
     id           uuid                 DEFAULT gen_random_uuid(),
 
-    name         TEXT        NOT NULL UNIQUE,
+    name         TEXT        NOT NULL ,
     is_interface BOOLEAN     NOT NULL default true,
     description  TEXT,
 
