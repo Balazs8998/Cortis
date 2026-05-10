@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS company.interface_inventory
 (
     id                  uuid                 DEFAULT gen_random_uuid(),
 
-    interface_code      TEXT        NOT NULL UNIQUE,
+    interface_code      TEXT        NOT NULL ,
     name                TEXT        NOT NULL,
     quantity            INTEGER     NOT NULL DEFAULT 0,
     location            TEXT        NOT NULL DEFAULT 'pending',
@@ -50,7 +50,7 @@ CREATE TABLE company.holder_inventory
 (
     id               uuid     DEFAULT gen_random_uuid(),
 
-    holder_code      TEXT        NOT NULL UNIQUE,
+    holder_code      TEXT        NOT NULL ,
     name             TEXT        NOT NULL,
     quantity         INTEGER     NOT NULL DEFAULT 0,
     location         TEXT        NOT NULL DEFAULT 'pending',
@@ -74,7 +74,7 @@ CREATE TABLE company.machine_inventory
 (
     id                uuid      DEFAULT gen_random_uuid(),
 
-    machine_code      TEXT        NOT NULL UNIQUE,
+    machine_code      TEXT        NOT NULL ,
     name              TEXT        NOT NULL,
     location          TEXT        NOT NULL DEFAULT 'pending',
     machine_master_id uuid        NOT NULL,
