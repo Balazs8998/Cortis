@@ -20,6 +20,8 @@
 | translation | Többnyelvű rendszerhez szükséges fordítási táblák |
 
 
+ ---
+
 ## Core
 
 ### A core séma a rendszer alapvető és közösen használt definíciós tábláit tartalmazza.
@@ -33,6 +35,8 @@
 - feature definíciók
 - enum jellegű táblák
 - rendszer szintű metaadatok
+
+---
 
 ## Specification
 
@@ -49,6 +53,8 @@
 - mounting feature requirement táblák
 - entity feature value táblák
 
+---
+
 ## Company
 
 ### A company séma a céges készlet- és üzemi adatokat tartalmazza, amelyek domain specifikus master táblákon keresztül kapcsolódnak a rendszerhez.
@@ -63,6 +69,8 @@
 - order táblák
 - statisztikai táblák (később)
 
+---
+
 ## Map
 
 ### A map séma a rendszer kapcsoló-, párosító- és szabálytábláit tartalmazza.
@@ -74,6 +82,8 @@
 ### Megjegyzés:
 A séma jelenleg előkészített struktúraként szolgál a későbbi kapcsoló- és szabályrendszerek számára.
 
+---
+
 ## Archiv
 
 ### Az archiv séma a már nem aktív céges domain entitások, statisztikák és kapcsolódó adatok tárolására szolgál.
@@ -82,6 +92,8 @@ A séma jelenleg előkészített struktúraként szolgál a későbbi kapcsoló-
 - már nem használt céges adatok archiválása
 - régi statisztikai adatok tárolása
 - lezárt vagy inaktív megrendelések adatainak mentése
+
+---
 
 ## Personal
 
@@ -102,6 +114,8 @@ A séma jelenleg előkészített struktúraként szolgál a későbbi kapcsoló-
 - user_role kapcsolatok
 - role_permission kapcsolatok
 
+---
+
 ## Translation
 
 ### A translation séma a szoftver többnyelvű működését és a fordítási rendszer bővíthetőségét biztosítja.
@@ -114,3 +128,17 @@ A séma jelenleg előkészített struktúraként szolgál a későbbi kapcsoló-
 - keyword adatok
 - category definíciók
 - központi text kapcsolótábla
+
+---
+
+# Általános meta mezők
+
+Az adatbázis táblák egy része közös audit és életciklus követő mezőket tartalmaz.
+
+| Oszlop | Leírás |
+|---|---|
+| created_by | létrehozó felhasználó |
+| created_at | létrehozás időpontja |
+| updated_by | utolsó módosítást végző felhasználó |
+| updated_at | utolsó módosítás időpontja |
+| deleted_at | logikai törlés időpontja |

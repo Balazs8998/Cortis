@@ -41,7 +41,6 @@ CREATE TABLE IF NOT EXISTS core.entity_feature
     created_at  TIMESTAMPTZ      NOT NULL DEFAULT now(),
     updated_at  TIMESTAMPTZ,
     updated_by  TEXT,
-    FOREIGN KEY (feature_id) REFERENCES core.feature_definition (id),
 
     constraint ef_pkey primary key (id),
     constraint ef_feature_id_entity_type_role_key unique (feature_id, entity_type, role),

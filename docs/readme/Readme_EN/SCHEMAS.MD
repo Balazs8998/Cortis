@@ -19,6 +19,8 @@
 | personal | Users and permissions |
 | translation | Translation tables required for multilingual system support |
 
+---
+
 ## Core
 
 ### The core schema contains the fundamental and commonly used definition tables of the system.
@@ -32,6 +34,8 @@
 - feature definitions
 - enum-like tables
 - system-level metadata
+
+---
 
 ## Specification
 
@@ -48,6 +52,8 @@
 - mounting feature requirement tables
 - entity feature value tables
 
+---
+
 ## Company
 
 ### The company schema contains company inventory and operational data, which are connected to the system through domain-specific master tables.
@@ -62,6 +68,8 @@
 - order tables
 - statistical tables (later)
 
+---
+
 ## Map
 
 ### The map schema contains the system's mapping, pairing and rule tables.
@@ -73,6 +81,8 @@
 ### Note:
 The schema currently serves as a prepared structure for future mapping and rule systems.
 
+---
+
 ## Archiv
 
 ### The archiv schema is used for storing inactive company domain entities, statistics and related data.
@@ -81,6 +91,8 @@ The schema currently serves as a prepared structure for future mapping and rule 
 - archiving no longer used company data
 - storing historical statistical data
 - storing data of closed or inactive orders
+
+---
 
 ## Personal
 
@@ -101,6 +113,8 @@ The schema currently serves as a prepared structure for future mapping and rule 
 - user_role relations
 - role_permission relations
 
+---
+
 ## Translation
 
 ### The translation schema provides multilingual system support and ensures the extensibility of the translation system.
@@ -113,3 +127,17 @@ The schema currently serves as a prepared structure for future mapping and rule 
 - keyword data
 - category definitions
 - central text mapping table
+
+---
+
+# Common Meta Fields
+
+Some database tables contain shared audit and lifecycle tracking fields.
+
+| Column | Description |
+|---|---|
+| created_by | user who created the record |
+| created_at | record creation timestamp |
+| updated_by | user who last modified the record |
+| updated_at | last modification timestamp |
+| deleted_at | logical deletion timestamp |
