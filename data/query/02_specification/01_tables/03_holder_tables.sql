@@ -18,6 +18,31 @@ CREATE TABLE IF NOT EXISTS specification.holder_type
 );
 
 
+create table if not exists specification.holder_type_mounting_option
+(
+    id                uuid                                      default gen_random_uuid(),
+
+    type_id           uuid                             not null,
+    option_name       text                             not null,
+    requirement_basis core.holder_clamping_requirement not null,
+
+    created_by        text                                      default current_setting('app.current_user', true),
+    created_at        timestamptz                      not null default now(),
+    updated_at        timestamptz,
+    updated_by        text,
+    deleted_at        timestamptz,
+
+    constraint htmo_pkey primary key (id),
+
+    constraint htmo_type_id_requirement_basis_key unique (type_id, requirement_basis),
+
+    constraint htmo_type_id_id_key unique (type_id, id),
+
+    constraint htmo_holder_type_id_fkey foreign key (type_id)
+        references specification.holder_type (id)
+);
+
+
 CREATE TABLE IF NOT EXISTS specification.holder_master
 (
     id                 uuid                 DEFAULT gen_random_uuid(),
@@ -47,29 +72,6 @@ CREATE TABLE IF NOT EXISTS specification.holder_master
     constraint hm_holder_type_id_fkey foreign key (type_id) references specification.holder_type (id)
 );
 
-create table if not exists specification.holder_type_mounting_option
-(
-    id                uuid                                      default gen_random_uuid(),
-
-    type_id           uuid                             not null,
-    option_name       text                             not null,
-    requirement_basis core.holder_clamping_requirement not null,
-
-    created_by        text                                      default current_setting('app.current_user', true),
-    created_at        timestamptz                      not null default now(),
-    updated_at        timestamptz,
-    updated_by        text,
-    deleted_at        timestamptz,
-
-    constraint htmo_pkey primary key (id),
-
-    constraint htmo_type_id_requirement_basis_key unique (type_id, requirement_basis),
-
-    constraint htmo_type_id_id_key unique (type_id, id),
-
-    constraint htmo_holder_type_id_fkey foreign key (type_id)
-        references specification.holder_type (id)
-);
 
 CREATE TABLE IF NOT EXISTS specification.holder_mounting_feature_requirement
 (
@@ -82,7 +84,7 @@ CREATE TABLE IF NOT EXISTS specification.holder_mounting_feature_requirement
     created_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at             TIMESTAMPTZ,
     updated_by             TEXT,
-    deleted_at             TEXT,
+    deleted_at             TIMESTAMPTZ,
 
     constraint htmfr_pkey primary key (id),
 
