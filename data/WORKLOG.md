@@ -1,20 +1,9 @@
-ToDo
-README.md
+Added two new schema debugging views to the `core` schema:
 
-1. Purpose
-Mire való ez a domain/modul?
+* `debug_table_structure_overview` (materialized view)
+  Provides an aggregated, human-readable column overview with summarized constraint metadata for fast schema inspection and internal debugging.
 
-2. Main tables
-Melyik tábla mit jelent?
+* `debug_column_constraint_details` (standard view)
+  Provides detailed constraint-level inspection for precise relation and constraint analysis.
 
-3. Important relationships
-Melyik tábla hova kapcsolódik és miért?
-
-4. Business rules
-Milyen UNIQUE / FK / CHECK mögötti logika van?
-
-5. Naming conventions
-Milyen rövidítéseket használsz? Pl. TT, TM, TTMO.
-
-6. Notes / open questions
-Ami még nem végleges, vagy később backendben lesz kezelve.
+The same debugging and metadata inspection structure is planned for the remaining schemas in the future.
