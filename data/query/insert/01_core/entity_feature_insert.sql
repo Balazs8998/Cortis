@@ -70,11 +70,22 @@ FROM (
              ('tool', 'relief_angle', 'mounting'),
              ('tool', 'tolerance_class', 'mounting'),
              ('tool', 'mounting_type', 'mounting'),
+             ('tool', 'shape_size', 'mounting'),
+             ('tool', 'shape_width', 'mounting'),
+             ('tool', 'manufacturer', 'mounting'),
+             ('tool', 'mounting_code', 'mounting'),
+             ('tool', 'size', 'mounting'),
 
              ('holder', 'insert_shape', 'mounting'),
              ('holder', 'relief_angle', 'mounting'),
              ('holder', 'tolerance_class', 'mounting'),
              ('holder', 'mounting_type', 'mounting'),
+             ('holder', 'shape_size', 'mounting'),
+             ('holder', 'shape_width', 'mounting'),
+             ('holder', 'manufacturer', 'mounting'),
+             ('holder', 'mounting_code', 'mounting'),
+             ('holder', 'size', 'mounting'),
+
 
              -- additional shared mounting features
              ('machine_station', 'inner_diameter', 'mounting'),

@@ -21,6 +21,11 @@ VALUES
 ('relief_angle', 'degree', 'number'),
 ('tolerance_class', 'text', 'string'),
 ('mounting_type', 'text', 'string'),
+('shape_size', 'mm','number'),
+('shape_width','mm','number'),
+('manufacturer','text','string'),
+('mounting_code','text','string'),
+('size','mm','number'),
 
 -- Machine constraints
 ('max_tool_diameter', 'mm', 'number'),

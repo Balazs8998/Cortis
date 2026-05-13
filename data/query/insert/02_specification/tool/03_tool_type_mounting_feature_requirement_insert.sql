@@ -1,1 +1,0 @@
-insert into specification.tool_type_mounting_feature_requirement(type_id, requirement_feature_id, is_required, context, )

@@ -40,6 +40,7 @@ create type core.tool_mounting_requirement as enum (
     'geometry',
     'form',
     'form_and_geometry'
+    'manufacturer_and_code_and_geometry'
     );
 
 create type core.holder_clamping_requirement as enum(

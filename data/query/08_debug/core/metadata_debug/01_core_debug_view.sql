@@ -1,4 +1,4 @@
-SET search_path TO debug;
+SET search_path TO metadata_debug;
 
 REFRESH MATERIALIZED VIEW debug_table_structure_overview;
 
