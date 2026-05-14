@@ -6,6 +6,7 @@ FROM (VALUES
           ('insert', 'grooving_system', 'mounting', 'tool', 'shape_width'),
           ('insert', 'grooving_system', 'mounting', 'tool', 'manufacturer'),
           ('insert', 'grooving_system', 'mounting', 'tool',
+
            'mounting_code')) AS m(type_name, option_name, role, entity_type, feature_name)
          JOIN specification.tool_type tt ON tt.name = m.type_name
          JOIN specification.tool_type_mounting_option ttmo ON tt.id = ttmo.type_id

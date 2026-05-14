@@ -5,8 +5,7 @@ FROM (VALUES
 
           --drill, clamping
           ('drill', 'clamping', 'mounting', 'tool', 'outer_diameter'),
-          ('drill', 'clamping', 'mounting', 'tool','length'),
-          ('drill', 'clamping', 'mounting', 'tool', 'manufacturer')
+          ('drill', 'clamping', 'mounting', 'tool','length')
 
 
       ) AS m(type_name, option_name, role, entity_type, feature_name)

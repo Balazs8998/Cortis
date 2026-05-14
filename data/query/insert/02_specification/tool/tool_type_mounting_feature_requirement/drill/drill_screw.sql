@@ -5,8 +5,7 @@ FROM (VALUES
 
           --drill, weldon
           ('drill', 'weldon', 'mounting', 'tool', 'outer_diameter'),
-          ('drill', 'weldon', 'mounting', 'tool','length'),
-          ('drill', 'weldon', 'mounting', 'tool', 'manufacturer')
+          ('drill', 'weldon', 'mounting', 'tool','length')
 
       ) AS m(type_name, option_name, role, entity_type, feature_name)
          JOIN specification.tool_type tt ON tt.name = m.type_name

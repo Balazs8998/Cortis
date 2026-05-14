@@ -7,8 +7,7 @@ FROM (VALUES
           ('insert', 'iso_standard', 'mounting', 'tool', 'relief_angle'),
           ('insert', 'iso_standard', 'mounting', 'tool', 'tolerance_class'),
           ('insert', 'iso_standard', 'mounting', 'tool', 'mounting_type'),
-          ('insert', 'iso_standard', 'mounting', 'tool','shape_size'),
-          ('insert', 'iso_standard', 'mounting', 'tool', 'manufacturer')
+          ('insert', 'iso_standard', 'mounting', 'tool','shape_size')
 
      ) AS m(type_name, option_name, role, entity_type, feature_name)
          JOIN specification.tool_type tt ON tt.name = m.type_name
