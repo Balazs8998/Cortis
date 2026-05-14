@@ -7,8 +7,3 @@ Added two new schema debugging views to the `core` schema:
   Provides detailed constraint-level inspection for precise relation and constraint analysis.
 
 The same debugging and metadata inspection structure is planned for the remaining schemas in the future.
---------------------------------------
-
-### Populate tool tables with data.
-
-## Tomorrow: Review and debug the requirement tables.Something is not correct there yet.

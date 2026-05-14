@@ -6,8 +6,9 @@ FROM (VALUES
           --boring_bar, screw
           ('boring_bar', 'screw', 'mounting', 'tool', 'manufacturer'),
           ('boring_bar', 'screw', 'mounting', 'tool', 'mounting_code'),
-          ('boring_bar', 'screw', 'mounting', 'tool',
-           'size')) AS m(type_name, option_name, role, entity_type, feature_name)
+          ('boring_bar', 'screw', 'mounting', 'tool','size')
+
+      ) AS m(type_name, option_name, role, entity_type, feature_name)
          JOIN specification.tool_type tt ON tt.name = m.type_name
          JOIN specification.tool_type_mounting_option ttmo ON tt.id = ttmo.type_id
     AND ttmo.option_name = m.option_name

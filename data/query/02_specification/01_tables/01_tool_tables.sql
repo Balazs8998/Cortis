@@ -33,7 +33,7 @@ create table if not exists specification.tool_type_mounting_option
 
     constraint ttmo_pkey primary key (id),
 
-    constraint ttmo_type_id_requirement_basis_key unique (type_id, requirement_basis),
+    constraint ttmo_type_id_option_name unique (type_id,option_name),
 
     constraint ttmo_type_id_id_key unique (type_id, id),
 

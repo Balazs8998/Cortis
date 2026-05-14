@@ -3,10 +3,10 @@ SELECT ef.id,
        ttmo.id
 FROM (VALUES
 
-          --drill, screw
-          ('drill', 'screw', 'mounting', 'tool', 'outer_diameter'),
-          ('drill', 'screw', 'mounting', 'tool','length'),
-          ('drill', 'screw', 'mounting', 'tool', 'manufacturer')
+          --drill, weldon
+          ('drill', 'weldon', 'mounting', 'tool', 'outer_diameter'),
+          ('drill', 'weldon', 'mounting', 'tool','length'),
+          ('drill', 'weldon', 'mounting', 'tool', 'manufacturer')
 
       ) AS m(type_name, option_name, role, entity_type, feature_name)
          JOIN specification.tool_type tt ON tt.name = m.type_name
