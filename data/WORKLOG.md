@@ -7,3 +7,17 @@ Added two new schema debugging views to the `core` schema:
   Provides detailed constraint-level inspection for precise relation and constraint analysis.
 
 The same debugging and metadata inspection structure is planned for the remaining schemas in the future.
+
+-------------------------
+
+Refactor all audit and datetime columns from TIMESTAMP to TIMESTAMPTZ.
+
+Tasks:
+
+* Review all schemas and tables
+* Update DDL definitions
+* Create ALTER TABLE migration scripts
+* Review triggers and timestamp defaults
+* Validate timezone handling consistency
+* Update related queries, views, and documentation
+
