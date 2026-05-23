@@ -1,6 +1,4 @@
-# Alert ! 
-## Potential data model issue
-
+# Update tool insert statements after model refactor
 ---------------
 
 Added two new schema debugging views to the `core` schema:
