@@ -47,7 +47,6 @@ CREATE TABLE IF NOT EXISTS specification.tool_master
 
     manufacturer_code  TEXT        NOT NULL,
     type_id            uuid        NOT NULL,
-    mounting_option_id uuid        not null,
     manufacturer       TEXT        NOT NULL,
     description        TEXT,
 
@@ -63,11 +62,12 @@ CREATE TABLE IF NOT EXISTS specification.tool_master
 
     constraint tm_pkey primary key (id),
 
-    constraint tm_mounting_option_id_fkey foreign key (type_id, mounting_option_id)
-        references specification.tool_type_mounting_option (type_id, id),
+
+    constraint tm_manufacturer_code_manufacturer_key unique (manufacturer_code,manufacturer),
 
     constraint tm_tool_type_id_fkey foreign key (type_id) references specification.tool_type (id)
 );
+
 
 
 CREATE TABLE IF NOT EXISTS specification.tool_mounting_feature_requirement

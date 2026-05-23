@@ -46,10 +46,11 @@ CREATE TABLE IF NOT EXISTS specification.interface_master
 
 CREATE TABLE IF NOT EXISTS specification.interface_type_mounting_feature_requirement
 (
-    id                     uuid     DEFAULT gen_random_uuid(),
+    id                     uuid                 DEFAULT gen_random_uuid(),
 
     type_id                uuid        NOT NULL,
     requirement_feature_id uuid        NOT NULL,
+    role                   TEXT        NOT NULL,
 
     created_by             TEXT                 DEFAULT current_setting('app.current_user', true),
     created_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -60,12 +61,11 @@ CREATE TABLE IF NOT EXISTS specification.interface_type_mounting_feature_require
     constraint itmfr_pkey primary key (id),
 
     constraint itmfr_interface_type_id_fkey foreign key (type_id)
-        references specification.interface_type(id),
+        references specification.interface_type (id),
 
     constraint itmfr_entity_feature_id_fkey foreign key (requirement_feature_id)
-        references core.entity_feature(id),
+        references core.entity_feature (id),
 
     constraint itmfr_type_id_requirement_feature_id_key UNIQUE (type_id, requirement_feature_id)
 
 );
-

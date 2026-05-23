@@ -1,3 +1,8 @@
+# Alert ! 
+## Potential data model issue
+
+---------------
+
 Added two new schema debugging views to the `core` schema:
 
 * `debug_table_structure_overview` (materialized view)

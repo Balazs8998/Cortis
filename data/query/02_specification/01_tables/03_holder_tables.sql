@@ -49,7 +49,6 @@ CREATE TABLE IF NOT EXISTS specification.holder_master
 
     manufacturer_code  TEXT        NOT NULL,
     type_id            uuid        NOT NULL,
-    mounting_option_id uuid        not null,
 
     manufacturer       TEXT        NOT NULL,
     description        TEXT,
@@ -66,11 +65,10 @@ CREATE TABLE IF NOT EXISTS specification.holder_master
 
     constraint hm_pkey primary key (id),
 
-    constraint hm_mounting_option_id_fkey foreign key (type_id, mounting_option_id)
-        references specification.holder_type_mounting_option (type_id, id),
-
+    CONSTRAINT hm_manufacturer_code_manufacturer_key unique (manufacturer_code,manufacturer),
     constraint hm_holder_type_id_fkey foreign key (type_id) references specification.holder_type (id)
 );
+
 
 
 CREATE TABLE IF NOT EXISTS specification.holder_mounting_feature_requirement

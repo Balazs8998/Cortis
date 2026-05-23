@@ -7,4 +7,5 @@ SELECT
     fd.data_type
 FROM core.entity_feature ef
          JOIN core.feature_definition fd
-              ON fd.id = ef.feature_id;
+              ON fd.id = ef.feature_id
+WHERE ef.entity_type = 'interface' AND  ef.role = 'mounting';
