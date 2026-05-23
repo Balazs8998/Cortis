@@ -5,6 +5,8 @@ VALUES
 ('depth', 'mm', 'number'),
 ('radius', 'mm', 'number'),
 ('inner_diameter', 'mm', 'number'),
+('inner_diameter_min', 'mm', 'number'),
+('inner_diameter_max', 'mm', 'number'),
 ('outer_diameter', 'mm', 'number'),
 
 -- Mounting / Interface

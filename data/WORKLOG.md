@@ -1,6 +1,7 @@
-# Update tool insert statements after model refactor
----------------
 
+# make insert to machine holder test data.
+
+---------------
 Added two new schema debugging views to the `core` schema:
 
 * `debug_table_structure_overview` (materialized view)

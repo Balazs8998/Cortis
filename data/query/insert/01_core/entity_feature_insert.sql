@@ -55,6 +55,8 @@ FROM (
              ('interface', 'mounting_length', 'mounting'),
              ('interface', 'outer_diameter', 'mounting'),
              ('interface', 'inner_diameter', 'mounting'),
+             ('interface', 'inner_diameter_min', 'mounting'),
+             ('interface', 'inner_diameter_max', 'mounting'),
 
 
 

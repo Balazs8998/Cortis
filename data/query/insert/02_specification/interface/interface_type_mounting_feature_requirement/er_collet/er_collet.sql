@@ -7,20 +7,23 @@ SELECT
     v.role
 FROM (
          VALUES
-             ('er_collet', 'inner_diameter','mounting'),
-             ('er_collet', 'outer_diameter','clamping'),
-             ('er_collet', 'mounting_length','clamping'),
-             ('er_collet', 'taper_angle','clamping'),
+             ('er_collet', 'inner_diameter_min','clamping'),
+             ('er_collet', 'inner_diameter_max','clamping'),
+             ('er_collet', 'outer_diameter','mounting'),
+             ('er_collet', 'mounting_length','mounting'),
+             ('er_collet', 'taper_angle','mounting'),
 
-             ('er_fix_tapping_collet', 'inner_diameter','mounting'),
-             ('er_fix_tapping_collet', 'outer_diameter','clamping'),
-             ('er_fix_tapping_collet', 'mounting_length','clamping'),
-             ('er_fix_tapping_collet', 'taper_angle','clamping'),
+             ('er_fix_tapping_collet', 'inner_diameter_min','clamping'),
+             ('er_fix_tapping_collet', 'inner_diameter_max','clamping'),
+             ('er_fix_tapping_collet', 'outer_diameter','mounting'),
+             ('er_fix_tapping_collet', 'mounting_length','mounting'),
+             ('er_fix_tapping_collet', 'taper_angle','mounting'),
 
-             ('er_extension_tapping_collet', 'inner_diameter','mounting'),
-             ('er_extension_tapping_collet', 'outer_diameter','clamping'),
-             ('er_extension_tapping_collet', 'mounting_length','clamping'),
-             ('er_extension_tapping_collet', 'taper_angle','clamping')
+             ('er_extension_tapping_collet', 'inner_diameter_min','clamping'),
+             ('er_extension_tapping_collet', 'inner_diameter_max','clamping'),
+             ('er_extension_tapping_collet', 'outer_diameter','mounting'),
+             ('er_extension_tapping_collet', 'mounting_length','mounting'),
+             ('er_extension_tapping_collet', 'taper_angle','mounting')
 
      ) AS v(type_name, requirement_name, role)
          JOIN specification.interface_type it ON v.type_name = it.name
