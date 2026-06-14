@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.cortis.desktop.controller.LoginController"
+           fx:id="rootPane"
+           styleClass="login-root"
+           alignment="CENTER_RIGHT"
+           stylesheets="@../css/login.css">
+
+    <!-- Távolság az ablak széleitől -->
+    <padding>
+        <Insets top="300"
+                right="40"
+                bottom="300"
+                left="300"/>
+    </padding>
+
+    <!-- Bejelentkezési panel -->
+    <VBox fx:id="loginCard"
+          alignment="CENTER"
+          spacing="16"
+          minWidth="320"
+          prefWidth="380"
+          maxWidth="440"
+          styleClass="login-card">
+
+        <!-- A panel belső térköze -->
+        <padding>
+            <Insets top="42"
+                    right="42"
+                    bottom="42"
+                    left="42"/>
+        </padding>
+
+        <Label text="Bejelentkezés"
+               maxWidth="Infinity"
+               styleClass="login-title"/>
+
+        <Label text="Lépj be a CORTIS rendszerbe"
+               maxWidth="Infinity"
+               wrapText="true"
+               styleClass="login-subtitle"/>
+
+        <!-- Felhasználónév -->
+
+        <Label text="Felhasználónév"
+               maxWidth="Infinity"
+               styleClass="field-label"/>
+
+        <TextField fx:id="usernameField"
+                   promptText="Add meg a felhasználóneved"
+                   maxWidth="Infinity"
+                   prefHeight="44"
+                   styleClass="input-field"/>
+
+        <!-- Jelszó -->
+
+        <Label text="Jelszó"
+               maxWidth="Infinity"
+               styleClass="field-label"/>
+
+        <!--
+            A PasswordField, a látható TextField és a szem ikon
+            egymáson helyezkednek el.
+        -->
+        <StackPane maxWidth="Infinity"
+                   prefHeight="44"
+                   minHeight="44"
+                   maxHeight="44">
+
+            <PasswordField fx:id="passwordField"
+                           promptText="Add meg a jelszavad"
+                           maxWidth="Infinity"
+                           prefHeight="44"
+                           styleClass="password-input"/>
+
+            <TextField fx:id="visiblePasswordField"
+                       promptText="Add meg a jelszavad"
+                       maxWidth="Infinity"
+                       prefHeight="44"
+                       visible="false"
+                       styleClass="password-input"/>
+
+            <!--
+                A jelszó csak addig látható,
+                amíg az egérgombot lenyomva tartod.
+            -->
+            <Button fx:id="showPasswordButton"
+                    text="👁"
+                    focusTraversable="false"
+                    mnemonicParsing="false"
+                    StackPane.alignment="CENTER_RIGHT"
+                    onMousePressed="#showPassword"
+                    onMouseReleased="#hidePassword"
+                    onMouseExited="#hidePassword"
+                    styleClass="password-eye-button">
+
+                <StackPane.margin>
+                    <Insets right="8"/>
+                </StackPane.margin>
+
+            </Button>
+
+        </StackPane>
+
+        <!-- Hibaüzenet -->
+
+        <Label fx:id="errorLabel"
+               text=""
+               minHeight="20"
+               maxWidth="Infinity"
+               wrapText="true"
+               styleClass="message-label"/>
+
+        <!-- Bejelentkezés -->
+
+        <Button text="Bejelentkezés"
+                onAction="#handleLogin"
+                defaultButton="true"
+                maxWidth="Infinity"
+                prefHeight="44"
+                styleClass="login-button"/>
+
+    </VBox>
+
+</StackPane>

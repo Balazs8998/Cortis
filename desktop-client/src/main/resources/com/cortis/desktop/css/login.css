@@ -1,0 +1,53 @@
+.login-root {
+    -fx-background-image: url("../images/cortis_background.png");
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;
+}
+
+.login-card {
+    -fx-background-color: rgba(20, 24, 30, 0.88);
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(
+            gaussian,
+            rgba(0, 0, 0, 0.55),
+            25,
+            0.25,
+            0,
+            8
+    );
+}
+
+.login-title {
+    -fx-font-size: 34px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.login-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #b8c0cc;
+    -fx-text-alignment: center;
+}
+
+.text-field,
+.password-field {
+    -fx-pref-height: 42;
+    -fx-font-size: 14px;
+    -fx-background-radius: 7;
+    -fx-border-radius: 7;
+}
+
+.login-button {
+    -fx-pref-height: 42;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.message-label {
+    -fx-text-fill: #ff6b6b;
+}
