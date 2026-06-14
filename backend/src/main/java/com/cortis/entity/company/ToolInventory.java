@@ -1,11 +1,13 @@
-package com.cortis.entity.company;
+package java.com.cortis.entity.company;
 
 import com.cortis.entity.tool.BaseEntity;
-import com.cortis.entity.tool.specification.ToolMaster;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.com.cortis.entity.tool.specification.ToolMaster;
 
 @Getter
 @Setter

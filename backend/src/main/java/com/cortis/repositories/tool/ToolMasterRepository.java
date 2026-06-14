@@ -1,9 +1,9 @@
-package com.cortis.repositories.tool;
+package java.com.cortis.repositories.tool;
 
-import com.cortis.entity.tool.specification.ToolMaster;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.com.cortis.entity.tool.specification.ToolMaster;
 import java.util.UUID;
 
 @Repository
