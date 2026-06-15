@@ -33,18 +33,12 @@ public class AuthApiClient {
     public LoginResponse login(String username, String password) {
 
         try {
-            // 1. Request DTO létrehozása
-            LoginRequest loginRequest =
-                    new LoginRequest(username, password);
 
+            LoginRequest loginRequest = createLoginRequest(username,password);
 
-
-            // 2. Java objektum -> JSON
             String requestBody =
                     objectMapper.writeValueAsString(loginRequest);
 
-
-            // 3. HTTP kérés összeállítása
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(LOGIN_URL))
                     .timeout(Duration.ofSeconds(10))
@@ -58,16 +52,12 @@ public class AuthApiClient {
                     .build();
 
 
-            // 4. HTTP kérés elküldése
-
-
             HttpResponse<String> response =
                     httpClient.send(
                             request,
                             HttpResponse.BodyHandlers.ofString()
                     );
 
-            // 5. Szerverválasz vizsgálata
             int statusCode = response.statusCode();
             String responseBody = response.body();
 
@@ -210,5 +200,9 @@ public class AuthApiClient {
                     exception
             );
         }
+    }
+
+    private LoginRequest createLoginRequest(String username, String password) {
+        return new LoginRequest(username, password);
     }
 }

@@ -1,4 +1,4 @@
-package java.com.cortis.entity.tool.specification;
+package com.cortis.entity.tool.specification;
 import com.cortis.entity.tool.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;

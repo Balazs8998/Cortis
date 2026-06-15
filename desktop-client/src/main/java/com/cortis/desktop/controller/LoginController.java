@@ -99,8 +99,6 @@ public class LoginController {
 
             errorLabel.setText("You are logged in!");
 
-
-            // Később itt válthatsz át a főképernyőre.
             ViewManager.switchScene(
                     usernameField,
                     "/com/cortis/desktop/view/main-menu.view.fxml",

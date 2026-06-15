@@ -1,8 +1,8 @@
 package com.cortis.entity.core;
 
 import com.cortis.entity.tool.BaseEntity;
-import com.cortis.enums.EntityType;
 import com.cortis.enums.RoleType;
+import com.cortis.enums.EntityType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
