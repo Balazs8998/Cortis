@@ -51,3 +51,17 @@
 .message-label {
     -fx-text-fill: #ff6b6b;
 }
+
+.language-menu {
+    -fx-background-color: rgba(20, 25, 29, 0.85);
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-cursor: hand;
+}
+
+.language-menu:hover {
+    -fx-background-color: rgba(35, 43, 48, 0.95);
+}
