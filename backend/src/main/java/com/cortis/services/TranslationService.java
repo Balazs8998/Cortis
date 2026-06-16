@@ -2,6 +2,7 @@ package com.cortis.services;
 
 import com.cortis.dto.translation.TranslationProjection;
 import com.cortis.dto.translation.TranslationResponse;
+import com.cortis.exception.translation.LanguageNotFoundException;
 import com.cortis.repositories.translation.CategoryRepository;
 import com.cortis.repositories.translation.LanguageRepositroy;
 import com.cortis.repositories.translation.TextRepository;
@@ -27,6 +28,11 @@ public class TranslationService {
 
         List<TranslationProjection> translations =
                 textRepository.findTranslationsByLanguageCode(languageCode);
+
+
+        if (translations.isEmpty()) {
+            throw new LanguageNotFoundException(languageCode);
+        }
 
         return makeTranslationResponse(translations);
     }

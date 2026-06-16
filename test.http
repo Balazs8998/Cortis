@@ -1,2 +1,4 @@
 GET http://localhost:8080/api/tooltype/all
 ###
+
+GET http://localhost:8080/api/translation/fr
