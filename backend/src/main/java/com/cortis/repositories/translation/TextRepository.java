@@ -13,16 +13,16 @@ public interface TextRepository
         extends JpaRepository<TranslationTextEntity, UUID> {
 
     @Query("""
-            SELECT
-                category.categoryName AS categoryName,
-                keyword.keyword AS keyword,
-                text.translationText AS translationText
-            FROM TranslationTextEntity text
-            JOIN text.category category
-            JOIN text.keyword keyword
-            JOIN text.language language
-            WHERE language.code = :languageCode
-            """)
+        SELECT
+            categoryEntity.categoryName AS categoryName,
+            keywordEntity.keyword AS keyword,
+            text.translationText AS translationText
+        FROM TranslationTextEntity text
+        JOIN text.category categoryEntity
+        JOIN text.keyword keywordEntity
+        JOIN text.language languageEntity
+        WHERE languageEntity.code = :languageCode
+        """)
     List<TranslationProjection> findTranslationsByLanguageCode(
             @Param("languageCode") String languageCode
     );
