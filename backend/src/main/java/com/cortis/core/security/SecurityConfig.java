@@ -55,6 +55,10 @@ public class SecurityConfig {
                                 HttpMethod.POST,
                                 "/api/auth/login"
                         ).permitAll()
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/translation/{languageCode}"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(
