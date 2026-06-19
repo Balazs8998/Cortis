@@ -1,6 +1,6 @@
-package com.cortis.core.entity_legacy.translation;
+package com.cortis.translation.entity;
 
-import com.cortis.core.entity_legacy.tool.BaseEntity;
+import com.cortis.core.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
