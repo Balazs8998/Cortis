@@ -1,6 +1,6 @@
 package com.cortis.translation.repositorie;
 
-import com.cortis.core.entity_legacy.translation.TranslationTextEntity;
+import com.cortis.translation.entity.TranslationTextEntity;
 import com.cortis.translation.dto.TranslationProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
