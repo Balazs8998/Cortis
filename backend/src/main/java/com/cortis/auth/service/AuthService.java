@@ -1,67 +1,75 @@
 package com.cortis.auth.service;
 
-
 import com.cortis.auth.dto.LoginRequest;
 import com.cortis.auth.dto.LoginResponse;
-import com.cortis.core.entity_legacy.user.UserEntity;
-import com.cortis.auth.repositorie.UserRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final SecurityContextRepository securityContextRepository;
+    private final SessionAuthenticationStrategy sessionAuthenticationStrategy;
 
-    public AuthService(UserRepository userRepository , PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    public AuthService(
+            AuthenticationManager authenticationManager,
+            SecurityContextRepository securityContextRepository,
+            SessionAuthenticationStrategy sessionAuthenticationStrategy
+    ) {
+        this.authenticationManager = authenticationManager;
+        this.securityContextRepository = securityContextRepository;
+        this.sessionAuthenticationStrategy = sessionAuthenticationStrategy;
     }
 
-
-    public LoginResponse login(LoginRequest request) {
-
+    public LoginResponse login(
+            LoginRequest loginRequest,
+            HttpServletRequest httpRequest,
+            HttpServletResponse httpResponse
+    ) {
         System.out.println("1. Login service elindult");
 
-        UserEntity user = userRepository
-                .findByUsername(request.getUsername())
-                .orElseThrow(() -> {
-                    System.out.println("2. Felhasználó nem található");
+        UsernamePasswordAuthenticationToken authenticationRequest =
+                UsernamePasswordAuthenticationToken.unauthenticated(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
+                );
 
-                    return new RuntimeException(
-                            "Hibás felhasználónév vagy jelszó"
-                    );
-                });
+        Authentication authentication =
+                authenticationManager.authenticate(authenticationRequest);
 
-        System.out.println("2. Felhasználó megtalálva");
+        System.out.println("2. Felhasználó hitelesítve");
 
-        boolean passwordMatches = passwordEncoder.matches(
-                request.getPassword(),
-                user.getPasswordHash()
+        sessionAuthenticationStrategy.onAuthentication(
+                authentication,
+                httpRequest,
+                httpResponse
         );
 
-        System.out.println(
-                "3. Jelszó eredménye: " + passwordMatches
+        SecurityContext securityContext =
+                SecurityContextHolder.createEmptyContext();
+
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        securityContextRepository.saveContext(
+                securityContext,
+                httpRequest,
+                httpResponse
         );
 
-        if (!passwordMatches) {
-            throw new RuntimeException(
-                    "Hibás felhasználónév vagy jelszó"
-            );
-        }
+        System.out.println("3. SecurityContext sessionbe mentve");
 
-        System.out.println("4. LoginResponse létrehozása");
-
-        LoginResponse response = new LoginResponse(
-                user.getUsername(),
-                "test-token"
+        return new LoginResponse(
+                authentication.getName(),authentication.isAuthenticated()
         );
-
-        System.out.println("5. AuthService visszatér");
-
-        return response;
     }
-
-
 }

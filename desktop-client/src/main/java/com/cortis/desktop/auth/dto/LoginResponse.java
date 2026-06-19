@@ -1,7 +1,15 @@
 package com.cortis.desktop.auth.dto;
 
-public record LoginResponse(
-        String username,
-        String token
-) {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Setter
+public class LoginResponse {
+    private String username;
+    private boolean authenticated;
 }

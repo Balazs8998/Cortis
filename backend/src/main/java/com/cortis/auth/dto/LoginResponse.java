@@ -1,21 +1,17 @@
 package com.cortis.auth.dto;
 
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Setter
 public class LoginResponse {
 
-
     private String username;
-    private String token;
-
-
-    public LoginResponse(String username, String s) {
-        this.username = username;
-        this.token = s;
-    }
+    private boolean authenticated;
 }
