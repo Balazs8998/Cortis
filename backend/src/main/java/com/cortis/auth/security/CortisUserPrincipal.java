@@ -1,63 +1,90 @@
 package com.cortis.auth.security;
 
-import com.cortis.core.entity_legacy.user.UserEntity;
+
+import com.cortis.auth.entity.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CortisUserPrincipal implements UserDetails {
 
-    private final UUID userId;
-    private final String username;
-    private final String passwordHash;
-    private final boolean active;
+    private final UserEntity user;
+    private final Set<GrantedAuthority> authorities;
 
     public CortisUserPrincipal(UserEntity user) {
-        this.userId = user.getId();
-        this.username = user.getUsername();
-        this.passwordHash = user.getPasswordHash();
-        this.active = Boolean.TRUE.equals(user.getActive());
+        this.user = user;
+        this.authorities = buildAuthorities(user);
     }
 
-    public UUID getUserId() {
-        return userId;
+    private Set<GrantedAuthority> buildAuthorities(UserEntity user) {
+
+        Set<GrantedAuthority> authorities = new HashSet<>();
+
+        for (UserRoleEntity userRole : user.getUserRoles()) {
+
+            if (userRole.getDeletedAt() != null) {
+                continue;
+            }
+
+            RoleEntity role = userRole.getRole();
+
+            if (role == null || role.getDeletedAt() != null) {
+                continue;
+            }
+
+            authorities.add(
+                    new SimpleGrantedAuthority(
+                            "ROLE_" + role.getName().toUpperCase()
+                    )
+            );
+
+            for (RolePermissionEntity rolePermission
+                    : role.getRolePermissions()) {
+
+                if (rolePermission.getDeletedAt() != null) {
+                    continue;
+                }
+
+                PermissionEntity permission =
+                        rolePermission.getPermission();
+
+                if (permission == null
+                        || permission.getDeletedAt() != null) {
+                    continue;
+                }
+
+                authorities.add(
+                        new SimpleGrantedAuthority(
+                                permission.getCode()
+                        )
+                );
+            }
+        }
+
+        return authorities;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-    }
-
-    @Override
-    public String getPassword() {
-        return passwordHash;
+        return authorities;
     }
 
     @Override
     public String getUsername() {
-        return username;
+        return user.getUsername();
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
+    public String getPassword() {
+        return user.getPasswordHash();
     }
 
     @Override
     public boolean isEnabled() {
-        return active;
+        return user.isActive();
     }
 }

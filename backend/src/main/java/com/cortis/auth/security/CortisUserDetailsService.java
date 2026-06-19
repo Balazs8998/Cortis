@@ -1,7 +1,7 @@
 package com.cortis.auth.security;
 
+import com.cortis.auth.entity.UserEntity;
 import com.cortis.auth.repositorie.UserRepository;
-import com.cortis.core.entity_legacy.user.UserEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,12 +21,15 @@ public class CortisUserDetailsService implements UserDetailsService {
             throws UsernameNotFoundException {
 
         UserEntity user = userRepository
-                .findByUsername(username)
+                .findByUsernameWithAuthorities(username)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "Hibás felhasználónév vagy jelszó"
                 ));
 
 
+
         return new CortisUserPrincipal(user);
     }
+
+
 }

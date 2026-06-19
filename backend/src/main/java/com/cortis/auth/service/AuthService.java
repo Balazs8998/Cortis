@@ -3,8 +3,7 @@ package com.cortis.auth.service;
 import com.cortis.auth.dto.LoginRequest;
 import com.cortis.auth.dto.LoginResponse;
 import com.cortis.auth.security.CortisUserPrincipal;
-import com.cortis.core.security.JwtService;
-import lombok.extern.slf4j.Slf4j;
+import com.cortis.core.session.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 
-@Slf4j
 @Service
 public class AuthService {
 

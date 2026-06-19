@@ -1,4 +1,4 @@
-package com.cortis.core.security;
+package com.cortis.core.session;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

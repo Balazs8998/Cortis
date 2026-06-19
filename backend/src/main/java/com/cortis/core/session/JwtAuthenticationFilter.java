@@ -1,4 +1,4 @@
-package com.cortis.core.security;
+package com.cortis.core.session;
 
 import com.cortis.auth.security.CortisUserDetailsService;
 import jakarta.servlet.FilterChain;
@@ -27,7 +27,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
     }
-
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -45,14 +44,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
         String username = jwtService.extractUsername(token);
 
-        if (
-                username != null
-                        && SecurityContextHolder.getContext().getAuthentication() == null
-        ) {
+        if (username != null
+                && SecurityContextHolder.getContext().getAuthentication() == null) {
+
             UserDetails userDetails =
                     userDetailsService.loadUserByUsername(username);
 
             if (jwtService.isTokenValid(token, userDetails)) {
+
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails,
