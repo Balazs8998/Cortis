@@ -26,6 +26,7 @@ public class CortisUserDetailsService implements UserDetailsService {
                         "Hibás felhasználónév vagy jelszó"
                 ));
 
+
         return new CortisUserPrincipal(user);
     }
 }

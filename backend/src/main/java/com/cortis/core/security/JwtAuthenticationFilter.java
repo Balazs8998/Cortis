@@ -1,5 +1,6 @@
-package com.cortis.auth.security;
+package com.cortis.core.security;
 
+import com.cortis.auth.security.CortisUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

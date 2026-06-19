@@ -1,4 +1,4 @@
-package com.cortis.auth.security;
+package com.cortis.core.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -14,8 +14,7 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    private static final String SECRET =
-            "cortis-super-secret-key-change-this-later-minimum-32-characters";
+    private static final String SECRET ="1f5A7afeh6g24562g3d2fD4G2D5Se22nM";
 
     private static final long EXPIRATION_SECONDS = 60 * 60 * 8;
 

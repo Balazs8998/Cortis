@@ -1,7 +1,7 @@
 package com.cortis.auth.dto;
 
 public record LoginResponse(
-        String username,
+        String userName,
         boolean authenticated,
         String token
 ) {

@@ -17,10 +17,13 @@ public class AuthController {
         this.authService = authService;
     }
 
+
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(
             @RequestBody @Valid LoginRequest request
     ) {
+
+        System.out.println("1.Login request received: " + request);
         LoginResponse response = authService.login(request);
 
         return ResponseEntity.ok(response);

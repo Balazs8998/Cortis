@@ -11,7 +11,7 @@ public class AuthService {
         this.authApiClient = new AuthApiClient();
     }
 
-    public LoginResponse login(String username, String password) {
-        return authApiClient.login(username, password);
+    public LoginResponse login(String userName, String password) {
+        return authApiClient.login(userName, password);
     }
 }

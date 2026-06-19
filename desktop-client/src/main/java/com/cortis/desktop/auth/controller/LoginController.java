@@ -96,10 +96,12 @@ public class LoginController {
     @FXML
     private void handleLogin() {
 
+
+
         String username = usernameField.getText().trim();
         String password = passwordField.getText();
 
-        if (username.isBlank() || password.isBlank()) {
+        if (username.isBlank() || password.isBlank())  {
             errorLabel.setText(
                     "The username and password cannot be empty."
             );
@@ -112,7 +114,7 @@ public class LoginController {
 
             System.out.println(
                     "Successfully logged in as:"
-                            + response.username()
+                            + response.userName()
             );
 
             System.out.println(
