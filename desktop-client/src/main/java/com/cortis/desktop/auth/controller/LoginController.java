@@ -97,11 +97,10 @@ public class LoginController {
     private void handleLogin() {
 
 
-
         String username = usernameField.getText().trim();
         String password = passwordField.getText();
 
-        if (username.isBlank() || password.isBlank())  {
+        if (username.isBlank() || password.isBlank()) {
             errorLabel.setText(
                     "The username and password cannot be empty."
             );
@@ -109,18 +108,8 @@ public class LoginController {
         }
 
         try {
-            LoginResponse response =
-                    authService.login(username, password);
+            authService.login(username, password);
 
-            System.out.println(
-                    "Successfully logged in as:"
-                            + response.userName()
-            );
-
-            System.out.println(
-                    "Token: "
-                            + response.token()
-            );
 
             errorLabel.setText("You are logged in!");
 
@@ -147,6 +136,7 @@ public class LoginController {
 
         languageMenuButton.setText("🌐 " + languageCode.toUpperCase());
     }
+
     private void refreshLoginTexts() {
 
         loginTitleLabel.setText(
