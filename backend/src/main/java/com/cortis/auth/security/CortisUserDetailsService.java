@@ -23,7 +23,7 @@ public class CortisUserDetailsService implements UserDetailsService {
         UserEntity user = userRepository
                 .findByUsernameWithAuthorities(username)
                 .orElseThrow(() -> new UsernameNotFoundException(
-                        "Hibás felhasználónév vagy jelszó"
+                        "Invalid username or password"
                 ));
 
 

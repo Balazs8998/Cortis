@@ -30,25 +30,20 @@ public class AuthService {
 
     public LoginResponse login(LoginRequest loginRequest) {
 
-        log.info("1.Login request received: {}", loginRequest);
         UsernamePasswordAuthenticationToken authenticationRequest =
                 UsernamePasswordAuthenticationToken.unauthenticated(
                         loginRequest.userName(),
                         loginRequest.passwordHash()
                 );
 
-        log.info("2.Authentication request created");
         Authentication authentication =
                 authenticationManager.authenticate(authenticationRequest);
 
-        log.info("3.Authentication successful");
         CortisUserPrincipal principal =
                 (CortisUserPrincipal) authentication.getPrincipal();
 
-        log.info("4.User principal created");
         String token = jwtService.generateToken(principal);
 
-        log.info("5.JWT token generated");
         return new LoginResponse(
                 principal.getUsername(),
                 authentication.isAuthenticated(),

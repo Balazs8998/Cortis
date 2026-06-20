@@ -3,6 +3,7 @@ package com.cortis.desktop.translation.api;
 import com.cortis.desktop.translation.dto.TranslationResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -23,7 +24,7 @@ public class TranslationApiClient {
     }
 
 
-    public TranslationResponse fetchTranslations(String languageCode) throws Exception {
+    public TranslationResponse fetchTranslations(String languageCode) throws IOException, InterruptedException {
 
         String TRANSLATION_API_URL_WITH_LANGUAGE_CODE = TRANSLATION_API_URL + languageCode;
 

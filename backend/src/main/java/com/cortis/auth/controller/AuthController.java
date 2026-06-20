@@ -28,7 +28,6 @@ public class AuthController {
             @RequestBody @Valid LoginRequest request
     ) {
 
-        System.out.println("1.Login request received: " + request);
         LoginResponse response = authService.login(request);
 
         return ResponseEntity.ok(response);

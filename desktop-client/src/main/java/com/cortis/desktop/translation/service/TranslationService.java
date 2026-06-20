@@ -5,6 +5,8 @@ import com.cortis.desktop.translation.api.TranslationApiClient;
 import com.cortis.desktop.translation.cache.TranslationCache;
 import com.cortis.desktop.translation.dto.TranslationResponse;
 
+import java.io.IOException;
+
 public class TranslationService {
 
     private final TranslationCache translationCache;
@@ -20,8 +22,19 @@ public class TranslationService {
             TranslationResponse response = translationApiClient.fetchTranslations(languageCode);
             translationCache.getCache().clear();
             translationCache.getCache().putAll(response.getTranslations());
-        }catch (Exception e){
-            e.printStackTrace();
+        }catch (IOException exception) {
+            throw new RuntimeException(
+                    "Could not connect to the server.",
+                    exception
+            );
+
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+
+            throw new RuntimeException(
+                    "The request was interrupted",
+                    exception
+            );
         }
     }
 
