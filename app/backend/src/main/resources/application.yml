@@ -27,6 +27,12 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: false
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
 jwt:
   secret-key: ${JWT_SECRET_KEY}
   expiration-seconds: ${JWT_EXPIRATION_SECONDS:28800}

@@ -258,6 +258,15 @@
         </dependency>
 
         <!--
+          Healty
+      -->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!--
             SPRING SECURITY TEST – Security-specifikus tesztelési támogatás.
 
             Főbb lehetőségei:
