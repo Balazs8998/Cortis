@@ -17,6 +17,7 @@ build/
 # Runtime data
 data/
 logs/
+logs/
 *.log
 
 # Python cache

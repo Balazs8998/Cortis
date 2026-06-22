@@ -8,10 +8,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/cortis
-    username: cortis_user
-    password: cortis_pass
-
+    url: jdbc:postgresql://localhost:${POSTGRES_PORT:5432}/${POSTGRES_DB:cortis}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
   jpa:
     open-in-view: false
     show-sql: false
@@ -27,18 +26,20 @@ spring:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: false
-    baseline-version: 10
-    baseline-description: Existing CORTIS database
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  expiration-seconds: ${JWT_EXPIRATION_SECONDS:28800}
 
 logging:
   file:
     name: logs/cortis.log
+
   level:
-    com.progmasters: DEBUG
+    com.cortis: DEBUG
     org.springframework.web: INFO
     org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
-
 
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
