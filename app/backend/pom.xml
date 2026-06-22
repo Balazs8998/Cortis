@@ -1,0 +1,307 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--
+        Spring Boot szülőprojekt.
+        Meghatározza a Spring Boot által kezelt függőségverziókat,
+        az alap Maven-beállításokat és a plugin-konfigurációkat.
+    -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.5.11</version>
+        <relativePath/>
+    </parent>
+
+    <!-- A projekt Maven-azonosítói -->
+    <groupId>com.cortis</groupId>
+    <artifactId>cortis</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>CORTIS backend</name>
+
+    <properties>
+        <!-- A projekt Java 21-et használ -->
+        <java.version>21</java.version>
+    </properties>
+
+    <dependencies>
+
+        <!--
+            FLYWAY – adatbázis-migráció alapmodul.
+
+            Feladata:
+            - SQL migrációs fájlok automatikus futtatása
+            - adatbázisséma verziózása
+            - annak nyilvántartása, hogy mely migrációk futottak már le
+
+            Tipikus hely:
+            src/main/resources/db/migration/
+        -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+
+        <!--
+            FLYWAY – PostgreSQL-specifikus támogatás.
+
+            A Flyway újabb verzióiban az egyes adatbázistípusok támogatása
+            külön modulba került. Ez szükséges ahhoz, hogy a Flyway
+            PostgreSQL adatbázison tudjon migrációkat futtatni.
+        -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+        </dependency>
+
+        <!--
+            SPRING BOOT WEB – webes és REST API réteg.
+
+            Főbb részei:
+            - Spring MVC
+            - REST Controller támogatás
+            - HTTP-kérések kezelése
+            - JSON konvertálás Jackson segítségével
+            - beépített Tomcat webszerver
+
+            Példák:
+            @RestController
+            @GetMapping
+            @PostMapping
+            ResponseEntity
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!--
+            SPRING SECURITY – hitelesítés és jogosultságkezelés.
+
+            Főbb feladatai:
+            - felhasználók bejelentkeztetése
+            - jelszóellenőrzés
+            - végpontok védelme
+            - role és permission kezelés
+            - SecurityFilterChain
+            - AuthenticationManager
+            - UserDetailsService
+            - PasswordEncoder
+            - JWT-filter beillesztése a security filterláncba
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!--
+            SPRING DATA JPA – adatbázis-kezelés JPA és Hibernate használatával.
+
+            Főbb feladatai:
+            - Entity osztályok kezelése
+            - Repository interfészek
+            - CRUD műveletek
+            - objektumok és adatbázistáblák összekapcsolása
+            - kapcsolatok kezelése: OneToMany, ManyToMany stb.
+
+            Példák:
+            @Entity
+            @Table
+            @Id
+            JpaRepository
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!--
+            SPRING VALIDATION – beérkező adatok ellenőrzése.
+
+            Főbb feladatai:
+            - Request DTO-k validálása
+            - hibás vagy hiányzó adatok kiszűrése
+            - Jakarta Bean Validation használata
+
+            Példák:
+            @Valid
+            @NotNull
+            @NotBlank
+            @Size
+            @Email
+            @Min
+            @Max
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!--
+            POSTGRESQL JDBC DRIVER – kapcsolat a PostgreSQL adatbázishoz.
+
+            Ez teszi lehetővé, hogy a Java alkalmazás JDBC-n keresztül
+            kommunikáljon a PostgreSQL adatbázissal.
+
+            runtime scope:
+            fordításkor közvetlenül nem szükséges,
+            de az alkalmazás futtatásakor igen.
+        -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--
+            JJWT API – JWT tokenek kezeléséhez használt publikus API.
+
+            Főbb feladatai:
+            - JWT token létrehozásának definiálása
+            - token feldolgozásának definiálása
+            - claim-ek kezelése
+            - token aláírásának és ellenőrzésének API-ja
+
+            A tényleges megvalósítást a jjwt-impl biztosítja.
+        -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.12.6</version>
+        </dependency>
+
+        <!--
+            JJWT IMPLEMENTATION – a JWT működés tényleges implementációja.
+
+            Főbb feladatai:
+            - token generálása
+            - token aláírása
+            - token parse-olása
+            - token hitelességének ellenőrzése
+            - lejárati idő ellenőrzése
+
+            runtime scope:
+            az alkalmazás fordításakor az API-t használjuk,
+            futáskor azonban szükség van erre az implementációra.
+        -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.12.6</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--
+            JJWT JACKSON – JSON támogatás a JWT tokenekhez.
+
+            A JWT header és payload JSON formátumú.
+            Ez a modul a Jackson könyvtár segítségével végzi
+            a Java objektumok és a JWT-ben tárolt JSON-adatok közötti
+            átalakítást.
+
+            Például:
+            - subject
+            - roles
+            - permissions
+            - egyéb saját claim-ek
+        -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.12.6</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--
+            LOMBOK – ismétlődő Java-kód automatikus generálása.
+
+            Példák:
+            @Getter
+            @Setter
+            @Builder
+            @RequiredArgsConstructor
+            @NoArgsConstructor
+            @AllArgsConstructor
+
+            optional:
+            a Lombok csak a fejlesztéshez és fordításhoz szükséges,
+            nem része az alkalmazás üzleti működésének.
+        -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!--
+            SPRING BOOT TEST – általános tesztelési csomag.
+
+            Több tesztkönyvtárat összefog:
+            - JUnit 5
+            - Mockito
+            - AssertJ
+            - Spring Test
+            - MockMvc
+            - JSON tesztelési támogatás
+
+            test scope:
+            kizárólag a tesztek fordításakor és futtatásakor érhető el.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!--
+            SPRING SECURITY TEST – Security-specifikus tesztelési támogatás.
+
+            Főbb lehetőségei:
+            - hitelesített felhasználó szimulálása
+            - role-ok és jogosultságok tesztelése
+            - védett végpontok MockMvc-tesztelése
+            - CSRF kezelés tesztekben
+
+            Példák:
+            @WithMockUser
+            SecurityMockMvcRequestPostProcessors
+
+            test scope:
+            csak teszteléskor használható.
+        -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <!--
+                SPRING BOOT MAVEN PLUGIN.
+
+                Főbb feladatai:
+                - futtatható Spring Boot JAR készítése
+                - az alkalmazás indítása Mavenből
+                - függőségek becsomagolása a végleges JAR-ba
+
+                Példák:
+                mvn spring-boot:run
+                mvn clean package
+            -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>
