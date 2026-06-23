@@ -1,0 +1,15 @@
+logging:
+  level:
+    com.cortis: INFO
+    org.springframework.web: WARN
+    org.hibernate.SQL: WARN
+    org.hibernate.orm.jdbc.bind: WARN
+
+  file:
+    name: logs/cortis.log
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
