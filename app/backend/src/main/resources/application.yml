@@ -25,7 +25,14 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
-    schemas: core,specification,company,map,archive,personal,translation
+    schemas:
+      - core
+      - specification
+      - company
+      - map
+      - archive
+      - personal
+      - translation
     default-schema: core
     validate-on-migrate: true
     clean-disabled: true
