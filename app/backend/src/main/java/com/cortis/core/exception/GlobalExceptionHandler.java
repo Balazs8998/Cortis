@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
-import java.util.stream.Collectors;
+import java.util.List;
 
 import org.springframework.security.access.AccessDeniedException;
 
@@ -27,13 +27,23 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> argumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException ex) {
 
+        List<ValidationError> validationErrors =
+                ex.getBindingResult()
+                        .getFieldErrors()
+                        .stream()
+                        .map(fieldError -> new ValidationError(
+                                fieldError.getField(),
+                                fieldError.getDefaultMessage()
+                        ))
+                        .toList();
 
         ErrorResponse errorResponse = new ErrorResponse(
                 Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "VALIDATION_ERROR",
-                "common.error.bad.request",
-                request.getRequestURI()
+                "common.error.validation_error",
+                request.getRequestURI(),
+                validationErrors
         );
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
@@ -51,7 +61,8 @@ public class GlobalExceptionHandler {
                 HttpStatus.FORBIDDEN.value(),
                 "ACCESS_DENIED",
                 "common.error.access_denied",
-                request.getRequestURI()
+                request.getRequestURI(),
+                null
         );
 
         return ResponseEntity
@@ -68,8 +79,9 @@ public class GlobalExceptionHandler {
                 Instant.now(),
                 HttpStatus.UNAUTHORIZED.value(),
                 "AUTH_INVALID_CREDENTIALS",
-                "Hibás felhasználónév vagy jelszó.",
-                request.getRequestURI()
+                "Wrong username or password.",
+                request.getRequestURI(),
+                null
         );
 
         return ResponseEntity
@@ -87,7 +99,8 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND.value(),
                 "TRANSLATION_LANGUAGE_NOT_FOUND",
                 "translation.error.language_not_found",
-                request.getRequestURI()
+                request.getRequestURI(),
+                null
         );
 
         return ResponseEntity
@@ -107,7 +120,8 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "INTERNAL_SERVER_ERROR",
                 "common.error.internal_server",
-                request.getRequestURI()
+                request.getRequestURI(),
+                null
         );
 
         return ResponseEntity
