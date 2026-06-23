@@ -257,10 +257,25 @@
             <scope>test</scope>
         </dependency>
 
-        <!--
-          Healty
-      -->
 
+        <!--
+            SPRING BOOT ACTUATOR – Az alkalmazás állapotának és működésének
+            monitorozásához szükséges végpontokat biztosítja.
+
+            Főbb lehetőségei:
+            - alkalmazás állapotának ellenőrzése
+            - adatbázis- és komponenskapcsolatok állapotának vizsgálata
+            - alkalmazásinformációk lekérdezése
+            - metrikák és rendszeradatok megfigyelése
+            - későbbi monitoring rendszerek csatlakoztatása
+
+            Példák:
+            GET /actuator/health
+            GET /actuator/info
+
+            A nyilvánosan elérhető Actuator végpontokat külön kell
+            engedélyezni az application.yml-ben és a Spring Securityben.
+        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -286,6 +301,18 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!--
+    MICROMETER TRACING – Brave implementáció.
+
+    Minden HTTP-kéréshez traceId és spanId generálható.
+    Ezek az MDC-n keresztül bekerülhetnek a logokba,
+    így egy kérés teljes útja összeköthető.
+-->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-brave</artifactId>
         </dependency>
 
     </dependencies>
