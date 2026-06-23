@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS company.interface_inventory
     constraint ii_interface_code_key unique (interface_code)
 );
 
-CREATE TABLE company.holder_inventory
+CREATE TABLE IF NOT EXISTS company.holder_inventory
 (
     id               uuid     DEFAULT gen_random_uuid(),
 
@@ -70,7 +70,7 @@ CREATE TABLE company.holder_inventory
 );
 
 
-CREATE TABLE company.machine_inventory
+CREATE TABLE IF NOT EXISTS company.machine_inventory
 (
     id                uuid      DEFAULT gen_random_uuid(),
 
@@ -91,27 +91,5 @@ CREATE TABLE company.machine_inventory
     constraint mi_machine_code_key unique (machine_code)
 );
 
-/*
-CREATE TABLE company.material
-(
-    id                    uuid PRIMARY KEY     DEFAULT gen_random_uuid(),
-    company_material_code TEXT        NOT NULL DEFAULT 'pending'
-    material_name         TEXT,
-    material_code         TEXT        NOT NULL,
-    quantity              INTEGER     NOT NULL DEFAULT 0 CHECK (quantity >= 0),
-    location              TEXT        NOT NULL DEFAULT 'pending',
-    diameter              REAL        NOT NULL CHECK (diameter > 0),
-    comment               TEXT,
-    link                  TEXT,
-    catalog               TEXT,
-    material_master_id    INTEGER     NOT NULL,
-    order_code            TEXT        NOT NULL,
-    created_by            TEXT                 DEFAULT current_setting('app.current_user', true),
-    created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at            TIMESTAMPTZ,
-    updated_by            TEXT,
-    deleted_at            TIMESTAMPTZ
-);
- */
 
 
