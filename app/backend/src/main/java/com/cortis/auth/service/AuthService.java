@@ -33,7 +33,7 @@ public class AuthService {
         UsernamePasswordAuthenticationToken authenticationRequest =
                 UsernamePasswordAuthenticationToken.unauthenticated(
                         loginRequest.userName(),
-                        loginRequest.passwordHash()
+                        loginRequest.password()
                 );
 
         Authentication authentication =

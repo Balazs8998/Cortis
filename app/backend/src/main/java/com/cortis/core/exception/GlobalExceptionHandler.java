@@ -2,30 +2,27 @@ package com.cortis.core.exception;
 
 import com.cortis.core.exception.translation.LanguageNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 import java.time.Instant;
 import java.util.List;
-
 import org.springframework.security.access.AccessDeniedException;
 
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
-    private static final Logger log =
-            LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> argumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException ex) {
+
+
 
         List<ValidationError> validationErrors =
                 ex.getBindingResult()
@@ -37,11 +34,19 @@ public class GlobalExceptionHandler {
                         ))
                         .toList();
 
+        log.warn("Validation error: method={}, path={}, field={} ",
+                request.getMethod(),
+                request.getRequestURI(),
+                validationErrors.stream()
+                        .map(ValidationError::field)
+                        .toList());
+
         ErrorResponse errorResponse = new ErrorResponse(
                 Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "VALIDATION_ERROR",
                 "common.error.validation_error",
+                null,
                 request.getRequestURI(),
                 validationErrors
         );
@@ -53,7 +58,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAccessDenied(
-            AccessDeniedException exception,
+            AccessDeniedException ex,
             HttpServletRequest request
     ) {
         ErrorResponse response = new ErrorResponse(
@@ -61,6 +66,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.FORBIDDEN.value(),
                 "ACCESS_DENIED",
                 "common.error.access_denied",
+                ex.getMessage(),
                 request.getRequestURI(),
                 null
         );
@@ -72,15 +78,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentials(
-            BadCredentialsException exception,
+            BadCredentialsException ex,
             HttpServletRequest request
     ) {
         ErrorResponse response = new ErrorResponse(
                 Instant.now(),
                 HttpStatus.UNAUTHORIZED.value(),
                 "AUTH_INVALID_CREDENTIALS",
-                "Wrong username or password.",
+                "auth.error.invalid_credentials",
                 request.getRequestURI(),
+                ex.getMessage(),
                 null
         );
 
@@ -91,7 +98,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(LanguageNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleLanguageNotFound(
-            LanguageNotFoundException exception,
+            LanguageNotFoundException ex,
             HttpServletRequest request
     ) {
         ErrorResponse response = new ErrorResponse(
@@ -100,6 +107,7 @@ public class GlobalExceptionHandler {
                 "TRANSLATION_LANGUAGE_NOT_FOUND",
                 "translation.error.language_not_found",
                 request.getRequestURI(),
+                ex.getMessage(),
                 null
         );
 
@@ -110,10 +118,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnexpectedException(
-            Exception exception,
+            Exception ex,
             HttpServletRequest request
     ) {
-        log.error("Unhandled backend exception", exception);
+        log.error("Unhandled backend exception", ex);
 
         ErrorResponse response = new ErrorResponse(
                 Instant.now(),
@@ -121,6 +129,7 @@ public class GlobalExceptionHandler {
                 "INTERNAL_SERVER_ERROR",
                 "common.error.internal_server",
                 request.getRequestURI(),
+                ex.getMessage(),
                 null
         );
 

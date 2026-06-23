@@ -33,23 +33,4 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-
-    /*
-
-
-
-    @PreAuthorize("hasAuthority('READ')")
-    @GetMapping("/permission")
-    public Map<String, Object> testPermission(
-            Authentication authentication
-    ) {
-        return Map.of(
-                "message", "A TOOL_READ jogosultság működik.",
-                "username", authentication.getName(),
-                "authorities", authentication.getAuthorities()
-        );
-    }
-*/
-
-
 }
