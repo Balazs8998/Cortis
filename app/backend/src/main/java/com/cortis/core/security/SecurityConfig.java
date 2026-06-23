@@ -1,7 +1,7 @@
 package com.cortis.core.security;
 
 import com.cortis.auth.security.CortisUserDetailsService;
-import com.cortis.core.session.JwtAuthenticationFilter;
+import com.cortis.core.security.jwt.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

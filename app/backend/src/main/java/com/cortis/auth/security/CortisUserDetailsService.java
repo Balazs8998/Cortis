@@ -1,7 +1,7 @@
 package com.cortis.auth.security;
 
 import com.cortis.auth.entity.UserEntity;
-import com.cortis.auth.repositorie.UserRepository;
+import com.cortis.auth.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

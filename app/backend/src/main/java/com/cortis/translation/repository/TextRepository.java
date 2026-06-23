@@ -1,4 +1,4 @@
-package com.cortis.translation.repositorie;
+package com.cortis.translation.repository;
 
 import com.cortis.translation.entity.TranslationTextEntity;
 import com.cortis.translation.dto.TranslationProjection;

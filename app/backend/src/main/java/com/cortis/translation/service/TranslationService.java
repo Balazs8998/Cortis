@@ -1,7 +1,7 @@
 package com.cortis.translation.service;
 
 import com.cortis.core.exception.translation.LanguageNotFoundException;
-import com.cortis.translation.repositorie.TextRepository;
+import com.cortis.translation.repository.TextRepository;
 import com.cortis.translation.dto.TranslationProjection;
 import com.cortis.translation.dto.TranslationResponse;
 import org.springframework.stereotype.Service;
