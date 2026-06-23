@@ -1,6 +1,9 @@
 package com.cortis.desktop;
 
+import com.cortis.desktop.core.exception.DesktopExceptionHandler;
+import com.cortis.desktop.translation.service.TranslationService;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -11,8 +14,23 @@ import java.util.Objects;
 
 public class CortisDesktopApplication extends Application {
 
+    private DesktopExceptionHandler exceptionHandler;
+    private TranslationService translationService;
+
     @Override
     public void start(Stage stage) throws IOException {
+
+        translationService = new TranslationService();
+
+        exceptionHandler =
+                new DesktopExceptionHandler(translationService);
+
+        Thread.setDefaultUncaughtExceptionHandler(
+                (thread, throwable) ->
+                        Platform.runLater(
+                                () -> exceptionHandler.handle(throwable)
+                        )
+        );
 
         FXMLLoader loader = new FXMLLoader(
                 CortisDesktopApplication.class.getResource(

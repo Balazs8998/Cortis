@@ -2,7 +2,17 @@ package com.cortis.desktop.auth.api;
 
 import com.cortis.desktop.auth.dto.LoginRequest;
 import com.cortis.desktop.auth.dto.LoginResponse;
+
+import com.cortis.desktop.core.exception.ApiException;
+import com.cortis.desktop.core.exception.ErrorResponse;
+import com.cortis.desktop.core.exception.NetworkException;
+import com.cortis.desktop.core.exception.UnexpectedException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -22,9 +32,9 @@ public class AuthApiClient {
                 .connectTimeout(Duration.ofSeconds(5))
                 .build();
 
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = new ObjectMapper()
+                .registerModule(new JavaTimeModule());
     }
-
 
     public LoginResponse login(String username, String password) {
 
@@ -49,30 +59,51 @@ public class AuthApiClient {
                             HttpResponse.BodyHandlers.ofString()
                     );
 
-            if (response.statusCode() == 200) {
+            if (response.statusCode() >= 200
+                    && response.statusCode() < 300) {
+
                 return objectMapper.readValue(
                         response.body(),
                         LoginResponse.class
                 );
             }
 
-            if (response.statusCode() == 401) {
-                throw new RuntimeException(
-                        "Hibás felhasználónév vagy jelszó."
-                );
+            if (response.statusCode() >= 400) {
+
+                ErrorResponse errorResponse =
+                        objectMapper.readValue(
+                                response.body(),
+                                ErrorResponse.class
+                        );
+
+                throw new ApiException(errorResponse);
             }
 
-            throw new RuntimeException(
-                    "Login hiba. HTTP státusz: "
+            throw new com.cortis.desktop.core.exception.UnexpectedException(
+                    "Unexpected login response. HTTP status: "
                             + response.statusCode()
-                            + ". Válasz: "
-                            + response.body()
             );
 
-        } catch (Exception exception) {
-            throw new RuntimeException(
-                    "Bejelentkezési hiba: "
-                            + exception.getMessage(),
+        } catch (ApiException exception) {
+            throw exception;
+
+        } catch (JsonProcessingException exception) {
+            throw new UnexpectedException(
+                    "Could not process authentication JSON response",
+                    exception
+            );
+
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+
+            throw new NetworkException(
+                    "Authentication request was interrupted",
+                    exception
+            );
+
+        } catch (IOException exception) {
+            throw new NetworkException(
+                    "Could not connect to the backend",
                     exception
             );
         }
