@@ -9,7 +9,7 @@ POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
-"name": " ",
-  "password": " "
+"userName": "Balázs",
+  "password": "test1234"
 
 }

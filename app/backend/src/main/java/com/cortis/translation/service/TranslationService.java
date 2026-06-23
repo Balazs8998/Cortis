@@ -1,13 +1,15 @@
 package com.cortis.translation.service;
 
-import com.cortis.core.exception.translation.LanguageNotFoundException;
+import com.cortis.core.exception.ex.LanguageNotFoundException;
 import com.cortis.translation.repository.TextRepository;
 import com.cortis.translation.dto.TranslationProjection;
 import com.cortis.translation.dto.TranslationResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class TranslationService {
 
@@ -30,7 +32,10 @@ public class TranslationService {
             throw new LanguageNotFoundException(languageCode);
         }
 
-        return makeTranslationResponse(translations);
+        TranslationResponse response = makeTranslationResponse(translations);
+
+        log.info("Translations loaded successfully: language={}, count={}", languageCode, translations.size());
+        return response;
     }
 
 
@@ -39,6 +44,7 @@ public class TranslationService {
     ) {
         TranslationResponse response = new TranslationResponse();
 
+        log.info("Building translation response");
         translations.forEach(translation -> {
 
             String translationKey =
@@ -46,6 +52,7 @@ public class TranslationService {
                             + "."
                             + translation.getKeyword();
 
+            log.info("Adding translation to response: key={}", translationKey,translation.getTranslationText());
             response.getTranslations().put(
                     translationKey,
                     translation.getTranslationText()

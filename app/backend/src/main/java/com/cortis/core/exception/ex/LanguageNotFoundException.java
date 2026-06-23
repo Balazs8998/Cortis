@@ -1,4 +1,4 @@
-package com.cortis.core.exception.translation;
+package com.cortis.core.exception.ex;
 
 public class LanguageNotFoundException extends RuntimeException {
 

@@ -1,6 +1,6 @@
 package com.cortis.core.exception;
 
-import com.cortis.core.exception.translation.LanguageNotFoundException;
+import com.cortis.core.exception.ex.LanguageNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -61,6 +61,8 @@ public class GlobalExceptionHandler {
             AccessDeniedException ex,
             HttpServletRequest request
     ) {
+
+        log.warn("Access denied: method={}, path={}", request.getMethod(), request.getRequestURI(), ex);
         ErrorResponse response = new ErrorResponse(
                 Instant.now(),
                 HttpStatus.FORBIDDEN.value(),
@@ -81,6 +83,7 @@ public class GlobalExceptionHandler {
             BadCredentialsException ex,
             HttpServletRequest request
     ) {
+        log.warn("Invalid credentials: method={}, path={}", request.getMethod(), request.getRequestURI(), ex);
         ErrorResponse response = new ErrorResponse(
                 Instant.now(),
                 HttpStatus.UNAUTHORIZED.value(),
@@ -101,6 +104,7 @@ public class GlobalExceptionHandler {
             LanguageNotFoundException ex,
             HttpServletRequest request
     ) {
+        log.warn("Language not found: method={}, path={}", request.getMethod(), request.getRequestURI());
         ErrorResponse response = new ErrorResponse(
                 Instant.now(),
                 HttpStatus.NOT_FOUND.value(),
