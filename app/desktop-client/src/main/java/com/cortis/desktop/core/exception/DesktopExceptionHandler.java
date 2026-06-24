@@ -1,5 +1,8 @@
 package com.cortis.desktop.core.exception;
 
+import com.cortis.desktop.core.exception.ex.ApiException;
+import com.cortis.desktop.core.exception.ex.NetworkException;
+import com.cortis.desktop.core.exception.ex.UnexpectedException;
 import com.cortis.desktop.translation.service.TranslationService;
 import javafx.scene.control.Alert;
 
@@ -55,7 +58,7 @@ public class DesktopExceptionHandler {
     private void showError(String message) {
 
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(translationService.translate("common.error.title", "Error"));
+        alert.setTitle(translationService.translate(message, message));
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

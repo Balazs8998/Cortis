@@ -1,4 +1,6 @@
-package com.cortis.desktop.core.exception;
+package com.cortis.desktop.core.exception.ex;
+
+import com.cortis.desktop.core.exception.ErrorResponse;
 
 public class ApiException extends RuntimeException {
 

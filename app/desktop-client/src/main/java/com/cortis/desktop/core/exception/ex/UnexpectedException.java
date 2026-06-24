@@ -1,4 +1,4 @@
-package com.cortis.desktop.core.exception;
+package com.cortis.desktop.core.exception.ex;
 
 public class UnexpectedException extends RuntimeException {
 

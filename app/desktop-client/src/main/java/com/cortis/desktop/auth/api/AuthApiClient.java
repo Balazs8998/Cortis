@@ -3,10 +3,10 @@ package com.cortis.desktop.auth.api;
 import com.cortis.desktop.auth.dto.LoginRequest;
 import com.cortis.desktop.auth.dto.LoginResponse;
 
-import com.cortis.desktop.core.exception.ApiException;
+import com.cortis.desktop.core.exception.ex.ApiException;
 import com.cortis.desktop.core.exception.ErrorResponse;
-import com.cortis.desktop.core.exception.NetworkException;
-import com.cortis.desktop.core.exception.UnexpectedException;
+import com.cortis.desktop.core.exception.ex.NetworkException;
+import com.cortis.desktop.core.exception.ex.UnexpectedException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -79,7 +79,7 @@ public class AuthApiClient {
                 throw new ApiException(errorResponse);
             }
 
-            throw new com.cortis.desktop.core.exception.UnexpectedException(
+            throw new UnexpectedException(
                     "Unexpected login response. HTTP status: "
                             + response.statusCode()
             );
