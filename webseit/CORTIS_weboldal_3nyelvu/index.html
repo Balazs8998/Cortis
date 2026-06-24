@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+
+<html lang="hu">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="CORTIS – CNC Operations Real-Time Intelligent System. Gyártási adatok, szerszámok, gépek és folyamatok egy rendszerben." name="description"/>
+<meta content="#07111f" name="theme-color"/>
+<title>CORTIS | CNC Operations Real-Time Intelligent System</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="styles.css" rel="stylesheet"/>
+</head>
+<body>
+<div aria-hidden="true" class="noise"></div>
+<header class="site-header" id="top">
+<div class="container nav-wrap">
+<a aria-label="CORTIS kezdőlap" class="brand" data-i18n-aria-label="aria.home" href="#top">
+<span aria-hidden="true" class="brand-mark">
+<span></span><span></span><span></span>
+</span>
+<span class="brand-text">
+<strong>CORTIS</strong>
+<small>CNC Operations Real-Time Intelligent System</small>
+</span>
+</a>
+<button aria-expanded="false" aria-label="Menü megnyitása" class="nav-toggle" data-i18n-aria-label="aria.menu" type="button">
+<span></span><span></span><span></span>
+</button>
+<nav aria-label="Fő navigáció" class="main-nav" data-i18n-aria-label="aria.nav">
+<a data-i18n="nav.system" href="#system">A rendszer</a>
+<a data-i18n="nav.modules" href="#modules">Modulok</a>
+<a data-i18n="nav.benefits" href="#benefits">Előnyök</a>
+<a data-i18n="nav.contact" href="#contact">Kapcsolat</a>
+<div class="language-switcher" data-i18n-aria-label="language.label" role="group"><button aria-pressed="true" class="language-button active" data-lang="hu" title="Magyar" type="button">HU</button><button aria-pressed="false" class="language-button" data-lang="de" title="Deutsch" type="button">DE</button><button aria-pressed="false" class="language-button" data-lang="en" title="English" type="button">EN</button></div><a class="button button-small button-outline" data-i18n="nav.demo" href="#demo">Demó megtekintése</a>
+</nav>
+</div>
+</header>
+<main>
+<section class="hero section">
+<div class="hero-grid container">
+<div class="hero-copy reveal">
+<div class="eyebrow">
+<span class="status-dot"></span><span data-i18n="hero.eyebrow">Ipari döntéstámogatás valós idejű adatokkal</span></div>
+<h1><span data-i18n="hero.title1">A gyártás nem találgatás.</span><span data-i18n="hero.title2">Legyen átlátható rendszer.</span>
+</h1>
+<p class="hero-lead" data-i18n="hero.lead">
+            A CORTIS egy moduláris CNC gyártástámogató platform, amely egy helyre rendezi
+            a gépeket, szerszámokat, készletadatokat és gyártási folyamatokat.
+          </p>
+<div class="hero-actions">
+<a class="button button-primary" href="#demo"><span data-i18n="hero.primary">Interaktív áttekintés</span><span aria-hidden="true">→</span>
+</a>
+<a class="button button-ghost" data-i18n="hero.secondary" href="#modules">Modulok megismerése</a>
+</div>
+<div aria-label="Fő előnyök" class="hero-points" data-i18n-aria-label="aria.benefits">
+<span><b>01</b><span data-i18n="hero.point1">Gyorsabb döntések</span></span>
+<span><b>02</b><span data-i18n="hero.point2">Kevesebb gépállás</span></span>
+<span><b>03</b><span data-i18n="hero.point3">Követhető folyamatok</span></span>
+</div>
+</div>
+<div class="hero-visual reveal reveal-delay" id="demo">
+<div class="dashboard-shell">
+<div class="dashboard-topbar">
+<div class="window-controls">
+<span></span><span></span><span></span>
+</div>
+<div class="dashboard-title" data-i18n="dashboard.title">CORTIS / OPERATIONS OVERVIEW</div>
+<div class="live-badge"><i></i><span data-i18n="dashboard.live">LIVE</span></div>
+</div>
+<div class="dashboard-layout">
+<aside aria-hidden="true" class="dashboard-sidebar">
+<div class="side-logo">C</div>
+<span class="active"></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</aside>
+<div class="dashboard-content">
+<div class="dashboard-heading">
+<div>
+<small data-i18n="dashboard.overview">GYÁRTÁSI ÁTTEKINTÉS</small>
+<h2 data-i18n="dashboard.status">Rendszerállapot</h2>
+</div>
+<div class="dashboard-time" id="dashboardTime">--:--:--</div>
+</div>
+<div class="metric-grid">
+<article class="metric-card metric-main">
+<span data-i18n="dashboard.activeMachines">Aktív gépek</span>
+<strong data-counter="18">0</strong>
+<small data-i18n="dashboard.outOf24">24 gépből</small>
+<div aria-hidden="true" class="mini-bars">
+<i style="height: 42%"></i>
+<i style="height: 65%"></i>
+<i style="height: 58%"></i>
+<i style="height: 82%"></i>
+<i style="height: 74%"></i>
+<i style="height: 92%"></i>
+<i style="height: 78%"></i>
+</div>
+</article>
+<article class="metric-card">
+<span data-i18n="dashboard.alerts">Figyelmeztetések</span>
+<strong class="warning" data-counter="3">0</strong>
+<small data-i18n="dashboard.alertDetails">2 készlet · 1 ciklusidő</small>
+</article>
+<article class="metric-card">
+<span data-i18n="dashboard.status">Rendszerállapot</span>
+<strong class="success" data-i18n="dashboard.stable">Stabil</strong>
+<small data-i18n="dashboard.lastSync">Utolsó szinkron: most</small>
+</article>
+</div>
+<div class="dashboard-bottom">
+<article class="machine-list">
+<div class="panel-head">
+<span data-i18n="common.machines">Gépek</span>
+<button class="text-button" data-i18n="dashboard.refresh" id="cycleMachines" type="button">Frissítés</button>
+</div>
+<div class="machine-row">
+<span class="machine-state running"></span>
+<div><b>Citizen L20</b><small data-i18n="dashboard.jobA">Job #A-2048</small></div>
+<em>78%</em>
+</div>
+<div class="machine-row">
+<span class="machine-state running"></span>
+<div><b>Tornos Delta 12/5</b><small data-i18n="dashboard.jobB">Job #B-1934</small></div>
+<em>64%</em>
+</div>
+<div class="machine-row">
+<span class="machine-state paused"></span>
+<div><b>Star SR-32</b><small data-i18n="dashboard.toolChange">Szerszámcsere</small></div>
+<em data-i18n="dashboard.pause">PAUSE</em>
+</div>
+</article>
+<article class="compatibility-card">
+<div class="compatibility-icon">
+<span></span><span></span><span></span>
+</div>
+<div>
+<small data-i18n="dashboard.compatibility">KOMPATIBILITÁS</small>
+<strong data-i18n="dashboard.chain">Szerszám → Befogó → Gép</strong>
+<p data-i18n="dashboard.chainFound">A rendszer 4 megfelelő szerelési láncot talált.</p>
+</div>
+<button data-i18n="dashboard.runCheck" id="runCheck" type="button">Ellenőrzés futtatása</button>
+</article>
+</div>
+</div>
+</div>
+<div aria-hidden="true" class="dashboard-glow"></div>
+</div>
+</div>
+</div>
+<div aria-hidden="true" class="hero-strip">
+<div>
+<span data-i18n="strip.machineData">MACHINE DATA</span>
+<i></i>
+<span data-i18n="strip.toolManagement">TOOL MANAGEMENT</span>
+<i></i>
+<span data-i18n="strip.productionCheck">PRODUCTION CHECK</span>
+<i></i>
+<span data-i18n="strip.analytics">REAL-TIME ANALYTICS</span>
+<i></i>
+<span data-i18n="strip.traceability">TRACEABILITY</span>
+</div>
+</div>
+</section>
+<section class="section system-section" id="system">
+<div class="container split-layout">
+<div class="section-copy reveal">
+<div class="section-index" data-i18n="system.index">01 / A RENDSZER</div>
+<h2 data-i18n="system.title">Egy központi rendszer a gyártás kritikus adataihoz.</h2>
+<p data-i18n="system.p1">
+            A CORTIS célja nem egy újabb elszigetelt nyilvántartás létrehozása.
+            A gép-, szerszám-, befogó-, készlet- és rendelési adatok közös logikában
+            kapcsolódnak egymáshoz.
+          </p>
+<p data-i18n="system.p2">
+            Így a rendszer nemcsak adatot tárol, hanem képes ellenőrizni, összevetni
+            és előkészíteni a döntéseket.
+          </p>
+<a class="inline-link" href="#benefits"><span data-i18n="system.link">Miért jelent ez üzleti előnyt?</span><span>↗</span></a>
+</div>
+<div class="system-map reveal reveal-delay">
+<div class="map-core">
+<span>CORTIS</span>
+<small>CORE</small>
+</div>
+<div class="orbit orbit-one"></div>
+<div class="orbit orbit-two"></div>
+<div class="map-node node-a"><i></i><span data-i18n="common.machines">Gépek</span></div>
+<div class="map-node node-b"><i></i><span data-i18n="common.tools">Szerszámok</span></div>
+<div class="map-node node-c"><i></i><span data-i18n="common.inventory">Raktár</span></div>
+<div class="map-node node-d"><i></i><span data-i18n="common.orders">Megrendelések</span></div>
+<div class="map-node node-e"><i></i><span data-i18n="common.reports">Riportok</span></div>
+<div class="map-node node-f"><i></i><span data-i18n="common.permissions">Jogosultságok</span></div>
+</div>
+</div>
+</section>
+<section class="section modules-section" id="modules">
+<div class="container">
+<div class="section-heading reveal">
+<div>
+<div class="section-index" data-i18n="modules.index">02 / MODULOK</div>
+<h2 data-i18n="modules.title">A gyártási folyamatokra építve.</h2>
+</div>
+<p data-i18n="modules.intro">
+            A moduláris felépítés miatt a rendszer fokozatosan is bevezethető,
+            és később további funkciókkal bővíthető.
+          </p>
+</div>
+<div class="module-grid">
+<article class="module-card featured reveal">
+<div class="module-number">01</div>
+<div aria-hidden="true" class="module-icon icon-tool">
+<span></span><span></span>
+</div>
+<h3 data-i18n="modules.tool.title">Szerszám- és kompatibilitáskezelés</h3>
+<p data-i18n="modules.tool.text">
+              Szerszámok, befogók, interfészek és gépek összekapcsolása
+              ellenőrizhető szerelési láncok alapján.
+            </p>
+<ul>
+<li data-i18n="modules.tool.bullet1">Automatikus kompatibilitás-ellenőrzés</li>
+<li data-i18n="modules.tool.bullet2">Alternatív eszközök keresése</li>
+<li data-i18n="modules.tool.bullet3">Készlet- és felhasználási adatok</li>
+</ul>
+</article>
+<article class="module-card reveal">
+<div class="module-number">02</div>
+<div aria-hidden="true" class="module-icon icon-machine">
+<span></span><span></span><span></span>
+</div>
+<h3 data-i18n="modules.machine.title">Gépkezelés</h3>
+<p data-i18n="modules.machine.text">
+              Gépadatok, vezérlők, kapacitások, pozíciók és karbantartási információk
+              egy helyen.
+            </p>
+</article>
+<article class="module-card reveal">
+<div class="module-number">03</div>
+<div aria-hidden="true" class="module-icon icon-stock">
+<span></span><span></span><span></span>
+</div>
+<h3 data-i18n="modules.inventory.title">Intelligens készlet</h3>
+<p data-i18n="modules.inventory.text">
+              Minimumkészlet, várható felhasználás, hiánykockázat és rendelési
+              folyamatok támogatása.
+            </p>
+</article>
+<article class="module-card reveal">
+<div class="module-number">04</div>
+<div aria-hidden="true" class="module-icon icon-order">
+<span></span><span></span>
+</div>
+<h3 data-i18n="modules.production.title">Gyártásellenőrzés</h3>
+<p data-i18n="modules.production.text">
+              Megrendeléshez kapcsolódó szerszám-, gép- és befogófeltételek
+              előzetes vizsgálata.
+            </p>
+</article>
+<article class="module-card reveal">
+<div class="module-number">05</div>
+<div aria-hidden="true" class="module-icon icon-chart">
+<span></span><span></span><span></span><span></span>
+</div>
+<h3 data-i18n="modules.report.title">Riport és elemzés</h3>
+<p data-i18n="modules.report.text">
+              Állásidők, selejt, készletmozgás és teljesítmény követhető,
+              visszakereshető formában.
+            </p>
+</article>
+</div>
+</div>
+</section>
+<section class="section benefits-section" id="benefits">
+<div class="container">
+<div class="section-heading reveal">
+<div>
+<div class="section-index" data-i18n="benefits.index">03 / ÜZLETI HATÁS</div>
+<h2 data-i18n="benefits.title">Kevesebb rejtett veszteség. Több kontroll.</h2>
+</div>
+<p data-i18n="benefits.intro">
+            A legnagyobb költségek gyakran nem egyetlen nagy hibából, hanem sok apró,
+            ismétlődő információs hiányból keletkeznek.
+          </p>
+</div>
+<div class="benefit-layout">
+<div class="benefit-list">
+<article class="benefit-item active reveal" data-panel="panel-1">
+<span>01</span>
+<div>
+<h3 data-i18n="benefits.stop.title">Gépállás megelőzése</h3>
+<p data-i18n="benefits.stop.text">A hiányzó szerszám vagy befogó még a gépállítás előtt láthatóvá válik.</p>
+</div>
+<b>→</b>
+</article>
+<article class="benefit-item reveal" data-panel="panel-2">
+<span>02</span>
+<div>
+<h3 data-i18n="benefits.search.title">Gyorsabb információkeresés</h3>
+<p data-i18n="benefits.search.text">Kevesebb Excel, papír, telefon és személyfüggő tudás.</p>
+</div>
+<b>→</b>
+</article>
+<article class="benefit-item reveal" data-panel="panel-3">
+<span>03</span>
+<div>
+<h3 data-i18n="benefits.trace.title">Visszakövethető döntések</h3>
+<p data-i18n="benefits.trace.text">A fontos műveletek és változások naplózhatók és visszakereshetők.</p>
+</div>
+<b>→</b>
+</article>
+</div>
+<div class="benefit-visual reveal reveal-delay">
+<div class="benefit-panel active" id="panel-1">
+<small data-i18n="panel.readiness.label">PRODUCTION READINESS</small>
+<h3 data-i18n="panel.readiness.title">Előzetes gyártásellenőrzés</h3>
+<div class="readiness-score">
+<div class="score-ring"><span>92<small>%</small></span></div>
+<div>
+<p><i class="ok"></i><span data-i18n="panel.readiness.machine">Gépkapacitás megfelelő</span></p>
+<p><i class="ok"></i><span data-i18n="panel.readiness.tools">11 / 12 szerszám elérhető</span></p>
+<p><i class="warn"></i><span data-i18n="panel.readiness.holder">1 befogó rendelés szükséges</span></p>
+</div>
+</div>
+</div>
+<div class="benefit-panel" id="panel-2">
+<small data-i18n="panel.search.label">SEARCH PERFORMANCE</small>
+<h3 data-i18n="panel.search.title">Összekapcsolt adatstruktúra</h3>
+<div class="data-flow">
+<span data-i18n="panel.search.order">MEGRENDELÉS</span><i>→</i><span data-i18n="panel.search.tool">SZERSZÁM</span><i>→</i><span data-i18n="panel.search.machine">GÉP</span>
+</div>
+<p class="panel-note" data-i18n="panel.search.note">
+                Egyetlen lekérdezési láncban vizsgálható a szükséges erőforrások elérhetősége.
+              </p>
+</div>
+<div class="benefit-panel" id="panel-3">
+<small data-i18n="panel.trace.label">TRACEABILITY</small>
+<h3 data-i18n="panel.trace.title">Auditálható folyamatok</h3>
+<div class="timeline">
+<p><time>08:12</time><span data-i18n="panel.trace.event1">Szerszám kivéve</span><b>BR-1024</b></p>
+<p><time>09:04</time><span data-i18n="panel.trace.event2">Minimumkészlet riasztás</span><b>AUTO</b></p>
+<p><time>09:16</time><span data-i18n="panel.trace.event3">Beszerzési igény létrehozva</span><b>#4182</b></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="section architecture-section">
+<div class="container architecture-wrap reveal">
+<div>
+<div class="section-index" data-i18n="technology.index">04 / TECHNOLÓGIA</div>
+<h2 data-i18n="technology.title">Moduláris, biztonságos és bővíthető alap.</h2>
+<p data-i18n="technology.text">
+            A rendszer modern backend- és kliensarchitektúrára épülhet,
+            szerepköralapú hozzáféréssel, naplózással és egységes API-kommunikációval.
+          </p>
+</div>
+<div class="tech-stack">
+<span>JAVA</span>
+<span>SPRING BOOT</span>
+<span>POSTGRESQL</span>
+<span>JWT SECURITY</span>
+<span>REST API</span>
+<span>REAL-TIME READY</span>
+</div>
+</div>
+</section>
+<section class="section contact-section" id="contact">
+<div class="container contact-card reveal">
+<div class="contact-copy">
+<div class="section-index" data-i18n="contact.index">KAPCSOLAT</div>
+<h2 data-i18n="contact.title">Nézzük meg, hol veszít időt a gyártási folyamat.</h2>
+<p data-i18n="contact.text">
+            A CORTIS fejlesztési koncepciója egyedi gyártási környezetre,
+            fokozatos bevezetésre és mérhető problémákra épül.
+          </p>
+</div>
+<form class="contact-form" id="contactForm">
+<label><span data-i18n="form.name">Név</span><input data-i18n-placeholder="form.namePlaceholder" name="name" placeholder="Az Ön neve" required="" type="text"/>
+</label>
+<label><span data-i18n="form.email">E-mail</span><input data-i18n-placeholder="form.emailPlaceholder" name="email" placeholder="nev@ceg.hu" required="" type="email"/>
+</label>
+<label class="full-width"><span data-i18n="form.message">Miben segíthet a CORTIS?</span><textarea data-i18n-placeholder="form.messagePlaceholder" name="message" placeholder="Röviden írja le a jelenlegi problémát..." required="" rows="4"></textarea>
+</label>
+<button class="button button-primary full-width" type="submit"><span data-i18n="form.submit">Kapcsolatfelvétel</span><span aria-hidden="true">→</span>
+</button>
+<p class="form-note full-width" data-i18n="contact.note">
+            Ez a bemutatóoldal jelenleg nem küld adatot szerverre.
+          </p>
+</form>
+</div>
+</section>
+</main>
+<footer class="site-footer">
+<div class="container footer-grid">
+<div>
+<a class="brand footer-brand" href="#top">
+<span aria-hidden="true" class="brand-mark">
+<span></span><span></span><span></span>
+</span>
+<span class="brand-text">
+<strong>CORTIS</strong>
+<small>CNC Operations Real-Time Intelligent System</small>
+</span>
+</a>
+<p data-i18n="footer.tagline">Gyártási adatokból használható döntések.</p>
+</div>
+<div class="footer-links">
+<a data-i18n="nav.system" href="#system">A rendszer</a>
+<a data-i18n="nav.modules" href="#modules">Modulok</a>
+<a data-i18n="nav.benefits" href="#benefits">Előnyök</a>
+<a data-i18n="nav.contact" href="#contact">Kapcsolat</a>
+</div>
+<div class="footer-meta">
+<span>© <span id="currentYear"></span> CORTIS</span>
+<span data-i18n="footer.concept">Concept website</span>
+</div>
+</div>
+</footer>
+<div aria-live="polite" class="toast" id="toast" role="status">
+<span class="toast-icon">✓</span>
+<div>
+<strong data-i18n="toast.title">Demóüzenet elkészült</strong>
+<p data-i18n="toast.text">A valódi oldalon ezt backend végpontra kell kötni.</p>
+</div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

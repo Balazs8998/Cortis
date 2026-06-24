@@ -1,0 +1,15 @@
+logging:
+  level:
+    com.cortis: DEBUG
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+
+  file:
+    name: logs/cortis-dev.log
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

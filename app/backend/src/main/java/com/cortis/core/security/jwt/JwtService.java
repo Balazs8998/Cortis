@@ -1,12 +1,14 @@
-package com.cortis.core.session;
+package com.cortis.core.security.jwt;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
 import javax.crypto.SecretKey;
 import java.time.Instant;
 import java.util.Date;
@@ -14,30 +16,35 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    private final String secretKey;
+    private final SecretKey signingKey;
+    private final JwtParser jwtParser;
     private final long expirationSeconds;
 
     public JwtService(
             @Value("${jwt.secret-key}") String secretKey,
             @Value("${jwt.expiration-seconds}") long expirationSeconds
     ) {
-        this.secretKey = secretKey;
-        this.expirationSeconds = expirationSeconds;
-    }
-    private SecretKey getSigningKey() {
-         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 
-         return Keys.hmacShaKeyFor(keyBytes);
+        this.signingKey = Keys.hmacShaKeyFor(keyBytes);
+        this.jwtParser = Jwts.parser()
+                .verifyWith(signingKey)
+                .build();
+
+        this.expirationSeconds = expirationSeconds;
     }
 
     public String generateToken(UserDetails userDetails) {
+
         Instant now = Instant.now();
 
         return Jwts.builder()
                 .subject(userDetails.getUsername())
                 .issuedAt(Date.from(now))
-                .expiration(Date.from(now.plusSeconds(expirationSeconds)))
-                .signWith(getSigningKey())
+                .expiration(Date.from(
+                        now.plusSeconds(expirationSeconds)
+                ))
+                .signWith(signingKey)
                 .compact();
     }
 
@@ -49,22 +56,15 @@ public class JwtService {
             String token,
             UserDetails userDetails
     ) {
-        String username = extractUsername(token);
+        Claims claims = extractAllClaims(token);
 
-        return username.equals(userDetails.getUsername())
-                && !isTokenExpired(token);
-    }
-
-    private boolean isTokenExpired(String token) {
-        return extractAllClaims(token)
-                .getExpiration()
-                .before(new Date());
+        return userDetails.isEnabled()
+                && userDetails.getUsername()
+                .equals(claims.getSubject());
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
+        return jwtParser
                 .parseSignedClaims(token)
                 .getPayload();
     }

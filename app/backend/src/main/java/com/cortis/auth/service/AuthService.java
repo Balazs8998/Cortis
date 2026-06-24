@@ -3,19 +3,17 @@ package com.cortis.auth.service;
 import com.cortis.auth.dto.LoginRequest;
 import com.cortis.auth.dto.LoginResponse;
 import com.cortis.auth.security.CortisUserPrincipal;
-import com.cortis.core.session.JwtService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.cortis.core.security.jwt.JwtService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-
+@Slf4j
 @Service
 public class AuthService {
 
-    private static final Logger log = LoggerFactory.getLogger(AuthService.class);
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
@@ -30,10 +28,12 @@ public class AuthService {
 
     public LoginResponse login(LoginRequest loginRequest) {
 
+        log.debug("Received login request for username={}", loginRequest.userName());
+
         UsernamePasswordAuthenticationToken authenticationRequest =
                 UsernamePasswordAuthenticationToken.unauthenticated(
                         loginRequest.userName(),
-                        loginRequest.passwordHash()
+                        loginRequest.password()
                 );
 
         Authentication authentication =
@@ -43,6 +43,8 @@ public class AuthService {
                 (CortisUserPrincipal) authentication.getPrincipal();
 
         String token = jwtService.generateToken(principal);
+
+        log.info("Login completed successfully for user={}", principal.getUsername());
 
         return new LoginResponse(
                 principal.getUsername(),

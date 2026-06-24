@@ -1,39 +1,54 @@
 package com.cortis.core.exception;
 
-import com.cortis.core.exception.translation.LanguageNotFoundException;
+import com.cortis.core.exception.ex.LanguageNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 import java.time.Instant;
-import java.util.stream.Collectors;
-
+import java.util.List;
 import org.springframework.security.access.AccessDeniedException;
 
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
-    private static final Logger log =
-            LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> argumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException ex) {
 
 
+
+        List<ValidationError> validationErrors =
+                ex.getBindingResult()
+                        .getFieldErrors()
+                        .stream()
+                        .map(fieldError -> new ValidationError(
+                                fieldError.getField(),
+                                fieldError.getDefaultMessage()
+                        ))
+                        .toList();
+
+        log.warn("Validation error: method={}, path={}, field={} ",
+                request.getMethod(),
+                request.getRequestURI(),
+                validationErrors.stream()
+                        .map(ValidationError::field)
+                        .toList());
+
         ErrorResponse errorResponse = new ErrorResponse(
                 Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "VALIDATION_ERROR",
-                "common.error.bad.request",
-                request.getRequestURI()
+                "common.error.validation_error",
+                null,
+                request.getRequestURI(),
+                validationErrors
         );
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
@@ -43,15 +58,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAccessDenied(
-            AccessDeniedException exception,
+            AccessDeniedException ex,
             HttpServletRequest request
     ) {
+
+        log.warn("Access denied: method={}, path={}", request.getMethod(), request.getRequestURI(), ex);
         ErrorResponse response = new ErrorResponse(
                 Instant.now(),
                 HttpStatus.FORBIDDEN.value(),
                 "ACCESS_DENIED",
                 "common.error.access_denied",
-                request.getRequestURI()
+                ex.getMessage(),
+                request.getRequestURI(),
+                null
         );
 
         return ResponseEntity
@@ -61,15 +80,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentials(
-            BadCredentialsException exception,
+            BadCredentialsException ex,
             HttpServletRequest request
     ) {
+        log.warn("Invalid credentials: method={}, path={}", request.getMethod(), request.getRequestURI(), ex);
         ErrorResponse response = new ErrorResponse(
                 Instant.now(),
                 HttpStatus.UNAUTHORIZED.value(),
                 "AUTH_INVALID_CREDENTIALS",
-                "Hibás felhasználónév vagy jelszó.",
-                request.getRequestURI()
+                "auth.error.invalid_credentials",
+                request.getRequestURI(),
+                ex.getMessage(),
+                null
         );
 
         return ResponseEntity
@@ -79,15 +101,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(LanguageNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleLanguageNotFound(
-            LanguageNotFoundException exception,
+            LanguageNotFoundException ex,
             HttpServletRequest request
     ) {
+        log.warn("Language not found: method={}, path={}", request.getMethod(), request.getRequestURI());
         ErrorResponse response = new ErrorResponse(
                 Instant.now(),
                 HttpStatus.NOT_FOUND.value(),
                 "TRANSLATION_LANGUAGE_NOT_FOUND",
                 "translation.error.language_not_found",
-                request.getRequestURI()
+                request.getRequestURI(),
+                ex.getMessage(),
+                null
         );
 
         return ResponseEntity
@@ -97,17 +122,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnexpectedException(
-            Exception exception,
+            Exception ex,
             HttpServletRequest request
     ) {
-        log.error("Unhandled backend exception", exception);
+        log.error("Unhandled backend exception", ex);
 
         ErrorResponse response = new ErrorResponse(
                 Instant.now(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "INTERNAL_SERVER_ERROR",
                 "common.error.internal_server",
-                request.getRequestURI()
+                request.getRequestURI(),
+                ex.getMessage(),
+                null
         );
 
         return ResponseEntity

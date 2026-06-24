@@ -1,4 +1,4 @@
-package com.cortis.auth.repositorie;
+package com.cortis.auth.repository;
 
 import com.cortis.auth.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

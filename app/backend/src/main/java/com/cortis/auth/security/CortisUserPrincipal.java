@@ -2,6 +2,7 @@ package com.cortis.auth.security;
 
 
 import com.cortis.auth.entity.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+
+@Slf4j
 public class CortisUserPrincipal implements UserDetails {
 
     private final UserEntity user;
@@ -64,6 +67,8 @@ public class CortisUserPrincipal implements UserDetails {
                 );
             }
         }
+
+        log.debug("Authorities built for user={}, authorityCount={}", user.getUsername(), authorities.size());
 
         return authorities;
     }
