@@ -65,3 +65,9 @@
 .language-menu:hover {
     -fx-background-color: rgba(35, 43, 48, 0.95);
 }
+
+.field-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #d8dee8;
+}

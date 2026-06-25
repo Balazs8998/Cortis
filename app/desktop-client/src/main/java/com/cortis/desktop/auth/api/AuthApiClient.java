@@ -3,6 +3,7 @@ package com.cortis.desktop.auth.api;
 import com.cortis.desktop.auth.dto.LoginRequest;
 import com.cortis.desktop.auth.dto.LoginResponse;
 
+import com.cortis.desktop.auth.dto.LoginWithChipRequest;
 import com.cortis.desktop.core.exception.ex.ApiException;
 import com.cortis.desktop.core.exception.ErrorResponse;
 import com.cortis.desktop.core.exception.ex.NetworkException;
@@ -24,6 +25,9 @@ public class AuthApiClient {
     private static final String LOGIN_URL =
             "http://localhost:8080/api/auth/login";
 
+    private static final String LOGIN_WITH_CHIP_URL =
+            "http://localhost:8080/api/auth/loginWithChip";
+
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
 
@@ -36,34 +40,61 @@ public class AuthApiClient {
                 .registerModule(new JavaTimeModule());
     }
 
+    public LoginResponse loginWithChipCard(String chipCardNumber) {
+
+        LoginWithChipRequest loginWithChipRequest =
+                new LoginWithChipRequest(chipCardNumber);
+
+        return executeLoginRequest(loginWithChipRequest, LOGIN_WITH_CHIP_URL);
+
+    }
+
     public LoginResponse login(String username, String password) {
 
+        LoginRequest loginRequest =
+                new LoginRequest(username, password);
+
+       return executeLoginRequest(loginRequest, LOGIN_URL);
+    }
+
+    private String makeRequestBody(Object request) throws JsonProcessingException {
+        return objectMapper.writeValueAsString(request);
+    }
+
+    private HttpRequest requestBuilder(String requestBody, String url) {
+        return HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .timeout(Duration.ofSeconds(10))
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+    }
+
+    private HttpResponse<String> sendRequest(HttpRequest request) throws IOException, InterruptedException {
+
+      return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+    private LoginResponse executeLoginRequest(Object loginRequest, String url) {
+
         try {
-            LoginRequest loginRequest =
-                    new LoginRequest(username, password);
+
 
             String requestBody =
-                    objectMapper.writeValueAsString(loginRequest);
+                    makeRequestBody(loginRequest);
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(LOGIN_URL))
-                    .timeout(Duration.ofSeconds(10))
-                    .header("Content-Type", "application/json")
-                    .header("Accept", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                    .build();
+            HttpRequest request =
+                    requestBuilder(requestBody, url);
 
             HttpResponse<String> response =
-                    httpClient.send(
-                            request,
-                            HttpResponse.BodyHandlers.ofString()
-                    );
+                    sendRequest(request);
 
             if (response.statusCode() >= 200
                     && response.statusCode() < 300) {
 
                 return objectMapper.readValue(
-                        response.body(),
+                        response.body().toString(),
                         LoginResponse.class
                 );
             }
@@ -72,7 +103,7 @@ public class AuthApiClient {
 
                 ErrorResponse errorResponse =
                         objectMapper.readValue(
-                                response.body(),
+                                response.body().toString(),
                                 ErrorResponse.class
                         );
 
@@ -83,9 +114,6 @@ public class AuthApiClient {
                     "Unexpected login response. HTTP status: "
                             + response.statusCode()
             );
-
-        } catch (ApiException exception) {
-            throw exception;
 
         } catch (JsonProcessingException exception) {
             throw new UnexpectedException(
@@ -107,5 +135,7 @@ public class AuthApiClient {
                     exception
             );
         }
+
     }
+
 }

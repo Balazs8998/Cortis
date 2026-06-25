@@ -1,5 +1,7 @@
 package com.cortis.desktop.auth.controller;
 
+import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import com.cortis.desktop.translation.service.TranslationService;
@@ -12,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 
 public class LoginController {
@@ -41,6 +44,13 @@ public class LoginController {
 
     @FXML
     private Label errorLabel;
+
+    @FXML
+    private VBox passwordLoginBox;
+
+    @FXML
+    private VBox chipLoginBox;
+
 
     @FXML
     private MenuButton languageMenuButton;
@@ -91,6 +101,68 @@ public class LoginController {
         passwordField.positionCaret(
                 passwordField.getText().length()
         );
+    }
+
+
+    @FXML
+    private TextField chipCodeField;
+    public void handleShowChipLogin(ActionEvent actionEvent) {
+
+
+        passwordLoginBox.setVisible(false);
+        passwordLoginBox.setManaged(false);
+
+        chipLoginBox.setVisible(true);
+        chipLoginBox.setManaged(true);
+
+        errorLabel.setText("");
+        chipCodeField.clear();
+
+        Platform.runLater(chipCodeField::requestFocus);
+    }
+
+    @FXML
+    public void handleShowPasswordLogin(ActionEvent actionEvent) {
+
+        chipLoginBox.setVisible(false);
+        chipLoginBox.setManaged(false);
+
+        passwordLoginBox.setVisible(true);
+        passwordLoginBox.setManaged(true);
+
+        errorLabel.setText("");
+        chipCodeField.clear();
+
+        Platform.runLater(usernameField::requestFocus);
+    }
+
+    @FXML
+    private void handleChipCardLogin() {
+
+        String chipCardNumber = chipCodeField.getText().trim();
+
+        if (chipCardNumber.isBlank()) {
+            errorLabel.setText(
+                    "The chip card number cannot be empty."
+            );
+            return;
+        }
+
+        try {
+                    authService.loginWithChipCard(chipCardNumber);
+
+            errorLabel.setText("You are logged in!");
+
+            ViewManager.switchScene(
+                    chipCodeField,
+                    "/com/cortis/desktop/view/main-menu.view.fxml",
+                    "CORTIS - Főmenü"
+            );
+
+        }  catch (Exception exception) {
+            errorLabel.setText(exception.getMessage());
+        }
+
     }
 
     @FXML
@@ -188,5 +260,9 @@ public class LoginController {
                         "Bejelentkezés"
                 )
         );
+
+        // TODO: Add translations for the new chip-card login controls after fixing the exception dialog message handling.
+
     }
+
 }
