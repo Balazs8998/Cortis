@@ -13,3 +13,13 @@ Content-Type: application/json
   "password": "test1234"
 
 }
+
+
+###
+
+POST http://localhost:8080/api/auth/loginWithChip
+Content-Type: application/json
+
+{
+  "chipCode": "test1234"
+}

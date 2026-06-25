@@ -1,5 +1,6 @@
 package com.cortis.core.security;
 
+import com.cortis.auth.security.ChipCardAuthenticationProvider;
 import com.cortis.auth.security.CortisUserDetailsService;
 import com.cortis.core.security.jwt.JwtAuthenticationFilter;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.List;
+
 @Slf4j
 @Configuration
 @EnableMethodSecurity
@@ -32,17 +35,23 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(
             CortisUserDetailsService userDetailsService,
+            ChipCardAuthenticationProvider chipCardAuthenticationProvider,
             PasswordEncoder passwordEncoder
     ) {
 
         log.debug("Creating AuthenticationManager");
 
-        DaoAuthenticationProvider provider =
+        DaoAuthenticationProvider daoAuthenticationProvider =
                 new DaoAuthenticationProvider(userDetailsService);
 
-        provider.setPasswordEncoder(passwordEncoder);
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
 
-        return new ProviderManager(provider);
+        return new ProviderManager(
+                List.of(
+                        daoAuthenticationProvider,
+                        chipCardAuthenticationProvider
+                )
+        );
     }
 
     @Bean
@@ -65,6 +74,12 @@ public class SecurityConfig {
                                 HttpMethod.POST,
                                 "/api/auth/login"
                         ).permitAll()
+
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/auth/loginWithChip"
+                        ).permitAll()
+
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/translation/{languageCode}"

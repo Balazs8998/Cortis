@@ -34,7 +34,7 @@ public class UserEntity extends BaseEntity {
     private String passwordHash;
 
     @Column(
-            name = "chip_code",
+            name = "chip_code_hash",
             unique = true
     )
     private String chipCode;
