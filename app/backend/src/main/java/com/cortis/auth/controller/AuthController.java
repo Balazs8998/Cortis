@@ -2,6 +2,7 @@ package com.cortis.auth.controller;
 
 import com.cortis.auth.dto.LoginRequest;
 import com.cortis.auth.dto.LoginResponse;
+import com.cortis.auth.dto.LoginWithChipRequest;
 import com.cortis.auth.service.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -29,6 +30,17 @@ public class AuthController {
     ) {
 
         LoginResponse response = authService.login(request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/loginWithChip")
+    public ResponseEntity<LoginResponse> loginWithChip(
+            @RequestBody @Valid LoginWithChipRequest request
+            ) {
+
+        LoginResponse response =
+                authService.loginWithChip(request);
 
         return ResponseEntity.ok(response);
     }

@@ -18,7 +18,7 @@
            alignment="CENTER_RIGHT"
            stylesheets="@../css/login.css">
 
-    <!-- Bejelentkezési panel -->
+    <!-- Teljes bejelentkezési kártya -->
     <VBox fx:id="loginCard"
           alignment="CENTER"
           spacing="16"
@@ -28,12 +28,10 @@
           styleClass="login-card"
           StackPane.alignment="CENTER_RIGHT">
 
-        <!-- Külső távolság az ablak jobb szélétől -->
         <StackPane.margin>
             <Insets right="40"/>
         </StackPane.margin>
 
-        <!-- A panel belső térköze -->
         <padding>
             <Insets top="42"
                     right="42"
@@ -41,97 +39,151 @@
                     left="42"/>
         </padding>
 
-        <!-- Cím -->
+        <!-- Közös cím -->
         <Label fx:id="loginTitleLabel"
                text="Bejelentkezés"
                maxWidth="Infinity"
                styleClass="login-title"/>
 
-        <!-- Alcím -->
+        <!-- Közös alcím -->
         <Label fx:id="loginSubtitleLabel"
                text="Lépj be a CORTIS rendszerbe"
                maxWidth="Infinity"
                wrapText="true"
                styleClass="login-subtitle"/>
 
-        <!-- Felhasználónév -->
-        <Label fx:id="usernameLabel"
-               text="Felhasználónév"
-               maxWidth="Infinity"
-               styleClass="field-label"/>
+        <!-- Felhasználónév és jelszó alapú belépés -->
+        <VBox fx:id="passwordLoginBox"
+              alignment="CENTER"
+              spacing="16"
+              maxWidth="Infinity">
 
-        <TextField fx:id="usernameField"
-                   promptText="Add meg a felhasználóneved"
+            <Label fx:id="usernameLabel"
+                   text="Felhasználónév"
                    maxWidth="Infinity"
-                   prefHeight="44"
-                   styleClass="input-field"/>
+                   styleClass="field-label"/>
 
-        <!-- Jelszó -->
-        <Label fx:id="passwordLabel"
-               text="Jelszó"
-               maxWidth="Infinity"
-               styleClass="field-label"/>
+            <TextField fx:id="usernameField"
+                       promptText="Add meg a felhasználóneved"
+                       maxWidth="Infinity"
+                       prefHeight="44"
+                       styleClass="input-field"/>
 
-        <!--
-            A PasswordField, a látható TextField és a szem ikon
-            egymáson helyezkednek el.
-        -->
-        <StackPane maxWidth="Infinity"
-                   prefHeight="44"
-                   minHeight="44"
-                   maxHeight="44">
+            <Label fx:id="passwordLabel"
+                   text="Jelszó"
+                   maxWidth="Infinity"
+                   styleClass="field-label"/>
 
-            <PasswordField fx:id="passwordField"
+            <!-- Jelszómező, látható jelszómező és szemgomb -->
+            <StackPane maxWidth="Infinity"
+                       prefHeight="44"
+                       minHeight="44"
+                       maxHeight="44">
+
+                <PasswordField fx:id="passwordField"
+                               promptText="Add meg a jelszavad"
+                               maxWidth="Infinity"
+                               prefHeight="44"
+                               styleClass="password-input"/>
+
+                <TextField fx:id="visiblePasswordField"
                            promptText="Add meg a jelszavad"
                            maxWidth="Infinity"
                            prefHeight="44"
+                           visible="false"
+                           managed="false"
                            styleClass="password-input"/>
 
-            <TextField fx:id="visiblePasswordField"
-                       promptText="Add meg a jelszavad"
-                       maxWidth="Infinity"
-                       prefHeight="44"
-                       visible="false"
-                       styleClass="password-input"/>
+                <Button fx:id="showPasswordButton"
+                        text="👁"
+                        focusTraversable="false"
+                        mnemonicParsing="false"
+                        StackPane.alignment="CENTER_RIGHT"
+                        onMousePressed="#showPassword"
+                        onMouseReleased="#hidePassword"
+                        onMouseExited="#hidePassword"
+                        styleClass="password-eye-button">
+
+                    <StackPane.margin>
+                        <Insets right="8"/>
+                    </StackPane.margin>
+
+                </Button>
+
+            </StackPane>
+
+            <!-- Normál bejelentkezés -->
+            <Button fx:id="loginButton"
+                    text="Bejelentkezés"
+                    onAction="#handleLogin"
+                    defaultButton="true"
+                    maxWidth="Infinity"
+                    prefHeight="44"
+                    styleClass="login-button"/>
+
+            <!-- Átváltás chipkártyás módra -->
+            <Button fx:id="showChipLoginButton"
+                    text="Belépés chipkártyával"
+                    onAction="#handleShowChipLogin"
+                    mnemonicParsing="false"
+                    maxWidth="Infinity"
+                    prefHeight="44"
+                    styleClass="login-button"/>
+
+        </VBox>
+
+        <!-- Chipkártyás belépés -->
+        <VBox fx:id="chipLoginBox"
+              alignment="CENTER"
+              spacing="16"
+              maxWidth="Infinity"
+              visible="false"
+              managed="false">
+
+            <Label fx:id="chipLoginTitleLabel"
+                   text="Chipkártyás bejelentkezés"
+                   maxWidth="Infinity"
+                   wrapText="true"
+                   styleClass="field-label"/>
+
+            <Label fx:id="chipLoginInstructionLabel"
+                   text="Húzza le vagy érintse az olvasóhoz a chipkártyát."
+                   maxWidth="Infinity"
+                   wrapText="true"
+                   styleClass="login-subtitle"/>
 
             <!--
-                A jelszó addig látható,
-                amíg az egérgombot lenyomva tartod.
+                Az olvasó ide írja be a chipkódot.
+                Nem lehet visible=false, mert akkor nem tud fókuszt kapni.
             -->
-            <Button fx:id="showPasswordButton"
-                    text="👁"
-                    focusTraversable="false"
+            <TextField fx:id="chipCodeField"
+                       promptText=""
+                       maxWidth="Infinity"
+                       prefHeight="1"
+                       minHeight="1"
+                       maxHeight="1"
+                       opacity="0.0"
+                       onAction="#handleChipCardLogin"
+                       styleClass="chip-reader-field"/>
+
+            <!-- Vissza a felhasználónév/jelszó belépéshez -->
+            <Button fx:id="showPasswordLoginButton"
+                    text="Vissza a normál bejelentkezéshez"
+                    onAction="#handleShowPasswordLogin"
                     mnemonicParsing="false"
-                    StackPane.alignment="CENTER_RIGHT"
-                    onMousePressed="#showPassword"
-                    onMouseReleased="#hidePassword"
-                    onMouseExited="#hidePassword"
-                    styleClass="password-eye-button">
+                    maxWidth="Infinity"
+                    prefHeight="44"
+                    styleClass="login-button"/>
 
-                <StackPane.margin>
-                    <Insets right="8"/>
-                </StackPane.margin>
+        </VBox>
 
-            </Button>
-
-        </StackPane>
-
-        <!-- Hibaüzenet -->
+        <!-- Mindkét loginmód közös hibaüzenete -->
         <Label fx:id="errorLabel"
                text=""
                minHeight="20"
                maxWidth="Infinity"
                wrapText="true"
                styleClass="message-label"/>
-
-        <!-- Bejelentkezés gomb -->
-        <Button fx:id="loginButton"
-                text="Bejelentkezés"
-                onAction="#handleLogin"
-                defaultButton="true"
-                maxWidth="Infinity"
-                prefHeight="44"
-                styleClass="login-button"/>
 
     </VBox>
 
@@ -144,7 +196,7 @@
                 StackPane.alignment="BOTTOM_RIGHT">
 
         <StackPane.margin>
-            <Insets right="20"
+            <Insets right="50"
                     bottom="20"/>
         </StackPane.margin>
 

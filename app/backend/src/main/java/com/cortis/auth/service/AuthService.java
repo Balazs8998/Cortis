@@ -2,6 +2,8 @@ package com.cortis.auth.service;
 
 import com.cortis.auth.dto.LoginRequest;
 import com.cortis.auth.dto.LoginResponse;
+import com.cortis.auth.dto.LoginWithChipRequest;
+import com.cortis.auth.security.ChipCardAuthenticationToken;
 import com.cortis.auth.security.CortisUserPrincipal;
 import com.cortis.core.security.jwt.JwtService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,13 +19,15 @@ public class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final ChipCodeHmacService chipCodeHmacService;
 
     public AuthService(
             AuthenticationManager authenticationManager,
-            JwtService jwtService
-    ) {
+            JwtService jwtService,
+            ChipCodeHmacService chipCodeHmacService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.chipCodeHmacService = chipCodeHmacService;
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
@@ -51,5 +55,39 @@ public class AuthService {
                 authentication.isAuthenticated(),
                 token
         );
+    }
+
+
+    public LoginResponse loginWithChip( LoginWithChipRequest request) {
+
+
+        log.debug("Received chipcard login request ");
+
+        String chipCodeHmac = chipCodeHmacService.createHmac(request.chipCode());
+
+
+        ChipCardAuthenticationToken authenticationRequest =
+                ChipCardAuthenticationToken.unauthenticated(
+                        chipCodeHmac
+
+                );
+
+        Authentication authentication =
+                authenticationManager.authenticate(authenticationRequest);
+
+        CortisUserPrincipal principal =
+                (CortisUserPrincipal) authentication.getPrincipal();
+
+        String token = jwtService.generateToken(principal);
+
+        log.info("Login with chipcard completed successfully for user={}", principal.getUsername());
+
+
+           return new LoginResponse(
+                principal.getUsername(),
+                authentication.isAuthenticated(),
+                token
+        );
+
     }
 }

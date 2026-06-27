@@ -19,8 +19,25 @@ public class AuthService {
 
         if (response.token() == null || response.token().isBlank()) {
             throw new IllegalStateException(
-                    "A backend nem adott vissza JWT tokent."
-            );
+                    "No JWT token was returned by the backend."            );
+        }
+
+        SessionManager.login(
+                response.userName(),
+                response.token()
+        );
+
+        return response;
+    }
+
+    public LoginResponse loginWithChipCard(String chipCardNumber) {
+
+        LoginResponse response =
+                authApiClient.loginWithChipCard(chipCardNumber);
+
+        if (response.token() == null || response.token().isBlank()){
+            throw new IllegalStateException(
+                    "No JWT token was returned by the backend."            );
         }
 
         SessionManager.login(

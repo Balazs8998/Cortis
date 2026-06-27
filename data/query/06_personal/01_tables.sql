@@ -1,11 +1,11 @@
 -- users definition
 CREATE TABLE IF NOT EXISTS personal.users
 (
-    id            uuid PRIMARY KEY     DEFAULT gen_random_uuid(),
-    username      TEXT UNIQUE NOT NULL,
-    password_hash TEXT,
-    chip_code     TEXT UNIQUE,
-    is_active     BOOLEAN     NOT NULL DEFAULT true,
+    id                  uuid PRIMARY KEY     DEFAULT gen_random_uuid(),
+    username            TEXT UNIQUE NOT NULL,
+    password_hash       TEXT,
+    chip_code_hash      TEXT UNIQUE,
+    is_active           BOOLEAN     NOT NULL DEFAULT true,
 
     created_by    TEXT                 DEFAULT COALESCE(current_setting('app.current_user', true), 'system'),
     created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
