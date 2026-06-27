@@ -55,10 +55,12 @@ management:
     web:
       exposure:
         include: health,info
-
-jwt:
-  secret-key: ${JWT_SECRET_KEY}
-  expiration-seconds: ${JWT_EXPIRATION_SECONDS:28800}
+security:
+  chip:
+    hmac-secret-key: ${CHIP_HMAC_SECRET}
+  jwt:
+    secret-key: ${JWT_SECRET_KEY}
+    expiration-seconds: ${JWT_EXPIRATION_SECONDS:28800}
 
 logging:
   file:

@@ -21,5 +21,5 @@ POST http://localhost:8080/api/auth/loginWithChip
 Content-Type: application/json
 
 {
-  "chipCode": "test1234"
+  "chipCode": "04A8F29C112233"
 }

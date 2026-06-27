@@ -6,7 +6,6 @@ import com.cortis.auth.dto.LoginWithChipRequest;
 import com.cortis.auth.security.ChipCardAuthenticationToken;
 import com.cortis.auth.security.CortisUserPrincipal;
 import com.cortis.core.security.jwt.JwtService;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,13 +19,15 @@ public class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final ChipCodeHmacService chipCodeHmacService;
 
     public AuthService(
             AuthenticationManager authenticationManager,
-            JwtService jwtService
-    ) {
+            JwtService jwtService,
+            ChipCodeHmacService chipCodeHmacService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.chipCodeHmacService = chipCodeHmacService;
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
@@ -57,16 +58,17 @@ public class AuthService {
     }
 
 
-    public LoginResponse loginWithChip(@Valid LoginWithChipRequest request) {
+    public LoginResponse loginWithChip( LoginWithChipRequest request) {
 
-        //TODO: HMAC-SHA-256 to CHIP-CODE
 
         log.debug("Received chipcard login request ");
+
+        String chipCodeHmac = chipCodeHmacService.createHmac(request.chipCode());
 
 
         ChipCardAuthenticationToken authenticationRequest =
                 ChipCardAuthenticationToken.unauthenticated(
-                        request.chipCode()
+                        chipCodeHmac
 
                 );
 
