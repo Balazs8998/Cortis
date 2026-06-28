@@ -8,9 +8,16 @@ import java.util.Locale;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+// TODO: Make chip authentication optional.
+//  A missing or invalid HMAC secret should disable only the chip-login feature
+//  instead of preventing the entire application from starting.
+
+@Slf4j
 @Service
 public class ChipCodeHmacService {
 
@@ -24,7 +31,7 @@ public class ChipCodeHmacService {
     ) {
         if (secret == null || secret.isBlank()) {
             throw new IllegalArgumentException(
-                    "A chip HMAC secret nincs konfigurálva."
+                    "The chip HMAC secret is not configured."
             );
         }
 
@@ -39,9 +46,9 @@ public class ChipCodeHmacService {
             );
         }
 
-        if (secretBytes.length != 32) {
+        if (secretBytes.length < MINIMUM_SECRET_LENGTH_BYTES) {
             throw new IllegalArgumentException(
-                    "A chip HMAC secretnek pontosan 32 bájtosnak kell lennie."
+                    "The chip HMAC secret must be at least 32 bytes long."
             );
         }
 
@@ -52,6 +59,8 @@ public class ChipCodeHmacService {
     }
 
     public String createHmac(String chipCode) {
+        log.debug("Creating chip code HMAC");
+
         if (chipCode == null || chipCode.isBlank()) {
             throw new IllegalArgumentException(
                     "Chip code can't be null or empty."
@@ -68,6 +77,8 @@ public class ChipCodeHmacService {
                     normalizedChipCode.getBytes(StandardCharsets.UTF_8)
             );
 
+
+            log.debug("Chip code HMAC created");
             return HexFormat.of().formatHex(hmacBytes);
 
         } catch (GeneralSecurityException exception) {
@@ -79,6 +90,7 @@ public class ChipCodeHmacService {
     }
 
     private String normalize(String chipCode) {
+        log.debug("Normalizing chip code");
         return chipCode
                 .trim()
                 .replace(":", "")
