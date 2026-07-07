@@ -1,8 +1,12 @@
-package com.cortis.core.security;
+package com.cortis.core.security.config;
 
 import com.cortis.auth.security.ChipCardAuthenticationProvider;
 import com.cortis.auth.security.CortisUserDetailsService;
+import com.cortis.core.security.jwt.CortisAuthenticationEntryPoint;
 import com.cortis.core.security.jwt.JwtAuthenticationFilter;
+import com.cortis.core.security.ratelimit.RateLimitFilter;
+import com.cortis.core.security.ratelimit.RateLimitKeyResolver;
+import com.cortis.core.security.ratelimit.RateLimitService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -57,11 +61,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            JwtAuthenticationFilter jwtAuthenticationFilter
-            , CortisAuthenticationEntryPoint cortisAuthenticationEntryPoint
+            JwtAuthenticationFilter jwtAuthenticationFilter,
+            CortisAuthenticationEntryPoint cortisAuthenticationEntryPoint,
+            RateLimitKeyResolver rateLimitKeyResolver,
+            RateLimitService rateLimitService
     ) throws Exception {
 
         log.debug("Creating SecurityFilterChain");
+
+        RateLimitFilter rateLimitFilter = new RateLimitFilter(
+                rateLimitService,
+                rateLimitKeyResolver
+        );
+
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -84,15 +96,21 @@ public class SecurityConfig {
                                 HttpMethod.GET,
                                 "/api/translation/{languageCode}"
                         ).permitAll()
+
                         .anyRequest().authenticated()
+                )
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling.authenticationEntryPoint(
+                                cortisAuthenticationEntryPoint
+                        )
                 )
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
-                ).exceptionHandling(exceptionHandling ->
-                        exceptionHandling.authenticationEntryPoint(
-                                cortisAuthenticationEntryPoint
-                        )
+                )
+                .addFilterBefore(
+                        rateLimitFilter,
+                        JwtAuthenticationFilter.class
                 );
 
         return http.build();

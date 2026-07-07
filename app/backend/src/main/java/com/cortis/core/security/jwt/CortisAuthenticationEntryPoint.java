@@ -1,4 +1,4 @@
-package com.cortis.core.security;
+package com.cortis.core.security.jwt;
 
 import com.cortis.core.exception.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;

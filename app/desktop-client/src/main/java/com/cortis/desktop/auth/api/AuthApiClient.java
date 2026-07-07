@@ -11,6 +11,7 @@ import com.cortis.desktop.core.exception.ex.UnexpectedException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.extern.slf4j.Slf4j;
 
 
 import java.io.IOException;
@@ -20,6 +21,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
+@Slf4j
 public class AuthApiClient {
 
     private static final String LOGIN_URL =
@@ -41,6 +43,8 @@ public class AuthApiClient {
     }
 
     public LoginResponse loginWithChipCard(String chipCardNumber) {
+        log.info("Fronted login with chip card:");
+
 
         LoginWithChipRequest loginWithChipRequest =
                 new LoginWithChipRequest(chipCardNumber);
@@ -50,6 +54,7 @@ public class AuthApiClient {
     }
 
     public LoginResponse login(String username, String password) {
+        log.info("Fronted login with username and password:");
 
         LoginRequest loginRequest =
                 new LoginRequest(username, password);

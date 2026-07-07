@@ -6,6 +6,8 @@
 - [x] Translation System
 - [x] Global Exception Handler
 - [x] Logging
+- [ ] Audit log
+- [ ] RateLimiting
 - [ ] Core cleanup
 - [ ] Business logic
 
