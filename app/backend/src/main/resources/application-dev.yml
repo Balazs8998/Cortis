@@ -1,3 +1,9 @@
+security:
+  rate-limit:
+    login-limit:
+      max-requests: 20
+      window-seconds: 60
+
 logging:
   level:
     com.cortis: DEBUG

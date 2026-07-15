@@ -62,6 +62,18 @@ security:
     secret-key: ${JWT_SECRET_KEY}
     expiration-seconds: ${JWT_EXPIRATION_SECONDS:28800}
 
+  rate-limit:
+    enabled: true
+    default-limit:
+      max-requests: 120
+      window-seconds: 60
+    login-limit:
+      max-requests: 5
+      window-seconds: 60
+    strict-limit:
+      max-requests: 20
+      window-seconds: 60
+
 logging:
   file:
     name: logs/cortis.log
