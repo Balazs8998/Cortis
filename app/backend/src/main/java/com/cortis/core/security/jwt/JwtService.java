@@ -21,8 +21,8 @@ public class JwtService {
     private final long expirationSeconds;
 
     public JwtService(
-            @Value("${jwt.secret-key}") String secretKey,
-            @Value("${jwt.expiration-seconds}") long expirationSeconds
+            @Value("${security.jwt.secret-key}") String secretKey,
+            @Value("${security.jwt.expiration-seconds}") long expirationSeconds
     ) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 
