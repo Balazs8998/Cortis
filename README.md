@@ -1,226 +1,487 @@
 # CORTIS
 
-CORTIS (CNC Operations Real-Time Intelligent System) is a modular, data-driven backend system designed for CNC manufacturing environments.
+**CORTIS — CNC Operations Real-Time Intelligent System**
 
-The project aims to provide a scalable and structured architecture for:
+CORTIS is a manufacturing support system designed for CNC production environments.
 
-* inventory management
-* tooling compatibility validation
-* machine and resource management
-* production-related data handling
-* future monitoring and analytical systems
+The project is based on real manufacturing experience and aims to provide a structured platform for managing tooling data, machines, inventory, users, permissions and compatibility relationships.
 
-CORTIS is designed around database-driven logic and domain separation instead of hardcoded workflows.
+> **Project status:** Active development / portfolio project  
+> The authentication, authorization, translation and database foundations are implemented. Manufacturing and inventory modules are under development.
 
 ---
 
-# 🎯 Objective
+## Why CORTIS?
 
-The primary goal of CORTIS is to create a unified manufacturing support system capable of:
+CNC manufacturing environments often store tooling, machine and compatibility information across spreadsheets, paper documents and isolated software systems.
 
-* managing tools, holders, interfaces, machines and materials
-* validating compatibility relationships
-* organizing company-specific technological data
-* supporting future monitoring and decision systems
-* providing a scalable architecture for long-term development
+CORTIS aims to provide one centralized system for:
 
----
+- tools, holders and machine interfaces;
+- machine and resource management;
+- inventory and tooling availability;
+- compatibility validation;
+- company-specific manufacturing data;
+- users, roles and permissions;
+- multilingual user interfaces;
+- future monitoring and reporting.
 
-# 🧠 Core Concept
-
-CORTIS is built around structured domain logic.
-
-The system separates:
-
-* shared system definitions
-* domain specifications
-* company-specific operational data
-* mapping and rule systems
-* user and permission handling
-* multilingual support
-
-Compatibility and logic are not determined by hardcoded conditions.
-
-Instead, the system uses:
-
-* feature definitions
-* type abstractions
-* mapping tables
-* compatibility rules
-* domain relationships
-
-This allows the architecture to remain flexible, extensible and reusable.
+The project is not intended to be only a basic CRUD application. Its long-term goal is to model real relationships between manufacturing resources and support rule-based compatibility checks.
 
 ---
 
-# 🏗️ Database Architecture
+## Current Features
 
-The database is separated into multiple schemas to improve:
+### Authentication and security
 
-* modularity
-* readability
-* maintainability
-* scalability
-* separation of responsibilities
+- username and password authentication;
+- JWT-based stateless authentication;
+- chip-card authentication;
+- HMAC-SHA-256 protection for stored chip identifiers;
+- database-backed user loading;
+- role- and permission-based authorization;
+- disabled-user handling;
+- protected REST endpoints;
+- structured authentication error responses.
 
-## Schema Overview
+### Backend
 
-| Schema        | Purpose                                     |
-| ------------- | ------------------------------------------- |
-| core          | System tables and shared definitions        |
-| specification | Domain specifications, properties and rules |
-| company       | Company data and inventory information      |
-| map           | Mapping and rule tables                     |
-| archiv        | Inactive entities and archived data         |
-| personal      | Users and permissions                       |
-| translation   | Translation system tables                   |
+- REST API built with Spring Boot;
+- Spring Security filter chain;
+- Spring Data JPA and Hibernate;
+- request DTO validation;
+- centralized exception handling;
+- environment-based configuration;
+- development and production profiles;
+- application health endpoint;
+- structured application logging;
+- request correlation using trace and span IDs.
 
----
+### Database
 
-# ⚙️ Main System Areas
+- PostgreSQL database;
+- Flyway database migrations;
+- schema validation on startup;
+- destructive Flyway clean operations disabled;
+- domain separation using multiple PostgreSQL schemas;
+- version-controlled database structure.
 
-## Core
+### Translation system
 
-Contains shared system-level structures.
+- database-driven translations;
+- language, category, keyword and translation-text entities;
+- translation API grouped by category;
+- support for multiple user-interface languages.
 
-Examples:
+### Desktop client
 
-* feature definitions
-* enum-like structures
-* metadata tables
-* shared base definitions
-
----
-
-## Specification
-
-Contains domain specifications and rule definitions.
-
-Examples:
-
-* type definitions
-* master data
-* mounting option definitions
-* feature requirement structures
-* entity feature values
-
----
-
-## Company
-
-Contains company-specific operational and inventory data.
-
-Examples:
-
-* inventory tables
-* order tables
-* company-specific machine and tooling data
-* future statistical data
+- JavaFX user interface;
+- password login mode;
+- chip-card login mode;
+- communication with the Spring REST API;
+- JWT session handling;
+- API, network and unexpected error handling;
+- multilingual user-interface support.
 
 ---
 
-## Map
+## Technology Stack
 
-Contains mapping, compatibility and rule-related structures.
+### Backend
 
-Examples:
+- Java 21
+- Spring Boot 3.5
+- Spring Web
+- Spring Security
+- Spring Data JPA
+- Hibernate
+- Jakarta Bean Validation
+- JJWT
+- Maven
+- Lombok
 
-* mapping tables
-* helper rule structures
-* compatibility support tables
+### Database
 
----
+- PostgreSQL 16
+- Flyway
+- Docker Compose
 
-## Archiv
+### Desktop client
 
-Contains inactive or historical company data.
+- Java 21
+- JavaFX
+- FXML
+- Jackson
+- Maven
 
-Examples:
+### Testing and observability
 
-* inactive entities
-* archived orders
-* historical statistics
-
----
-
-## Personal
-
-Contains user and permission related structures.
-
-Examples:
-
-* users
-* roles
-* permissions
-* user-role relations
-
----
-
-## Translation
-
-Provides multilingual support for the system.
-
-Examples:
-
-* language definitions
-* translation keywords
-* categories
-* translation text relations
+- JUnit 5
+- Mockito
+- Spring Boot Test
+- Spring Security Test
+- Spring Boot Actuator
+- Micrometer Tracing
+- Brave
 
 ---
 
-# 📂 Project Structure
+## Architecture
+
+CORTIS currently consists of three main parts:
 
 ```text
-cortis/
+┌─────────────────────────┐
+│   JavaFX Desktop Client │
+│                         │
+│ Password / Chip Login   │
+└────────────┬────────────┘
+             │ HTTP / JSON
+             │ JWT
+┌────────────▼────────────┐
+│  Spring Boot REST API   │
+│                         │
+│ Security                │
+│ Authentication          │
+│ Translation             │
+│ Business Logic          │
+└────────────┬────────────┘
+             │ JPA / Hibernate
+┌────────────▼────────────┐
+│      PostgreSQL 16      │
+│                         │
+│ Flyway migrations       │
+│ Multiple schemas        │
+└─────────────────────────┘
+```
+
+The backend is responsible for authentication, authorization, validation, domain logic and database access.
+
+The desktop client does not access the database directly. It communicates with the backend through the REST API.
+
+---
+
+## Project Structure
+
+```text
+Cortis/
 ├── app/
-│   ├── core/
-│   ├── domain/
-│   ├── services/
-│   ├── repositories/
-│   └── api/
+│   ├── backend/
+│   │   ├── src/main/java/com/cortis/
+│   │   ├── src/main/resources/
+│   │   │   ├── db/migration/
+│   │   │   ├── application.yml
+│   │   │   ├── application-dev.yml
+│   │   │   └── application-prod.yml
+│   │   └── pom.xml
+│   │
+│   └── desktop-client/
+│       ├── src/main/java/
+│       ├── src/main/resources/
+│       └── pom.xml
 │
-├── data/
-├── scripts/
-├── docs/
-├── test/
-└── alembic/
+├── docker-compose.yml
+├── .gitignore
+└── README.md
 ```
 
 ---
 
-# 🚧 Current Status
+## Database Schema Design
 
-Current development focuses on:
+The database is divided into multiple PostgreSQL schemas.
 
-* database architecture
-* schema separation
-* domain modeling
-* compatibility structure design
-* documentation
-* backend restructuring
+| Schema | Responsibility |
+|---|---|
+| `core` | Shared system definitions and base structures |
+| `specification` | Domain specifications, properties and type definitions |
+| `company` | Company-specific machines, inventory and operational data |
+| `map` | Mapping tables, relationships and compatibility rules |
+| `archive` | Inactive and historical records |
+| `personal` | Users, roles, permissions and authentication data |
+| `translation` | Languages, keywords, categories and translated text |
 
-The project is currently in active architecture and backend development.
-
----
-
-# 🔜 Planned Features
-
-Planned future systems include:
-
-* compatibility validation engine
-* inventory workflow handling
-* production monitoring
-* runtime statistics
-* tooling usage tracking
-* machine performance analysis
-* reporting systems
-* API and backend services
+This separation keeps unrelated responsibilities isolated and provides a foundation for future manufacturing modules.
 
 ---
 
-# ⚠️ Notes
+## Security Design
 
-CORTIS is not intended to be a simple CRUD application.
+### Password authentication
 
-The long-term goal is to build a scalable manufacturing support and decision system capable of handling complex industrial workflows and compatibility logic.
+Users can authenticate with a username and password.
+
+Passwords are stored as cryptographic hashes and are verified through Spring Security.
+
+After successful authentication, the backend returns a signed JWT that is used for subsequent protected API requests.
+
+### Chip-card authentication
+
+The desktop client also supports authentication using a chip-card identifier.
+
+Raw chip identifiers are not intended to be stored directly. Before database lookup, the identifier is:
+
+1. normalized;
+2. processed with HMAC-SHA-256;
+3. compared with the stored HMAC value.
+
+This prevents the original chip identifier from being recovered directly from the database.
+
+### Authorization
+
+Users can be connected to roles, and roles can contain permissions.
+
+The authorization model is loaded from the database and integrated with Spring Security authorities.
+
+---
+
+## API Overview
+
+### Authentication
+
+```http
+POST /api/auth/login
+```
+
+Example request:
+
+```json
+{
+  "userName": "example-user",
+  "password": "example-password"
+}
+```
+
+```http
+POST /api/auth/loginWithChip
+```
+
+Example request:
+
+```json
+{
+  "chipCode": "EXAMPLE-CHIP-CODE"
+}
+```
+
+Successful authentication returns a login response containing a JWT.
+
+### Translations
+
+```http
+GET /api/translation/{languageCode}
+```
+
+Example:
+
+```http
+GET /api/translation/en
+```
+
+The endpoint returns translations grouped by their categories.
+
+### Application health
+
+```http
+GET /actuator/health
+```
+
+---
+
+## Running the Project Locally
+
+### Requirements
+
+Install the following tools:
+
+- Java 21;
+- Maven 3.9 or newer;
+- Docker;
+- Docker Compose;
+- Git.
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Balazs8998/Cortis.git
+cd Cortis
+```
+
+### 2. Create the environment file
+
+Create a `.env` file in the repository root:
+
+```env
+POSTGRES_DB=cortis
+POSTGRES_USER=cortis_user
+POSTGRES_PASSWORD=replace_with_a_secure_password
+POSTGRES_PORT=5432
+
+JWT_SECRET_KEY=replace_with_a_base64_encoded_secret
+JWT_EXPIRATION_SECONDS=28800
+
+CHIP_HMAC_SECRET=replace_with_a_base64_encoded_32_byte_secret
+```
+
+Generate a suitable Base64-encoded secret on Linux:
+
+```bash
+openssl rand -base64 32
+```
+
+Generate separate values for the JWT secret and the chip HMAC secret.
+
+Never commit the `.env` file or real secrets to Git.
+
+### 3. Start PostgreSQL
+
+From the repository root:
+
+```bash
+docker compose up -d
+```
+
+Check the running container:
+
+```bash
+docker compose ps
+```
+
+### 4. Start the backend
+
+```bash
+cd app/backend
+mvn spring-boot:run
+```
+
+The backend runs by default at:
+
+```text
+http://localhost:8080
+```
+
+Check its health:
+
+```text
+http://localhost:8080/actuator/health
+```
+
+Flyway automatically creates and updates the configured database schemas during startup.
+
+### 5. Start the desktop client
+
+Open another terminal:
+
+```bash
+cd app/desktop-client
+mvn javafx:run
+```
+
+The backend must be running before using the desktop client.
+
+---
+
+## Running Tests
+
+### Backend tests
+
+```bash
+cd app/backend
+mvn test
+```
+
+### Desktop-client tests
+
+```bash
+cd app/desktop-client
+mvn test
+```
+
+---
+
+## Configuration
+
+CORTIS uses environment variables for secrets and environment-specific settings.
+
+| Variable | Purpose |
+|---|---|
+| `POSTGRES_DB` | PostgreSQL database name |
+| `POSTGRES_USER` | PostgreSQL username |
+| `POSTGRES_PASSWORD` | PostgreSQL password |
+| `POSTGRES_PORT` | Local PostgreSQL port |
+| `JWT_SECRET_KEY` | Base64-encoded JWT signing secret |
+| `JWT_EXPIRATION_SECONDS` | JWT lifetime in seconds |
+| `CHIP_HMAC_SECRET` | Base64-encoded 32-byte HMAC secret |
+
+The default JWT expiration is eight hours.
+
+Production secrets must never be stored directly in source-controlled configuration files.
+
+---
+
+## Development Status
+
+### Implemented
+
+- [x] PostgreSQL and Docker configuration
+- [x] Flyway database migrations
+- [x] multi-schema database structure
+- [x] username and password authentication
+- [x] JWT generation and validation
+- [x] user, role and permission model
+- [x] chip-card authentication
+- [x] HMAC-protected chip-code lookup
+- [x] database-driven translation system
+- [x] centralized backend exception handling
+- [x] JavaFX desktop login client
+- [x] application health endpoint
+- [x] structured logging and request tracing
+
+### In progress / planned
+
+- [ ] Angular web client
+- [ ] inventory management
+- [ ] tool and holder management
+- [ ] machine and interface management
+- [ ] compatibility validation engine
+- [ ] company-specific data management
+- [ ] audit logging
+- [ ] tooling usage tracking
+- [ ] production monitoring
+- [ ] reporting and analytics
+- [ ] expanded automated test coverage
+- [ ] continuous-integration pipeline
+
+---
+
+## Project Motivation
+
+CORTIS is a personal portfolio project created from practical CNC manufacturing experience.
+
+Its purpose is to combine manufacturing-domain knowledge with modern software-development practices, including:
+
+- layered backend architecture;
+- secure authentication;
+- relational data modeling;
+- database migrations;
+- REST API design;
+- desktop-client integration;
+- maintainable and extensible domain separation.
+
+The project is being developed alongside professional full-stack Java training.
+
+---
+
+## Disclaimer
+
+CORTIS is currently an educational and portfolio project under active development.
+
+It is not production-ready and should not currently be used to manage safety-critical or production-critical manufacturing processes.
+
+---
+
+## License
+
+No open-source license has been assigned to this repository yet.
+
+The source code is publicly visible for portfolio, evaluation and demonstration purposes. Public availability does not automatically grant permission to copy, modify or redistribute the project.
