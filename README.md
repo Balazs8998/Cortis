@@ -752,6 +752,28 @@ A successful fresh-database startup should complete the Flyway migration chain, 
 The test database can later be removed and recreated for repeated migration testing.
 
 ---
+### Testing authentication
+
+A `test.http` file is available in the repository root.
+
+It contains example requests for testing the authentication endpoints,
+including username/password login and chip-card login.
+
+Before testing authentication, execute the following SQL file against the test database:
+
+```text
+data/query/insert/login_test_insert.sql
+```
+
+Test credentials:
+
+```text
+username: Béla
+password: test1234
+chipCode: 04A8F29C112233
+```
+
+---
 
 ## Development Status
 
