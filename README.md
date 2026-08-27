@@ -7,7 +7,7 @@ CORTIS is a manufacturing support system designed for CNC production environment
 The project is based on real manufacturing experience and aims to provide a structured platform for managing tooling data, machines, inventory, users, permissions and compatibility relationships.
 
 > **Project status:** Active development / portfolio project  
-> The authentication, authorization, translation and database foundations are implemented. Manufacturing and inventory modules are under development.
+> Authentication, authorization, translation and the core database foundations are implemented. Manufacturing, inventory and compatibility modules are under active development.
 
 ---
 
@@ -60,17 +60,23 @@ The project is not intended to be only a basic CRUD application. Its long-term g
 ### Database
 
 - PostgreSQL database;
-- Flyway database migrations;
-- schema validation on startup;
+- Flyway versioned database migrations;
+- clean-database bootstrap using Flyway;
+- Hibernate schema validation on startup;
 - destructive Flyway clean operations disabled;
 - domain separation using multiple PostgreSQL schemas;
-- version-controlled database structure.
+- version-controlled database structure;
+- required core reference data managed through migrations;
+- translation reference data managed through migrations.
+
+The current Flyway migration chain has been verified against a fresh PostgreSQL database and can build the active database structure from an empty database.
 
 ### Translation system
 
 - database-driven translations;
 - language, category, keyword and translation-text entities;
 - translation API grouped by category;
+- Hungarian, German and English login translations;
 - support for multiple user-interface languages.
 
 ### Desktop client
@@ -169,7 +175,13 @@ Cortis/
 │   ├── backend/
 │   │   ├── src/main/java/com/cortis/
 │   │   ├── src/main/resources/
-│   │   │   ├── db/migration/
+│   │   │   ├── db/
+│   │   │   │   └── migration/
+│   │   │   │       ├── core/
+│   │   │   │       ├── specification/
+│   │   │   │       ├── company/
+│   │   │   │       ├── personal/
+│   │   │   │       └── translation/
 │   │   │   ├── application.yml
 │   │   │   ├── application-dev.yml
 │   │   │   └── application-prod.yml
@@ -180,28 +192,105 @@ Cortis/
 │       ├── src/main/resources/
 │       └── pom.xml
 │
+├── data/
+│   └── query/
 ├── docker-compose.yml
 ├── .gitignore
 └── README.md
 ```
 
+The `db/migration` directory contains the Flyway-managed database definition.
+
+The `data/query` directory is used as a development and reference workspace for SQL scripts and database design work. It is not the Flyway migration location.
+
 ---
 
 ## Database Schema Design
 
-The database is divided into multiple PostgreSQL schemas.
+The current database baseline is divided into five active PostgreSQL schemas.
 
 | Schema | Responsibility |
 |---|---|
-| `core` | Shared system definitions and base structures |
-| `specification` | Domain specifications, properties and type definitions |
-| `company` | Company-specific machines, inventory and operational data |
-| `map` | Mapping tables, relationships and compatibility rules |
-| `archive` | Inactive and historical records |
+| `core` | Shared system definitions, feature metadata and common domain structures |
+| `specification` | Tool, holder, interface and machine specifications |
+| `company` | Company-specific inventory and operational data |
 | `personal` | Users, roles, permissions and authentication data |
 | `translation` | Languages, keywords, categories and translated text |
 
+### Planned schemas
+
+The following schemas are part of the broader database design but are not currently included in the active Flyway baseline:
+
+| Schema | Planned responsibility |
+|---|---|
+| `map` | Compatibility relationships and mapping structures |
+| `archive` | Historical and inactive records |
+
+These schemas will be introduced through future Flyway migrations when their corresponding application modules are implemented.
+
 This separation keeps unrelated responsibilities isolated and provides a foundation for future manufacturing modules.
+
+---
+
+## Flyway Migration Design
+
+CORTIS uses Flyway as the source of truth for version-controlled database changes.
+
+The migration chain is designed so that a fresh PostgreSQL database can be built automatically during backend startup.
+
+The current migration structure follows the dependency order of the database:
+
+```text
+core types
+    ↓
+core tables
+    ↓
+core reference data
+    ↓
+specification tables
+    ↓
+company tables
+    ↓
+personal tables
+    ↓
+translation tables
+    ↓
+translation constraints
+    ↓
+translation reference data
+```
+
+Migration files may be grouped into subdirectories for readability, but Flyway migration versions remain globally ordered.
+
+Example:
+
+```text
+db/migration/
+├── core/
+├── specification/
+├── company/
+├── personal/
+└── translation/
+```
+
+Flyway scans the configured migration location recursively.
+
+Versioned migrations use the standard naming convention:
+
+```text
+V1__description.sql
+V2__description.sql
+V3__description.sql
+```
+
+Future replaceable database objects such as views or functions may use repeatable migrations where appropriate:
+
+```text
+R__example_view.sql
+R__example_function.sql
+```
+
+Applied versioned migrations must not be modified after they become part of the shared database history. Future database changes should be introduced through new migration versions.
 
 ---
 
@@ -371,6 +460,8 @@ docker compose ps
 
 The PostgreSQL container uses the values defined in the repository-root `.env` file.
 
+On first startup with a new empty database, Flyway creates the configured database structure automatically when the backend starts.
+
 ---
 
 ### 4. Start the backend
@@ -509,7 +600,9 @@ http://localhost:8080/actuator/health
 
 Flyway database migrations are executed automatically during backend startup.
 
-Hibernate validates the mapped database schema during startup.
+Hibernate validates the mapped database schema after the required migrations have completed.
+
+On subsequent startups, previously applied versioned migrations are validated and are not executed again.
 
 ---
 
@@ -520,6 +613,12 @@ Open another terminal:
 ```bash
 cd app/desktop-client
 mvn javafx:run
+```
+
+Alternatively, from the repository root:
+
+```bash
+mvn -f app/desktop-client/pom.xml javafx:run
 ```
 
 The backend must be running before using the desktop client.
@@ -628,13 +727,47 @@ This normally means that the `.env` file exists but its values have not been loa
 
 ---
 
+## Fresh Database Verification
+
+The Flyway migration baseline can be tested against a fresh PostgreSQL database without modifying an existing development database.
+
+Example:
+
+```bash
+docker exec cortis_postgres \
+  psql -U cortis_user -d postgres \
+  -c "CREATE DATABASE cortis_test OWNER cortis_user;"
+```
+
+Then set:
+
+```env
+POSTGRES_DB=cortis_test
+```
+
+and start the backend normally.
+
+A successful fresh-database startup should complete the Flyway migration chain, pass Hibernate schema validation and start the embedded Tomcat server.
+
+The test database can later be removed and recreated for repeated migration testing.
+
+---
+
 ## Development Status
 
 ### Implemented
 
 - [x] PostgreSQL and Docker configuration
-- [x] Flyway database migrations
-- [x] multi-schema database structure
+- [x] Flyway database migration baseline
+- [x] clean PostgreSQL database bootstrap through Flyway
+- [x] core database schema
+- [x] specification database schema
+- [x] company database schema foundation
+- [x] personal/authentication database schema
+- [x] translation database schema
+- [x] required core reference-data migrations
+- [x] translation reference-data migrations
+- [x] Hibernate schema validation
 - [x] username and password authentication
 - [x] JWT generation and validation
 - [x] user, role and permission model
@@ -653,6 +786,8 @@ This normally means that the `.env` file exists but its values have not been loa
 - [ ] tool and holder management
 - [ ] machine and interface management
 - [ ] compatibility validation engine
+- [ ] `map` database schema integration
+- [ ] `archive` database schema integration
 - [ ] company-specific data management
 - [ ] audit logging
 - [ ] tooling usage tracking
@@ -672,7 +807,7 @@ Its purpose is to combine manufacturing-domain knowledge with modern software-de
 - layered backend architecture;
 - secure authentication;
 - relational data modeling;
-- database migrations;
+- reproducible database migrations;
 - REST API design;
 - desktop-client integration;
 - maintainable and extensible domain separation.
@@ -694,3 +829,4 @@ It is not production-ready and should not currently be used to manage safety-cri
 No open-source license has been assigned to this repository yet.
 
 The source code is publicly visible for portfolio, evaluation and demonstration purposes. Public availability does not automatically grant permission to copy, modify or redistribute the project.
+
