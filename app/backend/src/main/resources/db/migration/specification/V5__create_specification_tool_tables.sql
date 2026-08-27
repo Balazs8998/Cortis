@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS specification.tool_type
     CONSTRAINT tt_name_key UNIQUE (name),
 
     constraint tt_pkey primary key (id)
-);
+    );
 
 
 create table if not exists specification.tool_type_mounting_option
@@ -38,7 +38,7 @@ create table if not exists specification.tool_type_mounting_option
     constraint ttmo_type_id_id_key unique (type_id, id),
 
     constraint ttmo_tool_type_id_fkey foreign key (type_id) references specification.tool_type (id)
-);
+    );
 
 
 CREATE TABLE IF NOT EXISTS specification.tool_master
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS specification.tool_master
     constraint tm_manufacturer_code_manufacturer_key unique (manufacturer_code,manufacturer),
 
     constraint tm_tool_type_id_fkey foreign key (type_id) references specification.tool_type (id)
-);
+    );
 
 
 
@@ -88,10 +88,9 @@ CREATE TABLE IF NOT EXISTS specification.tool_mounting_feature_requirement
     constraint tmfr_mounting_option_id_requirement_feature_id_key unique (mounting_option_id,requirement_feature_id),
 
     constraint tmfr_tool_mounting_feature_requirement_id_fkey foreign key (mounting_option_id)
-        references specification.tool_type_mounting_option (id),
+    references specification.tool_type_mounting_option (id),
 
     constraint tmfr_entity_feature_id_fkey foreign key (requirement_feature_id)
-        references core.entity_feature (id)
+    references core.entity_feature (id)
 
-);
-
+    );

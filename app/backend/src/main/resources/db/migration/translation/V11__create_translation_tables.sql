@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS translation.language
     updated_at    TIMESTAMPTZ,
     updated_by    TEXT,
     deleted_at    TIMESTAMPTZ
-);
+    );
 
 -- TranslationKeyword definition
 CREATE TABLE IF NOT EXISTS translation.keyword
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS translation.keyword
     updated_at    TIMESTAMPTZ,
     updated_by    TEXT,
     deleted_at    TIMESTAMPTZ
-);
+    );
 
 -- TranslationCategory definition
 CREATE TABLE IF NOT EXISTS translation.category
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS translation.category
     updated_at    TIMESTAMPTZ,
     updated_by    TEXT,
     deleted_at    TIMESTAMPTZ
-);
+    );
 
 -- TranslationText definition
 CREATE TABLE IF NOT EXISTS translation.text
@@ -56,4 +56,4 @@ CREATE TABLE IF NOT EXISTS translation.text
     FOREIGN KEY (language_id) REFERENCES translation.language (id),
     FOREIGN KEY (category_id) REFERENCES translation.category (id),
     UNIQUE (keyword_id, language_id, category_id)
-);
+    );

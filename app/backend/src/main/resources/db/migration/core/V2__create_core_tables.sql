@@ -1,6 +1,3 @@
-SET search_path TO core;
-
--- EngineVersion definition
 
 CREATE TABLE IF NOT EXISTS core.engine_version
 (

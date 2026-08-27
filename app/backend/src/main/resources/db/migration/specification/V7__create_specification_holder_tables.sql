@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS specification.holder_type
     CONSTRAINT ht_name_key UNIQUE (name),
 
     constraint ht_pkey primary key (id)
-);
+    );
 
 
 create table if not exists specification.holder_type_mounting_option
@@ -39,8 +39,8 @@ create table if not exists specification.holder_type_mounting_option
     constraint htmo_type_id_id_key unique (type_id, id),
 
     constraint htmo_holder_type_id_fkey foreign key (type_id)
-        references specification.holder_type (id)
-);
+    references specification.holder_type (id)
+    );
 
 
 CREATE TABLE IF NOT EXISTS specification.holder_master
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS specification.holder_master
 
     CONSTRAINT hm_manufacturer_code_manufacturer_key unique (manufacturer_code,manufacturer),
     constraint hm_holder_type_id_fkey foreign key (type_id) references specification.holder_type (id)
-);
+    );
 
 
 
@@ -90,9 +90,9 @@ CREATE TABLE IF NOT EXISTS specification.holder_mounting_feature_requirement
 
 
     constraint htmfr_holder_type_id_fkey foreign key (mounting_option_id)
-        references specification.holder_type_mounting_option (id),
+    references specification.holder_type_mounting_option (id),
 
     constraint htmfr_requirement_feature_id_fkey foreign key (requirement_feature_id)
-        references core.entity_feature (id)
-);
+    references core.entity_feature (id)
+    );
 

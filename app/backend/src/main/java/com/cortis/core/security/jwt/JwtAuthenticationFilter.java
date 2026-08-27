@@ -1,7 +1,7 @@
 package com.cortis.core.security.jwt;
 
 import com.cortis.auth.security.CortisUserDetailsService;
-import com.cortis.core.security.CortisAuthenticationEntryPoint;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
