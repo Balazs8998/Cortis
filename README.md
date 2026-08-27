@@ -286,7 +286,12 @@ The endpoint returns translations grouped by their categories.
 GET /actuator/health
 ```
 
----
+```json
+{
+  "userName": "example-user",
+  "password": "example-password"
+}
+```
 
 ## Running the Project Locally
 
@@ -309,7 +314,7 @@ git clone https://github.com/Balazs8998/Cortis.git
 cd Cortis
 ```
 
----
+### Translations
 
 ### 2. Create the environment file
 
@@ -379,7 +384,36 @@ The backend can be started using IntelliJ IDEA or directly from a terminal.
 
 Choose one of the following methods.
 
----
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Balazs8998/Cortis.git
+cd Cortis
+```
+
+### 2. Create the environment file
+
+Create a `.env` file in the repository root:
+
+```env
+POSTGRES_DB=cortis
+POSTGRES_USER=cortis_user
+POSTGRES_PASSWORD=replace_with_a_secure_password
+POSTGRES_PORT=5432
+
+JWT_SECRET_KEY=replace_with_a_base64_encoded_secret
+JWT_EXPIRATION_SECONDS=28800
+
+CHIP_HMAC_SECRET=replace_with_a_base64_encoded_32_byte_secret
+```
+
+Generate a suitable Base64-encoded secret on Linux:
+
+```bash
+openssl rand -base64 32
+```
+
+Generate separate values for the JWT secret and the chip HMAC secret.
 
 #### Option A — IntelliJ IDEA
 
