@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS company.tool_inventory
     constraint ti_tool_master_id_fkey foreign key (tool_master_id) references specification.tool_master (id),
     CONSTRAINT ti_quantity_check CHECK (quantity >= 0),
     constraint ti_tool_code_key unique (tool_code)
-);
+    );
 
 CREATE TABLE IF NOT EXISTS company.interface_inventory
 (
@@ -44,9 +44,9 @@ CREATE TABLE IF NOT EXISTS company.interface_inventory
     constraint ii_interface_master_id_fkey foreign key (interface_master_id) references specification.interface_master (id),
     CONSTRAINT ii_quantity_check CHECK (quantity >= 0),
     constraint ii_interface_code_key unique (interface_code)
-);
+    );
 
-CREATE TABLE IF NOT EXISTS company.holder_inventory
+CREATE TABLE company.holder_inventory
 (
     id               uuid     DEFAULT gen_random_uuid(),
 
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS company.holder_inventory
 );
 
 
-CREATE TABLE IF NOT EXISTS company.machine_inventory
+CREATE TABLE company.machine_inventory
 (
     id                uuid      DEFAULT gen_random_uuid(),
 
@@ -90,6 +90,3 @@ CREATE TABLE IF NOT EXISTS company.machine_inventory
     constraint mi_machine_master_id_fkey foreign key (machine_master_id) references specification.machine_master (id),
     constraint mi_machine_code_key unique (machine_code)
 );
-
-
-

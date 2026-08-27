@@ -1,18 +1,18 @@
 -- users definition
 CREATE TABLE IF NOT EXISTS personal.users
 (
-    id            uuid PRIMARY KEY     DEFAULT gen_random_uuid(),
-    username      TEXT UNIQUE NOT NULL,
-    password_hash TEXT,
-    chip_code     TEXT UNIQUE,
-    is_active     BOOLEAN     NOT NULL DEFAULT true,
+    id                  uuid PRIMARY KEY     DEFAULT gen_random_uuid(),
+    username            TEXT UNIQUE NOT NULL,
+    password_hash       TEXT,
+    chip_code_hash      TEXT UNIQUE,
+    is_active           BOOLEAN     NOT NULL DEFAULT true,
 
     created_by    TEXT                 DEFAULT COALESCE(current_setting('app.current_user', true), 'system'),
     created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at    TIMESTAMPTZ,
     updated_by    TEXT,
     deleted_at    TIMESTAMPTZ
-);
+    );
 
 -- roles definition
 CREATE TABLE IF NOT EXISTS personal.roles
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS personal.roles
     updated_at TIMESTAMPTZ,
     updated_by TEXT,
     deleted_at TIMESTAMPTZ
-);
+    );
 
 -- permissions definition
 CREATE TABLE IF NOT EXISTS personal.permissions
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS personal.permissions
     updated_at  TIMESTAMPTZ,
     updated_by  TEXT,
     deleted_at  TIMESTAMPTZ
-);
+    );
 
 -- user_roles definition
 CREATE TABLE IF NOT EXISTS personal.user_roles
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS personal.user_roles
     updated_by TEXT,
     deleted_at TIMESTAMPTZ,
     PRIMARY KEY (user_id, role_id)
-);
+    );
 
 -- role_permissions definition
 CREATE TABLE IF NOT EXISTS personal.role_permissions
@@ -67,5 +67,5 @@ CREATE TABLE IF NOT EXISTS personal.role_permissions
     updated_by    TEXT,
     deleted_at    TIMESTAMPTZ,
     PRIMARY KEY (role_id, permission_id)
-);
+    );
 

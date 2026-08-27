@@ -300,12 +300,16 @@ Install the following tools:
 - Docker Compose;
 - Git.
 
+---
+
 ### 1. Clone the repository
 
 ```bash
 git clone https://github.com/Balazs8998/Cortis.git
 cd Cortis
 ```
+
+---
 
 ### 2. Create the environment file
 
@@ -323,15 +327,33 @@ JWT_EXPIRATION_SECONDS=28800
 CHIP_HMAC_SECRET=replace_with_a_base64_encoded_32_byte_secret
 ```
 
-Generate a suitable Base64-encoded secret on Linux:
+Generate a suitable Base64-encoded secret on Linux or macOS:
 
 ```bash
 openssl rand -base64 32
 ```
 
-Generate separate values for the JWT secret and the chip HMAC secret.
+Generate separate values for:
+
+- `JWT_SECRET_KEY`
+- `CHIP_HMAC_SECRET`
+
+For example:
+
+```env
+JWT_SECRET_KEY=<first-generated-value>
+CHIP_HMAC_SECRET=<second-generated-value>
+```
 
 Never commit the `.env` file or real secrets to Git.
+
+> **Important:** Creating the `.env` file alone does not automatically make its values available to the Spring Boot application.
+>
+> Docker Compose automatically reads the `.env` file from the repository root, but the backend process must also receive these values through its environment.
+>
+> Follow one of the backend startup methods below.
+
+---
 
 ### 3. Start PostgreSQL
 
@@ -347,12 +369,131 @@ Check the running container:
 docker compose ps
 ```
 
+The PostgreSQL container uses the values defined in the repository-root `.env` file.
+
+---
+
 ### 4. Start the backend
 
-```bash
-cd app/backend
-mvn spring-boot:run
+The backend can be started using IntelliJ IDEA or directly from a terminal.
+
+Choose one of the following methods.
+
+---
+
+#### Option A — IntelliJ IDEA
+
+Open the backend project in IntelliJ IDEA and locate:
+
+```text
+com.cortis.CortisApplication
 ```
+
+Open:
+
+```text
+Run
+→ Edit Configurations...
+→ CortisApplication
+```
+
+Enable **EnvFile** and add the `.env` file from the repository root.
+
+The expected project layout is:
+
+```text
+Cortis/
+├── .env
+├── app/
+│   ├── backend/
+│   └── desktop-client/
+├── docker-compose.yml
+└── README.md
+```
+
+The EnvFile entry should point to:
+
+```text
+.env
+```
+
+If the **EnvFile** option is not available in IntelliJ IDEA, install or enable the EnvFile integration/plugin first.
+
+For local development, the Spring development profile can optionally be activated with:
+
+```text
+SPRING_PROFILES_ACTIVE=dev
+```
+
+After the environment file is configured, start:
+
+```text
+CortisApplication
+```
+
+---
+
+#### Option B — Linux terminal
+
+Open a terminal in the repository root.
+
+Load all variables from `.env` into the current shell:
+
+```bash
+set -a
+source .env
+set +a
+```
+
+Then start the backend:
+
+```bash
+mvn -f app/backend/pom.xml spring-boot:run
+```
+
+The `set -a` command causes variables loaded from `.env` to be exported to child processes, including the Spring Boot application.
+
+The exported variables remain available in the current terminal session.
+
+---
+
+#### Option C — macOS terminal
+
+Open Terminal in the repository root.
+
+The same approach works with the default macOS shell (`zsh`) and with `bash`.
+
+Load the `.env` file:
+
+```bash
+set -a
+source .env
+set +a
+```
+
+Then start the backend:
+
+```bash
+mvn -f app/backend/pom.xml spring-boot:run
+```
+
+If you want to verify that a variable has been loaded before starting Spring Boot, you can run:
+
+```bash
+echo "$POSTGRES_DB"
+```
+
+It should return:
+
+```text
+cortis
+```
+
+Do not print secret values such as `JWT_SECRET_KEY` or `CHIP_HMAC_SECRET` in shared terminals, screenshots or logs.
+
+---
+
+### Backend URL
 
 The backend runs by default at:
 
@@ -360,13 +501,17 @@ The backend runs by default at:
 http://localhost:8080
 ```
 
-Check its health:
+Check its health at:
 
 ```text
 http://localhost:8080/actuator/health
 ```
 
-Flyway automatically creates and updates the configured database schemas during startup.
+Flyway database migrations are executed automatically during backend startup.
+
+Hibernate validates the mapped database schema during startup.
+
+---
 
 ### 5. Start the desktop client
 
@@ -385,10 +530,30 @@ The backend must be running before using the desktop client.
 
 ### Backend tests
 
+If the backend tests require database or environment configuration, make sure the required environment variables are available first.
+
+From the repository root on Linux or macOS:
+
+```bash
+set -a
+source .env
+set +a
+```
+
+Then run:
+
+```bash
+mvn -f app/backend/pom.xml test
+```
+
+Alternatively:
+
 ```bash
 cd app/backend
 mvn test
 ```
+
+provided that the required environment variables are already available in the current shell.
 
 ### Desktop-client tests
 
@@ -416,6 +581,50 @@ CORTIS uses environment variables for secrets and environment-specific settings.
 The default JWT expiration is eight hours.
 
 Production secrets must never be stored directly in source-controlled configuration files.
+
+The `.env` file is intentionally excluded from Git and must be created separately for each local development environment.
+
+---
+
+## Environment Loading Summary
+
+### Docker Compose
+
+Docker Compose automatically reads the repository-root `.env` file when started from the repository root:
+
+```bash
+docker compose up -d
+```
+
+### IntelliJ IDEA
+
+The `.env` file must be added to the `CortisApplication` Run Configuration through EnvFile.
+
+### Linux
+
+```bash
+set -a
+source .env
+set +a
+mvn -f app/backend/pom.xml spring-boot:run
+```
+
+### macOS
+
+```bash
+set -a
+source .env
+set +a
+mvn -f app/backend/pom.xml spring-boot:run
+```
+
+If Spring Boot cannot access the required environment variables, startup may fail with an error similar to:
+
+```text
+Could not resolve placeholder 'JWT_SECRET_KEY'
+```
+
+This normally means that the `.env` file exists but its values have not been loaded into the Spring Boot process environment.
 
 ---
 

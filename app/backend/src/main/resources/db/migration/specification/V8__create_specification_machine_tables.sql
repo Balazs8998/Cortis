@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS specification.machine_type
     CONSTRAINT mt_name_key UNIQUE (name),
 
     constraint mt_pkey primary key (id)
-);
+    );
 
 
 CREATE TABLE IF NOT EXISTS specification.machine_master
@@ -39,8 +39,8 @@ CREATE TABLE IF NOT EXISTS specification.machine_master
     constraint mm_pkey primary key (id),
 
     constraint mm_machine_type_id_fkey foreign key (type_id)
-        references specification.machine_type (id)
-);
+    references specification.machine_type (id)
+    );
 
 
 CREATE TABLE IF NOT EXISTS specification.machine_tool_station_category
@@ -62,10 +62,10 @@ CREATE TABLE IF NOT EXISTS specification.machine_tool_station_category
     constraint mtsc_pkey primary key (id),
 
     constraint mtsc_machine_type_id_fkey foreign key (type_id)
-        references machine_type (id),
+    references specification.machine_type (id),
 
     constraint mtsc_type_id_station_type_key UNIQUE (type_id, station_type)
-);
+    );
 
 
 
@@ -80,13 +80,13 @@ CREATE TABLE IF NOT EXISTS specification.machine_station_feature_requirement
     created_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at             TIMESTAMPTZ,
     updated_by             TEXT,
-    deleted_at             TEXT,
+    deleted_at             TIMESTAMPTZ,
 
     constraint msfr_pkey primary key (id),
 
     constraint msfr_requirement_feature_id_fkey foreign key (requirement_feature_id)
-        references core.entity_feature (id),
+    references core.entity_feature (id),
 
     constraint msfr_tool_station_id_fkey foreign key (tool_station_id)
-        references specification.machine_tool_station_category (id)
-);
+    references specification.machine_tool_station_category (id)
+    );
