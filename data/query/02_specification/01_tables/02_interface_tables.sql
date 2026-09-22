@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS specification.interface_type_mounting_feature_require
     created_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at             TIMESTAMPTZ,
     updated_by             TEXT,
-    deleted_at             TEXT,
+    deleted_at             TIMESTAMPTZ,
 
     constraint itmfr_pkey primary key (id),
 

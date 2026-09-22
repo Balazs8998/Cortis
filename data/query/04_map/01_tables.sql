@@ -1,6 +1,5 @@
-SET search_path TO map;
 
-CREATE TABLE IF NOT EXISTS tool_mounting_option_map
+CREATE TABLE IF NOT EXISTS map.tool_mounting_option_map
 (
     id             uuid                 DEFAULT gen_random_uuid(),
 
@@ -24,7 +23,7 @@ CREATE TABLE IF NOT EXISTS tool_mounting_option_map
         REFERENCES specification.tool_type_mounting_option (id)
 );
 
-CREATE TABLE IF NOT EXISTS holder_mounting_option_map
+CREATE TABLE IF NOT EXISTS map.holder_mounting_option_map
 (
     id               uuid                 DEFAULT gen_random_uuid(),
 

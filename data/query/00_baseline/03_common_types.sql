@@ -15,11 +15,11 @@ CREATE TYPE core.record_status AS ENUM (
     );
 
 create type core.entity_type as enum(
-    'tool',
-    'holder',
-    'interface',
-    'machine',
-    'machine_station'
+    'tool_master',
+    'holder_master',
+    'interface_master',
+    'machine_master',
+    'machine_tool_station_category'
     );
 
 create type core.role_type as enum(

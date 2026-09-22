@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS specification.machine_tool_station_category
     constraint mtsc_pkey primary key (id),
 
     constraint mtsc_machine_type_id_fkey foreign key (type_id)
-        references machine_type (id),
+        references specification.machine_type (id),
 
     constraint mtsc_type_id_station_type_key UNIQUE (type_id, station_type)
 );
