@@ -1,0 +1,40 @@
+<div class="page-heading">
+  <div><p class="eyebrow">OPERÁCIÓS ÁTTEKINTÉS</p><h2>Jó munkát, {{ auth.user()?.userName }}!</h2>
+    <p class="muted">A CORTIS munkaterület jelenlegi, valódi készletadatai.</p></div>
+  <button class="action" type="button" (click)="refresh()" [disabled]="loading()">Adatok frissítése</button>
+</div>
+@if (error()) { <p class="error" role="alert">{{ error() }}</p> }
+@if (loading()) { <p class="notice" role="status">Raktári adatok betöltése…</p> }
+<div class="grid-cards">
+  @for (metric of metrics(); track metric.kind) {
+    <article class="metric">
+      <span>{{ metric.label }}</span>
+      <strong>{{ metric.quantity === null ? metric.rows : metric.quantity }}</strong>
+      <small>{{ metric.quantity === null ? 'nyilvántartott gép az első oldalon' : 'db · az első 100 tétel készlete' }}</small>
+      @if (metric.truncated) { <div class="truncated">100 tételes API-korlát · nem teljes összesítés</div> }
+    </article>
+  }
+</div>
+<div class="two-col">
+  <section class="panel">
+    <h3>Raktári műveletek</h3>
+    <p class="muted">Szerszámok, Werkzeughalterek, interfészek és gépek kezelése. Valós adatokat használ, a módosításokhoz külön jogosultság szükséges.</p>
+    <a routerLink="/inventory" class="button-link">Raktár megnyitása <span aria-hidden="true">→</span></a>
+  </section>
+  <section class="panel">
+    <h3>Megrendelések · Aufträge</h3>
+    <p class="muted">A havi kiszállítások widget az orders backend elkészültével mutathat valós adatot.</p>
+    <div class="not-ready">Még nincs megrendelés API · nincs fiktív darabszám</div>
+    <a routerLink="/orders" class="button-link">Megrendelések <span aria-hidden="true">→</span></a>
+  </section>
+  <section class="panel">
+    <h3>Kompatibilitásellenőrzés</h3>
+    <p class="muted">Csak műszakilag dokumentált döntés adhat COMPATIBLE vagy INCOMPATIBLE eredményt.</p>
+    <a routerLink="/compatibility" class="button-link">Ellenőrzés <span aria-hidden="true">→</span></a>
+  </section>
+  <section class="panel">
+    <h3>Következő modulok</h3>
+    <p class="muted">Rohmaterial (R), Zubehör (Z), Ersatzteile (E), globális készletmozgás-napló és megrendelési statisztikák.</p>
+    <div class="not-ready">Az új üzleti kategóriákhoz backend és Flyway bővítés kell</div>
+  </section>
+</div>

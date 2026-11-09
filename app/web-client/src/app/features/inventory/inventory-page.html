@@ -1,0 +1,89 @@
+<div class="page-heading">
+  <div><p class="eyebrow">LAGERVERWALTUNG</p><h2>Raktár</h2>
+    <p class="muted">Tételkeresés, készletmozgás és napló. A gépek külön nyilvántartásként jelennek meg.</p></div>
+  <span class="tag">Belső üzleti kódok: W / H / I / M</span>
+</div>
+<div class="tabs" aria-label="Raktári kategóriák">
+  @for (category of categories; track category.key) {
+    <button type="button" [class.active]="selectedCategory().key === category.key"
+            (click)="choose(category)">{{ category.label }}</button>
+  }
+</div>
+@if (!selectedCategory().kind) {
+  <section class="panel">
+    <p class="eyebrow">{{ selectedCategory().german }}</p>
+    <h3>{{ selectedCategory().label }}</h3>
+    <p class="muted">Tervezett üzleti kód: <span class="mono">{{ selectedCategory().prefix }}</span>.</p>
+    <p class="notice">Ehhez a kategóriához még nincs készlet- és katalógus API. A következő backend/Flyway szakaszban készül el; adatot nem jelenítünk meg kitalált forrásból.</p>
+  </section>
+} @else {
+  <section class="panel">
+    <div class="toolbar">
+      <label class="field search"><span>Keresés a betöltött tételekben</span><input type="search" placeholder="Kód, név, hely…"
+        [ngModel]="search()" (ngModelChange)="search.set($event)" maxlength="120"></label>
+      <button type="button" class="action" (click)="refresh()" [disabled]="loading()">Frissítés</button>
+      <span class="hint">Betöltés: {{ pageOffset() + 1 }}–{{ pageOffset() + stock().length }} · maximum 100 tétel/oldal</span>
+    </div>
+    @if (error()) { <div class="error" role="alert">{{ error() }}</div> }
+    @if (success()) { <div class="success" role="status">{{ success() }}</div> }
+    @if (loading()) { <p class="muted">Készlet és katalógus betöltése…</p> }
+    <div class="two-col">
+      <div><h3>Raktári tételek</h3>
+        <div class="scroll-table"><table class="data-table"><thead><tr><th>Üzleti kód</th><th>Megnevezés</th><th>{{ selectedCategory().stocked ? 'Db' : 'Gép' }}</th><th>Hely</th></tr></thead>
+          <tbody>
+            @for (item of visibleStock(); track item.id) {
+              <tr (click)="select(item)" [class.active-row]="selectedStock()?.id === item.id" tabindex="0" (keydown.enter)="select(item)" aria-label="Raktári tétel kiválasztása">
+                <td class="mono">{{ item.code }}</td><td>{{ item.name }}</td><td>{{ item.quantity ?? '—' }}</td><td>{{ item.location }}</td>
+              </tr>
+            } @empty { <tr><td colspan="4" class="empty">Nincs megjeleníthető tétel az aktuális oldalon.</td></tr> }
+          </tbody>
+        </table></div>
+        <div class="pagination">
+          <button type="button" class="action" (click)="previous()" [disabled]="pageOffset() === 0 || loading()">Előző</button>
+          <button type="button" class="action" (click)="next()" [disabled]="stock().length < pageSize || loading()">Következő</button>
+        </div>
+        <p class="hint">A kereső a betöltött készletoldal tételeit szűri. A teljes adatbázis kereséséhez szerveroldali kereső API szükséges.</p>
+      </div>
+      <div><h3>Törzsadatok</h3>
+        <div class="scroll-table"><table class="data-table"><thead><tr><th>Gyártói kód</th><th>Gyártó</th><th>Típus</th></tr></thead>
+          <tbody>@for (master of masters(); track master.id) {
+            <tr><td class="mono">{{ master.manufacturerCode }}</td><td>{{ master.manufacturer }}</td><td>{{ master.typeName }}</td></tr>
+          } @empty { <tr><td colspan="3" class="empty">Nincs törzsadat ezen az oldalon.</td></tr> }</tbody>
+        </table></div>
+      </div>
+    </div>
+  </section>
+  @if (selectedStock(); as item) {
+    <section class="panel detail">
+      <div class="page-heading"><div><p class="eyebrow">KIVÁLASZTOTT TÉTEL</p><h3>{{ item.name }} · <span class="mono">{{ item.code }}</span></h3>
+        <p class="muted">Készlet: {{ item.quantity ?? 'nem alkalmazható' }} · Raktárhely: {{ item.location }}</p></div>
+        <button type="button" class="action" (click)="selectedStock.set(null)">Bezárás</button>
+      </div>
+      @if (selectedCategory().stocked) {
+        @if (canWrite()) {
+          <form [formGroup]="quantityForm" (ngSubmit)="saveMovement()">
+            <div class="toolbar">
+              <button type="button" class="action" [class.primary]="action() === 'IN'" (click)="setAction('IN')">Betesz · Einlagern</button>
+              <button type="button" class="action" [class.primary]="action() === 'OUT'" (click)="setAction('OUT')">Kivesz · Entnehmen</button>
+              <button type="button" class="action" [class.primary]="action() === 'CORRECTION'" (click)="setAction('CORRECTION')">Korrekció</button>
+            </div>
+            <div class="form-grid">
+              <label class="field"><span>{{ action() === 'CORRECTION' ? 'Új teljes készletmennyiség' : 'Mennyiség (db)' }}</span>
+                <input type="number" formControlName="amount" min="0" step="1"></label>
+              <label class="field"><span>Indoklás (kötelező)</span>
+                <input formControlName="reason" maxlength="500" placeholder="Például: műhelykiadás / bevételezés"></label>
+              <button type="submit" class="action primary" [disabled]="quantityForm.invalid || saving()">{{ saving() ? 'Mentés…' : 'Készletmozgás mentése' }}</button>
+            </div>
+          </form>
+        } @else { <p class="notice">Készlet módosításához CORTIS_INVENTORY_WRITE jogosultság kell.</p> }
+        <h3 class="history-title">Utolsó készletmozgások</h3>
+        <div class="scroll-table"><table class="data-table"><thead><tr><th>Időpont</th><th>Eltérés</th><th>Előtte → utána</th><th>Indok</th></tr></thead>
+          <tbody>@for (movement of movements(); track movement.id) {
+            <tr><td>{{ movement.performedAt }}</td><td [class.negative]="movement.quantityDelta < 0">{{ movement.quantityDelta }}</td>
+              <td>{{ movement.previousQuantity }} → {{ movement.resultingQuantity }}</td><td>{{ movement.reason }}</td></tr>
+          } @empty { <tr><td colspan="4" class="empty">Nincs mozgásnapló-bejegyzés.</td></tr> }</tbody>
+        </table></div>
+      } @else { <p class="notice">A gépekhez nincs darabszám-korrekció. Hely és státusz módosítása a gépnyilvántartó backend következő verziójában készül.</p> }
+    </section>
+  }
+}

@@ -1,0 +1,48 @@
+<div class="workspace" [class.compact]="collapsed()" [class.menu-open]="mobileMenu()">
+  <aside class="sidebar" aria-label="CORTIS főmenü">
+    <div class="brand">
+      <span class="brand-symbol">C</span>
+      @if (!collapsed()) {
+        <div class="brand-name"><strong>CORTIS</strong><small>Industrial workspace</small></div>
+      }
+    </div>
+    <nav class="menu">
+      <span class="menu-heading">MUNKATERÜLET</span>
+      @for (entry of navigation; track entry.path) {
+        <a [routerLink]="entry.path" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+           [title]="entry.label" (click)="mobileMenu.set(false)">
+          <span class="nav-icon" aria-hidden="true">{{ entry.icon }}</span>
+          @if (!collapsed()) { <span>{{ entry.label }}</span> }
+        </a>
+      }
+      @if (isAdmin()) {
+        <a routerLink="/admin" routerLinkActive="active"><span class="nav-icon">⚑</span>
+          @if (!collapsed()) {<span>Adminisztráció</span>}
+        </a>
+      }
+    </nav>
+    <div class="sidebar-bottom">
+      <button type="button" class="collapse-control" (click)="collapsed.update(value => !value)"
+              [attr.aria-label]="collapsed() ? 'Menü kinyitása' : 'Menü összecsukása'">
+        <span aria-hidden="true">{{ collapsed() ? '»' : '«' }}</span>
+        @if (!collapsed()) { <span>Menü összecsukása</span> }
+      </button>
+      @if (!collapsed()) { <span class="build-label">CORTIS V1 · Phase 4A</span> }
+    </div>
+  </aside>
+  @if (mobileMenu()) { <button type="button" class="mobile-backdrop" aria-label="Menü bezárása" (click)="mobileMenu.set(false)"></button> }
+  <div class="main-column">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button type="button" class="hamburger" (click)="mobileMenu.update(value => !value)" aria-label="Navigáció">☰</button>
+        <div><span class="eyebrow">CORTIS / WORKSPACE</span><h1>{{ currentTitle() }}</h1></div>
+      </div>
+      <div class="topbar-right">
+        <span class="signed-in">{{ auth.user()?.userName ?? 'Ismeretlen felhasználó' }}</span>
+        <button type="button" class="logout" (click)="signOut()" [disabled]="auth.loading()">Kijelentkezés</button>
+      </div>
+    </header>
+    @if (logoutError()) { <p class="shell-error" role="alert">{{ logoutError() }}</p> }
+    <main class="content"><router-outlet /></main>
+  </div>
+</div>

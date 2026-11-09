@@ -1,0 +1,2 @@
+.search{min-width:min(340px,100%)}.search input{width:100%}.pagination{display:flex;gap:8px;margin:18px 0}.data-table tbody tr.active-row{background:#135071}.data-table tbody tr[tabindex]{cursor:pointer}.form-grid{display:grid;grid-template-columns:minmax(150px,190px) minmax(230px,1fr) auto;gap:12px;align-items:end}.history-title{margin-top:27px}.negative{color:#f0a3a3}
+@media(max-width:900px){.form-grid{grid-template-columns:1fr}.search{width:100%}}

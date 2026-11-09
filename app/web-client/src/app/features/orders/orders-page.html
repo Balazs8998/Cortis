@@ -1,0 +1,22 @@
+<div class="page-heading"><div><p class="eyebrow">AUFTRAGSVERWALTUNG</p><h2>Megrendelések</h2>
+<p class="muted">Megrendelési kód szerinti keresés és havi kiszállítási áttekintés.</p></div>
+<span class="tag neutral">Orders backend: következő fázis</span></div>
+<section class="panel">
+  <form (ngSubmit)="search()">
+    <div class="toolbar"><label class="field order-search"><span>Megrendelési kód</span>
+      <input type="search" name="orderCode" [ngModel]="query()" (ngModelChange)="query.set($event)" maxlength="100" placeholder="Például AU000001"></label>
+      <button type="submit" class="action primary" [disabled]="loading()">Keresés</button></div>
+  </form>
+  <div class="tabs">
+    <button type="button" [class.active]="scope() === 'thisMonth'" (click)="setScope('thisMonth')">Ebben a hónapban kiszállítandó</button>
+    <button type="button" [class.active]="scope() === 'overdue'" (click)="setScope('overdue')">Késésben lévő</button>
+    <button type="button" [class.active]="scope() === 'all'" (click)="setScope('all')">Összes megrendelés</button>
+  </div>
+  @if (!checked()) {<p class="notice">A kereső elrendezése kész. A megrendelési API hiányzik a jelenlegi backendből; az első keresés ennek meglétét is ellenőrzi.</p>}
+  @if (loading()) {<p class="muted">Megrendelések betöltése…</p>}
+  @if (error()) {<p class="error" role="alert">{{ error() }}</p>}
+  <div class="scroll-table"><table class="data-table"><thead><tr><th>Kód</th><th>Partner</th><th>Megrendelés</th><th>Kiszállítás</th><th>Státusz</th><th>Tételek</th></tr></thead>
+    <tbody>@for (order of records(); track order.id) {<tr><td class="mono">{{ order.orderCode }}</td><td>{{ order.customer }}</td><td>{{ order.orderDate }}</td><td>{{ order.deliveryDate }}</td><td>{{ order.status }}</td><td>{{ order.itemCount }}</td></tr>}
+    @empty {<tr><td colspan="6" class="empty">{{ available() ? 'Nincs találat a szűrésre.' : 'Még nincs betölthető megrendelési adat.' }}</td></tr>}</tbody>
+  </table></div>
+</section>

@@ -1,0 +1,27 @@
+<div class="page-heading"><div><p class="eyebrow">ENGINEERING EVIDENCE</p><h2>Kompatibilitás</h2>
+<p class="muted">Tool ⇄ Holder. Jóváhagyott műszaki dokumentáció nélkül az eredmény UNKNOWN.</p></div></div>
+<section class="panel"><h3>Szerszám és tartó ellenőrzése</h3>
+  <form [formGroup]="pair" (ngSubmit)="check()" class="pair-form">
+    <label class="field"><span>Tool master ID (UUID)</span><input type="text" formControlName="toolId" placeholder="xxxxxxxx-xxxx-..." autocomplete="off"></label>
+    <label class="field"><span>Holder master ID (UUID)</span><input type="text" formControlName="holderId" placeholder="xxxxxxxx-xxxx-..." autocomplete="off"></label>
+    <button type="submit" class="action primary" [disabled]="pair.invalid || working()">Ellenőrzés</button>
+  </form>
+  @if (error()) {<p class="error" role="alert">{{ error() }}</p>}
+  @if (result(); as resultValue) {
+    <div class="result"><span class="eyebrow">MŰSZAKI DÖNTÉS</span><h3>{{ resultValue.status }}</h3>
+      @if (resultValue.evidence) {<p>{{ resultValue.evidence }}</p>}
+      @if (resultValue.reference) {<p class="muted">Forrás: {{ resultValue.reference }}</p>}
+      @if (resultValue.status === 'UNKNOWN') {<p class="notice">Ehhez a pároshoz nincs jóváhagyott, dokumentált kompatibilitási döntés.</p>}
+    </div>
+  }
+</section>
+@if (canReview()) {
+  <section class="panel"><h3>Dokumentált mérnöki döntés rögzítése</h3>
+  <p class="muted">Ez nem automatikus következtetés. Csak ellenőrzött katalógus, rajz vagy hiteles gyártói adat alapján rögzíts döntést.</p>
+  <form [formGroup]="reviewForm" (ngSubmit)="review()" class="review-form">
+    <label class="field"><span>Verdikt</span><select formControlName="verdict"><option value="COMPATIBLE">COMPATIBLE</option><option value="INCOMPATIBLE">INCOMPATIBLE</option></select></label>
+    <label class="field"><span>Bizonyíték</span><textarea formControlName="evidence" rows="4" minlength="12" maxlength="2000"></textarea></label>
+    <label class="field"><span>Forrás / hivatkozás</span><input formControlName="reference" maxlength="500" placeholder="Rajzszám vagy gyártói katalógus"></label>
+    <button type="submit" class="action primary" [disabled]="pair.invalid || reviewForm.invalid || working()">Döntés rögzítése</button>
+  </form></section>
+}

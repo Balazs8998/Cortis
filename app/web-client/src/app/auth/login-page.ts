@@ -26,7 +26,7 @@ export class LoginPage {
   // A valid browser session should lead directly to the protected area.
   ngOnInit(): void {
     this.auth.loadMe().subscribe({
-      next: () => void this.router.navigateByUrl('/business'),
+      next: () => void this.router.navigateByUrl('/dashboard'),
       error: () => { /* Anonymous visitor: show the login form. */ }
     });
   }
@@ -37,7 +37,7 @@ export class LoginPage {
     this.auth.signIn(this.userName(), this.password()).subscribe({
       next: () => {
         this.password.set('');
-        void this.router.navigateByUrl('/business');
+        void this.router.navigateByUrl('/dashboard');
       },
       error: () => this.password.set('')
     });
