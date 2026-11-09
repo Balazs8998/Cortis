@@ -1,0 +1,41 @@
+package com.cortis.business.model;
+
+import jakarta.validation.constraints.*;
+import java.util.UUID;
+
+public final class BusinessDtos {
+    private BusinessDtos() { }
+    public record TypeCreate(@NotBlank @Size(max=150) String name,
+                             @Size(max=1000) String description,
+                             Boolean isInterface) { }
+    public record TypeView(UUID id, String name, String description, Boolean isInterface) { }
+    public record MasterCreate(@NotNull UUID typeId,
+                               @NotBlank @Size(max=200) String manufacturerCode,
+                               @NotBlank @Size(max=200) String manufacturer,
+                               @Size(max=2000) String description,
+                               @Size(max=200) String orderCode,
+                               @Size(max=1000) String link,
+                               @Size(max=500) String catalog) { }
+    public record MasterView(UUID id, UUID typeId, String typeName, String manufacturerCode,
+                             String manufacturer, String description, String orderCode,
+                             String link, String catalog) { }
+    public record InventoryCreate(@NotNull UUID masterId,
+                                  @NotBlank @Size(max=150) String code,
+                                  @NotBlank @Size(max=250) String name,
+                                  @Size(max=250) String location,
+                                  @Min(0) Integer quantity) { }
+    public record InventoryView(UUID id, UUID masterId, String masterCode, String code,
+                                String name, String location, Integer quantity) { }
+    public record StockAdjustment(int delta, @NotBlank @Size(min=3, max=500) String reason) { }
+    public record MovementView(UUID id, int previousQuantity, int quantityDelta,
+                               int resultingQuantity, String reason, UUID performedBy,
+                               java.time.Instant performedAt) { }
+    public record CompatibilityReview(@NotNull UUID toolId, @NotNull UUID holderId,
+                                      @NotNull Verdict verdict,
+                                      @NotBlank @Size(min=12, max=2000) String evidence,
+                                      @NotBlank @Size(min=3, max=500) String reference) { }
+    public enum Verdict { COMPATIBLE, INCOMPATIBLE }
+    public record CompatibilityView(UUID toolId, UUID holderId, String status,
+                                    UUID decisionId, String evidence, String reference,
+                                    UUID reviewedBy, java.time.Instant reviewedAt) { }
+}
