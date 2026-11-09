@@ -18,6 +18,10 @@ public class InventoryController {
     private final InventoryService service;
     public InventoryController(InventoryService service) { this.service = service; }
 
+    @GetMapping("/summary")
+    @PreAuthorize("hasAuthority('CORTIS_INVENTORY_READ')")
+    public List<InventorySummary> summary() { return service.summary(); }
+
     @GetMapping("/{kind}")
     @PreAuthorize("hasAuthority('CORTIS_INVENTORY_READ')")
     public List<InventoryView> list(@PathVariable String kind,
@@ -37,6 +41,14 @@ public class InventoryController {
                                 @AuthenticationPrincipal CortisUserPrincipal principal) {
         return service.create(CatalogKind.parse(kind), body, principal.getUserId());
     }
+    @DeleteMapping("/{kind}/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('CORTIS_INVENTORY_DELETE')")
+    public void archive(@PathVariable String kind, @PathVariable UUID id,
+                        @AuthenticationPrincipal CortisUserPrincipal principal) {
+        service.archive(CatalogKind.parse(kind), id, principal.getUserId());
+    }
+
     @PostMapping("/{kind}/{id}/adjust")
     @PreAuthorize("hasAuthority('CORTIS_INVENTORY_WRITE')")
     public InventoryView adjust(@PathVariable String kind, @PathVariable UUID id,

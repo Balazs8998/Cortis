@@ -10,15 +10,14 @@
     <article class="metric">
       <span>{{ metric.label }}</span>
       <strong>{{ metric.quantity === null ? metric.rows : metric.quantity }}</strong>
-      <small>{{ metric.quantity === null ? 'nyilvántartott gép az első oldalon' : 'db · az első 100 tétel készlete' }}</small>
-      @if (metric.truncated) { <div class="truncated">100 tételes API-korlát · nem teljes összesítés</div> }
+      <small>{{ metric.quantity === null ? 'nyilvántartott gép' : 'db · teljes adatbázis-összesítés' }}</small>
     </article>
   }
 </div>
 <div class="two-col">
   <section class="panel">
     <h3>Raktári műveletek</h3>
-    <p class="muted">Szerszámok, Werkzeughalterek, interfészek és gépek kezelése. Valós adatokat használ, a módosításokhoz külön jogosultság szükséges.</p>
+    <p class="muted">Szerszámok, tartók, interfészek, gépek, alapanyagok, kiegészítők és gépalkatrészek kezelése. Valós adatokat használ, a módosításokhoz külön jogosultság szükséges.</p>
     <a routerLink="/inventory" class="button-link">Raktár megnyitása <span aria-hidden="true">→</span></a>
   </section>
   <section class="panel">
@@ -40,7 +39,7 @@
   </section>
   <section class="panel">
     <h3>Következő modulok</h3>
-    <p class="muted">Rohmaterial (R), Zubehör (Z), Ersatzteile (E), globális készletmozgás-napló és megrendelési statisztikák.</p>
-    <div class="not-ready">Az új üzleti kategóriákhoz backend és Flyway bővítés kell</div>
+    <p class="muted">Globális készletmozgás-napló, anyagmértékegységek és megrendeléshez kötött raktárfoglalás.</p>
+    <div class="not-ready">A további üzleti folyamatok fejlesztés alatt állnak</div>
   </section>
 </div>

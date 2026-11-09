@@ -20,8 +20,10 @@ describe('CORTIS Phase 4A navigation and permissions', () => {
       'W000001', 'H000001', 'I000001', 'M1', 'R000001', 'Z000001', 'E000001'
     ]);
   });
-  it('does not pretend unsupported categories have a backend API', () => {
-    expect(STORAGE_CATEGORIES.filter(category => !category.kind).map(category => category.key))
-      .toEqual(['materials', 'accessories', 'parts']);
+  it('registers all seven categories with their actual backend kinds', () => {
+    expect(STORAGE_CATEGORIES.map(category => category.kind)).toEqual([
+      'tools', 'holders', 'interfaces', 'machines', 'materials', 'accessories', 'parts'
+    ]);
+    expect(STORAGE_CATEGORIES.every(category => category.kind === category.key)).toBe(true);
   });
 });

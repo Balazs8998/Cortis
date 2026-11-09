@@ -7,7 +7,10 @@ public enum CatalogKind {
     TOOLS("tools", "tool", true),
     HOLDERS("holders", "holder", true),
     INTERFACES("interfaces", "interface", true),
-    MACHINES("machines", "machine", false);
+    MACHINES("machines", "machine", false),
+    MATERIALS("materials", "material", true),
+    ACCESSORIES("accessories", "accessory", true),
+    PARTS("parts", "part", true);
 
     private final String slug;
     private final String noun;
@@ -33,6 +36,6 @@ public enum CatalogKind {
                 if (kind.slug.equals(value.toLowerCase(Locale.ROOT))) return kind;
             }
         }
-        throw new BusinessException(400, "INVALID_KIND", "Allowed kinds: tools, holders, interfaces, machines");
+        throw new BusinessException(400, "INVALID_KIND", "Allowed kinds: tools, holders, interfaces, machines, materials, accessories, parts");
     }
 }

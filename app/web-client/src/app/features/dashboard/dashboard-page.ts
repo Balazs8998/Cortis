@@ -1,14 +1,13 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { forkJoin } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { AuthSessionService } from '../../auth/auth-session.service';
 import { WorkspaceDataService, STORAGE_CATEGORIES } from '../../shared/workspace-data.service';
 import { hasAuthority } from '../../shared/access';
-import type { InventoryItem, Kind } from '../../cortis/business-api.service';
+import type { Kind } from '../../cortis/business-api.service';
 
 interface OrderOverview { thisMonth: number; overdue: number; inProgress: number; }
-interface StockMetric { kind: Kind; label: string; rows: number; quantity: number | null; truncated: boolean; }
+interface StockMetric { kind: Kind; label: string; rows: number; quantity: number | null; }
 
 @Component({
   selector: 'app-cortis-dashboard',
@@ -36,13 +35,13 @@ export class DashboardPage implements OnInit {
     this.refreshOrders();
     if (!this.hasRead()) { this.error.set('A raktári áttekintéshez CORTIS_INVENTORY_READ jogosultság kell.'); return; }
     this.loading.set(true); this.error.set('');
-    const kinds: Kind[] = ['tools', 'holders', 'interfaces', 'machines'];
-    forkJoin(kinds.map(kind => this.data.inventory(kind, 100))).subscribe({
+    this.data.inventorySummary().subscribe({
       next: groups => {
-        this.metrics.set(groups.map((items: InventoryItem[], i) => ({
-          kind: kinds[i], label: STORAGE_CATEGORIES.find(category => category.kind === kinds[i])?.label ?? kinds[i],
-          rows: items.length, truncated: items.length === 100,
-          quantity: kinds[i] === 'machines' ? null : items.reduce((sum, item) => sum + (item.quantity ?? 0), 0)
+        this.metrics.set(groups.map(item => ({
+          kind: item.kind,
+          label: STORAGE_CATEGORIES.find(category => category.kind === item.kind)?.label ?? item.kind,
+          rows: item.rows,
+          quantity: item.quantity
         })));
         this.loading.set(false);
       },

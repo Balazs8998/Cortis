@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { switchMap } from 'rxjs';
 
-export type Kind = 'tools' | 'holders' | 'interfaces' | 'machines';
+export type Kind = 'tools' | 'holders' | 'interfaces' | 'machines' | 'materials' | 'accessories' | 'parts';
 export interface Master {
   id: string;
   typeId: string;
@@ -32,7 +32,7 @@ export interface CompatibilityResult {
 @Injectable({ providedIn: 'root' })
 export class BusinessApiService {
   private readonly http = inject(HttpClient);
-  readonly kinds: Kind[] = ['tools', 'holders', 'interfaces', 'machines'];
+  readonly kinds: Kind[] = ['tools', 'holders', 'interfaces', 'machines', 'materials', 'accessories', 'parts'];
   csrf() { return this.http.get<{ token: string }>('/api/auth/csrf'); }
   login(userName: string, password: string) {
     return this.csrf().pipe(
