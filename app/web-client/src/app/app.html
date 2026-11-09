@@ -1,0 +1,144 @@
+<main class="cortis-page">
+
+  <section class="login-layout">
+
+    <aside class="brand-panel">
+      <div class="brand-header">
+        <div class="brand-logo">
+          C
+        </div>
+
+        <div>
+          <h1>CORTIS</h1>
+          <p>Tooling & compatibility system</p>
+        </div>
+      </div>
+
+      <div class="brand-content">
+        <h2>Üdv a rendszerben</h2>
+
+        <p>
+          Szerszámok, holderek, interface-ek és gépkompatibilitások
+          nyilvántartása egy helyen.
+        </p>
+
+        <ul class="feature-list">
+          <li>Tool management</li>
+          <li>Machine compatibility</li>
+          <li>Warehouse overview</li>
+          <li>Role based access</li>
+        </ul>
+      </div>
+
+      <footer class="brand-footer">
+        <span>Version 1.0</span>
+        <span>Internal system</span>
+      </footer>
+    </aside>
+
+    <section class="login-panel">
+
+      <div class="login-card">
+
+        <header class="login-header">
+          <h2>Bejelentkezés</h2>
+          <p>Add meg a felhasználóneved és a jelszavad.</p>
+        </header>
+
+        @if (loginError()) {
+          <div class="error-box" aria-live="polite">
+            {{ loginError() }}
+          </div>
+        }
+
+        <form class="login-form" (submit)="login(); $event.preventDefault()">
+
+          <div class="form-group">
+            <label for="username">Felhasználónév</label>
+
+            <input
+              id="username"
+              name="username"
+              type="text"
+              autocomplete="username"
+              placeholder="pl. balazs"
+              [value]="username()"
+              (input)="onUsernameInput($event)"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Jelszó</label>
+
+            <div class="password-field">
+            <input
+              id="password"
+              name="password"
+              [type]="passwordVisible() ? 'text' : 'password'"
+              autocomplete="current-password"
+              placeholder="Jelszó"
+              [value]="password()"
+              (input)="onPasswordInput($event)"
+            />
+
+            <button
+              class="password-toggle"
+              type="button"
+              aria-label="Jelszó megjelenítése"
+              (pointerdown)="showPassword()"
+              (pointerup)="hidePassword()"
+              (pointerleave)="hidePassword()"
+              (blur)="hidePassword()"
+            >
+              👁
+            </button>
+          </div>
+          </div>
+
+          <div class="form-options">
+            <label class="checkbox-row">
+              <input
+                type="checkbox"
+                [checked]="rememberMe()"
+                (change)="onRememberMeChange($event)"
+              />
+
+              <span>Emlékezz rám</span>
+            </label>
+
+            <button
+              class="text-button"
+              type="button"
+              (click)="forgotPassword()"
+            >
+              Elfelejtett jelszó
+            </button>
+          </div>
+
+          <button
+            class="login-button"
+            type="submit"
+            [disabled]="isLoading() || !username() || !password()"
+          >
+            @if (isLoading()) {
+              Bejelentkezés...
+            } @else {
+              Belépés
+            }
+          </button>
+
+        </form>
+
+        <footer class="login-footer">
+          <p>
+            Nincs publikus regisztráció. Felhasználót csak admin hozhat létre.
+          </p>
+        </footer>
+
+      </div>
+
+    </section>
+
+  </section>
+
+</main>
