@@ -2,6 +2,8 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { BusinessApiService, CompatibilityResult, InventoryItem, Kind, Master } from './business-api.service';
+import { AuthSessionService } from '../auth/auth-session.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cortis-business',
@@ -11,11 +13,8 @@ import { BusinessApiService, CompatibilityResult, InventoryItem, Kind, Master } 
   <main class="cortis">
     <header><h1>CORTIS · V1</h1><span>Catalog / Inventory / Engineering evidence</span></header>
     <section class="panel auth">
-      <label>Username <input type="text" [(ngModel)]="username" autocomplete="username"></label>
-      <label>Password <input type="password" [(ngModel)]="password" autocomplete="current-password"></label>
-      <button type="button" (click)="login()">Sign in</button>
-      <button type="button" (click)="logout()">Sign out</button>
-      <span>Session cookies · CSRF</span>
+      <strong>Bejelentkezve: {{ auth.user()?.userName }}</strong>
+      <button type="button" (click)="signOut()" [disabled]="auth.loading()">Kijelentkezés</button>
     </section>
     @if (error()) { <p class="error" role="alert">{{ error() }}</p> }
     <section class="panel">
@@ -89,14 +88,14 @@ import { BusinessApiService, CompatibilityResult, InventoryItem, Kind, Master } 
 })
 export class BusinessPage {
   readonly api = inject(BusinessApiService);
+  readonly auth = inject(AuthSessionService);
+  private readonly router = inject(Router);
   readonly selected = signal<Kind>('tools');
   readonly masters = signal<Master[]>([]);
   readonly stock = signal<InventoryItem[]>([]);
   readonly selectedStock = signal<InventoryItem | null>(null);
   readonly compatibility = signal<CompatibilityResult | null>(null);
   readonly error = signal('');
-  username = '';
-  password = '';
   delta = 1;
   reason = '';
   toolId = '';
@@ -110,16 +109,9 @@ export class BusinessPage {
     this.error.set(status === 401 ? 'Not signed in' : status === 403 ? 'Insufficient permissions / CSRF token' :
       `Request failed (${status || 'network'}). Check backend and dev proxy.`);
   }
-  login() {
-    this.error.set('');
-    this.api.login(this.username, this.password).subscribe({
-      next: () => { this.password = ''; this.refresh(); },
-      error: e => { this.password = ''; this.fail(e); }
-    });
-  }
-  logout() {
-    this.api.logout().subscribe({
-      next: () => { this.masters.set([]); this.stock.set([]); this.compatibility.set(null); },
+  signOut() {
+    this.auth.signOut().subscribe({
+      next: () => void this.router.navigateByUrl('/'),
       error: e => this.fail(e)
     });
   }
