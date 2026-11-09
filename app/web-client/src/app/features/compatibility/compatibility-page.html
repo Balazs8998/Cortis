@@ -1,27 +1,138 @@
-<div class="page-heading"><div><p class="eyebrow">ENGINEERING EVIDENCE</p><h2>Kompatibilitás</h2>
-<p class="muted">Tool ⇄ Holder. Jóváhagyott műszaki dokumentáció nélkül az eredmény UNKNOWN.</p></div></div>
-<section class="panel"><h3>Szerszám és tartó ellenőrzése</h3>
-  <form [formGroup]="pair" (ngSubmit)="check()" class="pair-form">
-    <label class="field"><span>Tool master ID (UUID)</span><input type="text" formControlName="toolId" placeholder="xxxxxxxx-xxxx-..." autocomplete="off"></label>
-    <label class="field"><span>Holder master ID (UUID)</span><input type="text" formControlName="holderId" placeholder="xxxxxxxx-xxxx-..." autocomplete="off"></label>
-    <button type="submit" class="action primary" [disabled]="pair.invalid || working()">Ellenőrzés</button>
+<div class="page-heading">
+  <div><p class="eyebrow">ENGINEERING · CORTIS V1</p><h2>Szerszám–gép összeállítások</h2>
+    <p class="muted">Üzleti kódokkal dolgozz. A jóváhagyott illesztések, a műszaki korlátok és a raktárkészlet külön ellenőrzések.</p></div>
+</div>
+@if (!canRead()) {
+  <section class="panel"><p class="notice">Az ellenőrzéshez CORTIS_ENGINEERING_READ jogosultság szükséges. Új jogosultság után jelentkezz be újra.</p></section>
+}
+<section class="panel">
+  <h3>Összeállítás vizsgálata</h3>
+  <form class="pair-form" [formGroup]="planForm" (ngSubmit)="checkPlan()">
+    <label class="field"><span>Szerszám kódja · Werkzeug</span>
+      <input formControlName="toolCode" placeholder="W000001" autocomplete="off" maxlength="7"></label>
+    <label class="field"><span>Gép kódja · Maschine</span>
+      <input formControlName="machineCode" placeholder="M1" autocomplete="off" maxlength="19"></label>
+    <button type="submit" class="action primary" [disabled]="planForm.invalid || busy() || !canRead()">Ellenőrzés</button>
   </form>
-  @if (error()) {<p class="error" role="alert">{{ error() }}</p>}
-  @if (result(); as resultValue) {
-    <div class="result"><span class="eyebrow">MŰSZAKI DÖNTÉS</span><h3>{{ resultValue.status }}</h3>
-      @if (resultValue.evidence) {<p>{{ resultValue.evidence }}</p>}
-      @if (resultValue.reference) {<p class="muted">Forrás: {{ resultValue.reference }}</p>}
-      @if (resultValue.status === 'UNKNOWN') {<p class="notice">Ehhez a pároshoz nincs jóváhagyott, dokumentált kompatibilitási döntés.</p>}
-    </div>
+  @if (error()) { <p class="error" role="alert">{{ error() }}</p> }
+  @if (notice()) { <p class="success" role="status">{{ notice() }}</p> }
+  @if (busy()) { <p class="muted">Adatok ellenőrzése…</p> }
+  @if (planResult(); as plan) {
+    <div class="asset-strip"><span><strong>{{ plan.tool.code }}</strong> · {{ plan.tool.name }}</span>
+      <span><strong>{{ plan.machine.code }}</strong> · {{ plan.machine.name }}</span></div>
+    <p class="notice">{{ plan.notice }}</p>
+    <div class="scroll-table"><table class="data-table">
+      <thead><tr><th>Pozíció</th><th>Tartó</th><th>Interfész</th><th>Műszaki eredmény</th><th>Készlet</th><th>Indok</th></tr></thead>
+      <tbody>
+        @for (item of plan.options; track item.stationId + ':' + item.holderCode + ':' + item.interfaceCode) {
+          <tr><td>{{ item.position }} · {{ item.stationLabel }}</td>
+            <td class="mono">{{ item.holderCode ?? '—' }}</td>
+            <td class="mono">{{ item.interfaceCode ?? 'Közvetlen / nincs' }}</td>
+            <td><span class="status-pill" [class.positive]="item.reviewStatus === 'REVIEWED_PAIR'"
+              [class.negative]="item.reviewStatus === 'INCOMPATIBLE'">{{ item.reviewStatus }}</span></td>
+            <td><strong>{{ item.stockAvailable ? 'Van' : 'Hiány / ismeretlen' }}</strong>
+              <small class="muted">{{ item.stockDetails }}</small></td>
+            <td>{{ item.explanation }}
+              @if(item.sourceReference){<small class="muted">Forrás: {{ item.sourceReference }}</small>}</td></tr>
+        } @empty {<tr><td colspan="6" class="empty">A géphez még nincs nyilvántartott fizikai állomás. Rögzítsd a géppozíciókat.</td></tr>}
+      </tbody>
+    </table></div>
   }
 </section>
-@if (canReview()) {
-  <section class="panel"><h3>Dokumentált mérnöki döntés rögzítése</h3>
-  <p class="muted">Ez nem automatikus következtetés. Csak ellenőrzött katalógus, rajz vagy hiteles gyártói adat alapján rögzíts döntést.</p>
-  <form [formGroup]="reviewForm" (ngSubmit)="review()" class="review-form">
-    <label class="field"><span>Verdikt</span><select formControlName="verdict"><option value="COMPATIBLE">COMPATIBLE</option><option value="INCOMPATIBLE">INCOMPATIBLE</option></select></label>
-    <label class="field"><span>Bizonyíték</span><textarea formControlName="evidence" rows="4" minlength="12" maxlength="2000"></textarea></label>
-    <label class="field"><span>Forrás / hivatkozás</span><input formControlName="reference" maxlength="500" placeholder="Rajzszám vagy gyártói katalógus"></label>
-    <button type="submit" class="action primary" [disabled]="pair.invalid || reviewForm.invalid || working()">Döntés rögzítése</button>
-  </form></section>
-}
+<section class="panel">
+  <h3>Gépállomások · Werkzeugpositionen</h3>
+  <p class="muted">Konkrét fizikai pozíciók, nem csak géptípus-kategóriák. A jóváhagyott felszerelési láncok külön rögzíthetők.</p>
+  <div class="station-grid">
+    @for (station of stations(); track station.id) {
+      <button class="station-card" type="button" (click)="loadMounts(station.id)">
+        <strong>T{{ station.positionIndex }} · {{ station.label }}</strong>
+        <span>{{ station.stationType }}</span>
+        <span>Ø max: {{ station.maxToolDiameter ?? '—' }} mm</span>
+      </button>
+    } @empty { <p class="muted">Válassz fent szerszámot és gépet a pozíciók betöltéséhez.</p> }
+  </div>
+  @if (mounts().length) {
+    <div class="scroll-table"><table class="data-table"><thead><tr><th>Tartó</th><th>Interfész</th><th>Bizonyíték</th><th>Forrás</th></tr></thead>
+      <tbody>@for(mount of mounts(); track mount.id){<tr><td>{{ mount.holderCode ?? 'Nincs raktári kód' }}</td>
+        <td>{{ mount.interfaceCode ?? 'Közvetlen' }}</td><td>{{ mount.evidence }}</td><td>{{ mount.reference }}</td></tr>}</tbody>
+    </table></div>
+  }
+  @if(canWrite()) {
+    <details class="editor"><summary>Új fizikai gépállomás rögzítése</summary>
+      <form [formGroup]="stationForm" (ngSubmit)="createStation()" class="edit-grid">
+        <label class="field"><span>Pozíciószám</span><input type="number" min="1" max="999" formControlName="positionIndex"></label>
+        <label class="field"><span>Név</span><input formControlName="label" placeholder="T03 – homlokoldali hajtott"></label>
+        <label class="field"><span>Állomástípus</span><select formControlName="stationType">
+          @for(t of stationTypes; track t.value){<option [value]="t.value">{{ t.label }}</option>}
+        </select></label>
+        <label class="field"><span>Max. szerszám Ø (mm, opcionális)</span><input formControlName="maxToolDiameter" placeholder="32"></label>
+        <label class="field"><span>Max. szerszámhossz (mm, opcionális)</span><input formControlName="maxToolLength" placeholder="80"></label>
+        <label class="field"><span>Max. tartóhossz (mm, opcionális)</span><input formControlName="maxHolderLength" placeholder="60"></label>
+        <button class="action primary" type="submit" [disabled]="stationForm.invalid || planForm.controls.machineCode.invalid || busy()">Állomás felvétele</button>
+      </form>
+    </details>
+  }
+  @if(canMountReview()) {
+    <details class="editor"><summary>Dokumentált tartó / interfész felszerelés jóváhagyása</summary>
+      <form [formGroup]="mountForm" (ngSubmit)="approveMount()" class="edit-grid">
+        <label class="field"><span>Gépállomás</span><select formControlName="stationId">
+          <option value="">Válassz pozíciót</option>
+          @for(station of stations();track station.id){<option [value]="station.id">T{{ station.positionIndex }} · {{ station.label }}</option>}
+        </select></label>
+        <label class="field"><span>Tartó üzleti kód</span><input formControlName="holderCode" placeholder="H000001"></label>
+        <label class="field"><span>Interfész – üresen hagyva közvetlen</span><input formControlName="interfaceCode" placeholder="I000001 (opcionális)"></label>
+        <label class="field wide"><span>Műszaki bizonyíték</span><textarea formControlName="evidence" rows="2" placeholder="Ellenőrzött befogási típus, rajz, gyártói méret…"></textarea></label>
+        <label class="field wide"><span>Forrás</span><input formControlName="reference" placeholder="Rajzszám / gyártói katalógus"></label>
+        <button class="action primary" type="submit" [disabled]="mountForm.invalid || busy()">Felszerelési lánc rögzítése</button>
+      </form>
+    </details>
+  }
+</section>
+<section class="panel">
+  <h3>Műszaki paraméterek · Features</h3>
+  <p class="muted">A feature-ök a gyártói törzsadathoz tartoznak. Egy raktári kód alapján a megfelelő master rekordot használjuk.</p>
+  <form [formGroup]="featureForm" (ngSubmit)="loadFeatures()" class="pair-form">
+    <label class="field"><span>Eszköztípus</span><select formControlName="kind">
+      <option value="tools">Szerszám</option><option value="holders">Tartó</option>
+      <option value="interfaces">Interfész</option><option value="machines">Gép</option>
+    </select></label>
+    <label class="field"><span>Üzleti kód</span><input formControlName="code" placeholder="W000001 / H000001 / I000001 / M1"></label>
+    <button type="submit" class="action" [disabled]="busy() || !canRead() || !featureForm.controls.code.value">Feature-ök betöltése</button>
+  </form>
+  @if (featureAsset(); as asset) {
+    <p class="muted"><strong>{{ asset.code }}</strong> · {{ asset.manufacturer }} · {{ asset.manufacturerCode }} · master: {{ asset.masterId }}</p>
+    <div class="feature-list"><div class="scroll-table"><table class="data-table">
+      <thead><tr><th>Paraméter</th><th>Szerep</th><th>Érték</th><th>Egység</th></tr></thead>
+      <tbody>@for(f of features();track f.entityFeatureId){
+        <tr class="selectable" (click)="selectFeature(f.entityFeatureId)" (keydown.enter)="selectFeature(f.entityFeatureId)" tabindex="0">
+          <td>{{ f.name }}</td><td>{{ f.role }}</td><td>{{ f.valueNumber ?? f.valueText ?? '—' }}</td><td>{{ f.unit }}</td></tr>
+      } @empty {<tr><td colspan="4" class="empty">Nem található feature-definíció.</td></tr>}</tbody>
+    </table></div></div>
+    @if(selectedFeature();as selected){
+      @if(canWrite()){
+      <form [formGroup]="featureForm" (ngSubmit)="saveFeature()" class="feature-edit">
+        <p><strong>{{ selected.name }}</strong> · {{ selected.dataType }} · {{ selected.unit }}</p>
+        <label class="field"><span>Érték</span><input formControlName="value"></label>
+        <button type="submit" class="action primary" [disabled]="featureForm.invalid || busy()">Feature mentése</button>
+      </form>
+      }
+    }
+  }
+</section>
+<section class="panel">
+  <h3>Szerszám–tartó dokumentált döntés</h3>
+  <p class="muted">Az összeállítástervező ezt is felhasználja. A korábbi kompatibilitási döntéseket megőrizzük; UUID-t itt sem kell beírni.</p>
+  <form [formGroup]="pairForm" (ngSubmit)="checkPair()" class="review-form">
+    <label class="field"><span>Tartó üzleti kód</span><input formControlName="holderCode" placeholder="H000001"></label>
+    <button class="action" type="submit" [disabled]="pairForm.controls.holderCode.invalid || planForm.controls.toolCode.invalid || busy()">Szerszám–tartó ellenőrzés</button>
+    @if(pairResult();as result){<div class="result"><strong>{{ result.status }}</strong>
+      <p>{{ result.evidence }}</p><p class="muted">{{ result.reference }}</p></div>}
+    @if(canPairReview()){
+      <label class="field"><span>Döntés</span><select formControlName="verdict"><option value="COMPATIBLE">COMPATIBLE</option>
+        <option value="INCOMPATIBLE">INCOMPATIBLE</option></select></label>
+      <label class="field"><span>Bizonyíték</span><textarea formControlName="evidence" rows="2"></textarea></label>
+      <label class="field"><span>Forrás</span><input formControlName="reference" placeholder="Rajzszám / katalógus"></label>
+      <button type="button" class="action primary" (click)="reviewPair()" [disabled]="pairForm.invalid || busy()">Dokumentált döntés rögzítése</button>
+    }
+  </form>
+</section>

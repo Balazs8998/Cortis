@@ -1,2 +1,13 @@
-.pair-form{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;align-items:end;gap:14px}.review-form{display:grid;gap:14px;max-width:650px}.result{border-left:3px solid #1ec4da;padding:14px 20px;background:#14364a;margin-top:18px;border-radius:7px}.result h3{font-size:23px;margin:0 0 12px}
-@media(max-width:850px){.pair-form{grid-template-columns:1fr}}
+.pair-form{display:grid;grid-template-columns:minmax(130px,1fr) minmax(130px,1fr) auto;align-items:end;gap:14px}
+.review-form{display:grid;gap:13px;max-width:720px}
+.result{border-left:3px solid #1ec4da;padding:14px 20px;background:#14364a;margin:12px 0;border-radius:7px}
+.asset-strip{display:flex;flex-wrap:wrap;gap:15px;margin:16px 0}.asset-strip span{padding:8px 14px;border:1px solid #32536a;border-radius:8px}
+.station-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin:18px 0}
+.station-card{display:flex;flex-direction:column;gap:6px;align-items:flex-start;text-align:left;background:#20364b;color:inherit;border:1px solid #39576b;border-radius:9px;padding:14px;cursor:pointer}
+.station-card:hover{border-color:#3eb5cb}.station-card span{font-size:.82rem;color:#adc3d1}
+.status-pill{display:inline-block;padding:4px 8px;border-radius:6px;background:#465065;font-size:.8rem;font-weight:600}
+.status-pill.positive{background:#214d41;color:#8dedc3}.status-pill.negative{background:#6b3535;color:#ffd0d0}
+.data-table small{display:block;line-height:1.5}.editor{margin-top:15px;padding-top:10px;border-top:1px solid #344a60}.editor summary{cursor:pointer;font-weight:600;margin-bottom:10px}
+.edit-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:end}.edit-grid .wide{grid-column:1/-1}
+.feature-list{margin:16px 0}.selectable{cursor:pointer}.selectable:hover{background:#203b53}.feature-edit{display:flex;gap:16px;align-items:end;flex-wrap:wrap;margin-top:12px}.feature-edit .field{min-width:220px}
+@media(max-width:900px){.pair-form,.edit-grid{grid-template-columns:1fr}.feature-edit{display:grid}}

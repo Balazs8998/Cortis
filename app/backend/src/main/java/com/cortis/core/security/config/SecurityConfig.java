@@ -9,6 +9,7 @@ import com.cortis.core.security.ratelimit.RateLimitService;
 import com.cortis.core.security.session.CortisAccessDeniedHandler;
 import com.cortis.core.security.session.CortisAuthenticationEntryPoint;
 import com.cortis.core.security.session.SessionAccountValidationFilter;
+import com.cortis.core.security.session.ReadOnlyAccountFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -146,7 +147,8 @@ public class SecurityConfig {
             )
             // Placed after SecurityContextHolderFilter: user identity is available.
             .addFilterBefore(sessionAccountValidationFilter, AuthorizationFilter.class)
-            .addFilterBefore(rateLimitFilter, AuthorizationFilter.class);
+            .addFilterBefore(rateLimitFilter, AuthorizationFilter.class)
+            .addFilterBefore(new ReadOnlyAccountFilter(), AuthorizationFilter.class);
         return http.build();
     }
 
