@@ -1,0 +1,84 @@
+<div class="agent-shade" (click)="close()" aria-hidden="true"></div>
+<section class="agent-drawer" role="dialog" aria-modal="true" aria-label="CORTIS Agent beszélgetés">
+  <header class="agent-header">
+    <div class="agent-emblem" aria-hidden="true"><span class="emblem-orbit"></span><span class="emblem-core">C</span></div>
+    <div class="agent-title">
+      <span class="agent-kicker">CORTIS INTELLIGENCE</span>
+      <strong>Agent konzol</strong>
+      <small><span class="status-light"></span> Ollama · helyi modell · csak olvasó eszközök</small>
+    </div>
+    <button type="button" class="agent-icon-btn close" (click)="close()" title="Bezárás" aria-label="Agentpanel bezárása">×</button>
+  </header>
+
+  <div class="agent-actions">
+    <button type="button" class="agent-new" (click)="newConversation()" [disabled]="busy()"><span>＋</span> Új beszélgetés</button>
+    <button type="button" class="agent-history" (click)="showConversations.set(!showConversations())" [disabled]="busy()" [attr.aria-expanded]="showConversations()">
+      <span aria-hidden="true">☷</span> Előzmények <span class="history-count">{{ conversations().length }}</span>
+    </button>
+  </div>
+  @if (showConversations()) {
+    <div class="history-list">
+      @for (conversation of conversations(); track conversation.id) {
+        <button type="button" (click)="openConversation(conversation.id)" [class.selected]="selectedId() === conversation.id">
+          <span>◉</span> <span class="history-title">{{ conversation.title }}</span>
+        </button>
+      } @empty { <p>Még nincs mentett beszélgetés.</p> }
+    </div>
+  }
+
+  <div class="agent-transcript" role="log" aria-live="polite" aria-label="Beszélgetés üzenetei">
+    @if (loading()) {
+      <div class="agent-loading"><span class="loading-ring"></span> Beszélgetés betöltése…</div>
+    } @else if (messages().length === 0) {
+      <div class="agent-welcome">
+        <div class="welcome-symbol" aria-hidden="true">✧</div>
+        <span class="welcome-eyebrow">SZERSZÁMOK · GÉPEK · ADATOK</span>
+        <h2>Miben segíthetek?</h2>
+        <p>Kérdezz a CORTIS-ban nyilvántartott gépekről, szerszámokról, készletről és megrendelésekről. Csak a jogosultságaiddal elérhető adatokat láthatom.</p>
+        <div class="suggestions">
+          <button type="button" (click)="example('Meg tudod nézni a W000001 szerszámot és a műszaki adatait?')">◈ W000001 szerszám adatai</button>
+          <button type="button" (click)="example('Milyen szerszámpozíciók vannak az M1 gépen?')">⌘ M1 géppozíciók</button>
+          <button type="button" (click)="example('Melyik géppozíciókon használható a W000001 szerszám az M1 gépen? Mi hiányzik hozzá?')">◇ Szerszám–gép kompatibilitás</button>
+          <button type="button" (click)="example('Mutasd meg a raktár összesített készletét kategóriánként.')">▤ Raktárösszesítés</button>
+        </div>
+      </div>
+    } @else {
+      <div class="thread">
+        @for (message of messages(); track $index) {
+          <div class="thread-line" [class.from-user]="message.role === 'user'">
+            @if (message.role !== 'user') { <span class="thread-avatar" aria-label="CORTIS">C</span> }
+            <div class="bubble">
+              <span class="speaker">{{ message.role === 'user' ? 'TE' : 'CORTIS' }}</span>
+              <p>{{ message.content }}</p>
+            </div>
+          </div>
+        }
+        @if (busy()) {
+          <div class="thread-line"><span class="thread-avatar">C</span><div class="bubble thinking"><span class="speaker">CORTIS</span><span class="dots"><i></i><i></i><i></i></span><span>Feldolgozás és eszközlekérdezés…</span></div></div>
+        }
+      </div>
+    }
+  </div>
+
+  @if (lastTools().length > 0) {
+    <div class="agent-tool-strip" aria-label="Legutóbbi eszközhasználat">
+      <span class="tool-caption">ESZKÖZHÍVÁSOK</span>
+      @for (tool of lastTools(); track $index) {
+        <span class="tool-tag" [class.tool-bad]="tool.status !== 'SUCCESS'" [title]="tool.note">{{ tool.status === 'SUCCESS' ? '✓' : '!' }} {{ tool.name }}</span>
+      }
+    </div>
+  }
+  @if (error()) { <div class="agent-error" role="alert">{{ error() }}</div> }
+
+  <footer class="agent-compose">
+    <div class="compose-box" [class.compose-busy]="busy()">
+      <textarea rows="2" maxlength="3000" [ngModel]="draft()" (ngModelChange)="draft.set($event)" (keydown)="keydown($event)" [disabled]="busy() || loading()" placeholder="Kérdezd a CORTIS Agentet…" aria-label="Üzenet az agentnek"></textarea>
+      <div class="compose-actions">
+        <button type="button" class="voice-soon" disabled title="Hangfunkció: későbbi fejlesztés" aria-label="Hangos beszélgetés még nem elérhető"><span aria-hidden="true">◉</span> Hang hamarosan</button>
+        <span class="composer-hint">Enter · küldés</span>
+        <button type="button" class="send-btn" (click)="send()" [disabled]="!canSend()" aria-label="Üzenet küldése">➤</button>
+      </div>
+    </div>
+    <div class="agent-disclaimer">A gépkompatibilitási javaslat nem helyettesíti a műszaki jóváhagyást.</div>
+  </footer>
+</section>

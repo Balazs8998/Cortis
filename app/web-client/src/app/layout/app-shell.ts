@@ -3,11 +3,12 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet, NavigationEnd } fro
 import { filter } from 'rxjs';
 import { AuthSessionService } from '../auth/auth-session.service';
 import { NAVIGATION, hasAuthority } from '../shared/access';
+import { AgentDrawerComponent } from '../features/agent/agent-drawer';
 
 @Component({
   selector: 'app-cortis-shell',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, AgentDrawerComponent],
   templateUrl: './app-shell.html',
   styleUrl: './app-shell.css'
 })
@@ -17,6 +18,7 @@ export class AppShell {
   readonly navigation = NAVIGATION;
   readonly collapsed = signal(false);
   readonly mobileMenu = signal(false);
+  readonly agentOpen = signal(false);
   readonly currentUrl = signal(this.router.url);
   readonly currentTitle = computed(() => NAVIGATION.find(entry => this.currentUrl().startsWith(entry.path))?.label ?? 'CORTIS');
   readonly isAdmin = computed(() => hasAuthority(this.auth.user(), 'CORTIS_ADMIN'));
@@ -27,6 +29,11 @@ export class AppShell {
       this.currentUrl.set(event.urlAfterRedirects);
       this.mobileMenu.set(false);
     });
+  }
+
+  toggleAgent(): void {
+    this.agentOpen.update(open => !open);
+    this.mobileMenu.set(false);
   }
 
   signOut(): void {

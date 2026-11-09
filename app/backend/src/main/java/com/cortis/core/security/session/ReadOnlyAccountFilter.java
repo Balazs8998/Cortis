@@ -30,7 +30,13 @@ public final class ReadOnlyAccountFilter extends OncePerRequestFilter {
                     .anyMatch(authority -> READONLY_ROLE.equals(authority.getAuthority()));
         boolean logout = "POST".equals(request.getMethod())
                 && "/api/auth/logout".equals(request.getServletPath());
-        if (readonly && !SAFE_METHODS.contains(request.getMethod()) && !logout) {
+        // Conversations are user-owned application notes, not business data mutation.
+        // The only POST exceptions are chat creation and a message to a UUID-owned chat.
+        String path = request.getServletPath();
+        boolean chat = "POST".equals(request.getMethod()) && (
+                "/api/agent/conversations".equals(path) ||
+                path.matches("/api/agent/conversations/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/messages"));
+        if (readonly && !SAFE_METHODS.contains(request.getMethod()) && !logout && !chat) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             response.setContentType("application/json");

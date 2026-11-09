@@ -22,16 +22,25 @@
       }
     </nav>
     <div class="sidebar-bottom">
+      <button type="button" class="agent-launch" [class.agent-launch-active]="agentOpen()"
+              (click)="toggleAgent()" [attr.aria-expanded]="agentOpen()" aria-label="CORTIS Agent megnyitása">
+        <span class="agent-launch-mark" aria-hidden="true"><span>C</span></span>
+        @if (!collapsed()) {
+          <span class="agent-launch-copy"><strong>CORTIS AGENT</strong><small>Intelligence console</small></span>
+          <span class="agent-launch-arrow" aria-hidden="true">↗</span>
+        }
+      </button>
       <button type="button" class="collapse-control" (click)="collapsed.update(value => !value)"
               [attr.aria-label]="collapsed() ? 'Menü kinyitása' : 'Menü összecsukása'">
         <span aria-hidden="true">{{ collapsed() ? '»' : '«' }}</span>
         @if (!collapsed()) { <span>Menü összecsukása</span> }
       </button>
-      @if (!collapsed()) { <span class="build-label">CORTIS V1 · Phase 4A</span> }
+      @if (!collapsed()) { <span class="build-label">CORTIS V1 · Agent Phase 5</span> }
     </div>
   </aside>
   @if (mobileMenu()) { <button type="button" class="mobile-backdrop" aria-label="Menü bezárása" (click)="mobileMenu.set(false)"></button> }
   <div class="main-column">
+    @if (agentOpen()) { <app-cortis-agent-drawer (closed)="agentOpen.set(false)" /> }
     <header class="topbar">
       <div class="topbar-left">
         <button type="button" class="hamburger" (click)="mobileMenu.update(value => !value)" aria-label="Navigáció">☰</button>
