@@ -1,6 +1,13 @@
 server:
   port: 8080
   servlet:
+    session:
+      timeout: 30m
+      cookie:
+        name: CORTIS_SESSION
+        http-only: true
+        same-site: lax
+        secure: ${SESSION_COOKIE_SECURE:false}
     encoding:
       charset: UTF-8
       enabled: true
@@ -38,6 +45,7 @@ spring:
       - archive
       - personal
       - translation
+      - agent
 
     default-schema: core
 
@@ -56,13 +64,18 @@ management:
       exposure:
         include: health,info
 security:
+  session:
+    secure-csrf-cookie: ${CSRF_COOKIE_SECURE:false}
   chip:
     hmac-secret-key: ${CHIP_HMAC_SECRET}
-  jwt:
-    secret-key: ${JWT_SECRET_KEY}
-    expiration-seconds: ${JWT_EXPIRATION_SECONDS:28800}
 
   rate-limit:
+    agent-limit:
+      max-requests: 30
+      window-seconds: 60
+    agent-global-limit:
+      max-requests: 250
+      window-seconds: 60
     enabled: true
     default-limit:
       max-requests: 120

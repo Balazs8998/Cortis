@@ -29,6 +29,11 @@
     </properties>
 
     <dependencies>
+        <!-- Explicit JDBC for session security auditing and agent ownership checks -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
 
         <!--
             FLYWAY – adatbázis-migráció alapmodul.
@@ -157,64 +162,14 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!--
-            JJWT API – JWT tokenek kezeléséhez használt publikus API.
+        
+        
 
-            Főbb feladatai:
-            - JWT token létrehozásának definiálása
-            - token feldolgozásának definiálása
-            - claim-ek kezelése
-            - token aláírásának és ellenőrzésének API-ja
+        
+        
 
-            A tényleges megvalósítást a jjwt-impl biztosítja.
-        -->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-api</artifactId>
-            <version>0.12.6</version>
-        </dependency>
-
-        <!--
-            JJWT IMPLEMENTATION – a JWT működés tényleges implementációja.
-
-            Főbb feladatai:
-            - token generálása
-            - token aláírása
-            - token parse-olása
-            - token hitelességének ellenőrzése
-            - lejárati idő ellenőrzése
-
-            runtime scope:
-            az alkalmazás fordításakor az API-t használjuk,
-            futáskor azonban szükség van erre az implementációra.
-        -->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-impl</artifactId>
-            <version>0.12.6</version>
-            <scope>runtime</scope>
-        </dependency>
-
-        <!--
-            JJWT JACKSON – JSON támogatás a JWT tokenekhez.
-
-            A JWT header és payload JSON formátumú.
-            Ez a modul a Jackson könyvtár segítségével végzi
-            a Java objektumok és a JWT-ben tárolt JSON-adatok közötti
-            átalakítást.
-
-            Például:
-            - subject
-            - roles
-            - permissions
-            - egyéb saját claim-ek
-        -->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-jackson</artifactId>
-            <version>0.12.6</version>
-            <scope>runtime</scope>
-        </dependency>
+        
+        
 
         <!--
             LOMBOK – ismétlődő Java-kód automatikus generálása.

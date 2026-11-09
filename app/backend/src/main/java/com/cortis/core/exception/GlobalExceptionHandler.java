@@ -2,175 +2,75 @@ package com.cortis.core.exception;
 
 import com.cortis.core.exception.ex.LanguageNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.time.Instant;
 import java.util.List;
-import org.springframework.security.access.AccessDeniedException;
 
-
-@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> argumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException ex) {
-
-
-
-        List<ValidationError> validationErrors =
-                ex.getBindingResult()
-                        .getFieldErrors()
-                        .stream()
-                        .map(fieldError -> new ValidationError(
-                                fieldError.getField(),
-                                fieldError.getDefaultMessage()
-                        ))
-                        .toList();
-
-        log.warn("Validation error: method={}, path={}, field={} ",
-                request.getMethod(),
-                request.getRequestURI(),
-                validationErrors.stream()
-                        .map(ValidationError::field)
-                        .toList());
-
-        ErrorResponse errorResponse = new ErrorResponse(
-                Instant.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                "VALIDATION_ERROR",
-                "common.error.validation_error",
-                null,
-                request.getRequestURI(),
-                validationErrors
-        );
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException exception,
+                                                          HttpServletRequest request) {
+        List<ValidationError> errors = exception.getBindingResult().getFieldErrors().stream()
+                .map(field -> new ValidationError(field.getField(), field.getDefaultMessage()))
+                .toList();
+        return build(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", "common.error.validation_error",
+                request, errors);
     }
 
-
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthentication(AuthenticationException exception,
+                                                              HttpServletRequest request) {
+        // Same generic message for invalid username, password, chip or disabled account.
+        return build(HttpStatus.UNAUTHORIZED, "AUTH_INVALID_CREDENTIALS", "auth.error.invalid_credentials",
+                request, null);
+    }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> handleAccessDenied(
-            AccessDeniedException ex,
-            HttpServletRequest request
-    ) {
-
-        log.warn("Access denied: method={}, path={}", request.getMethod(), request.getRequestURI(), ex);
-        ErrorResponse response = new ErrorResponse(
-                Instant.now(),
-                HttpStatus.FORBIDDEN.value(),
-                "ACCESS_DENIED",
-                "common.error.access_denied",
-                ex.getMessage(),
-                request.getRequestURI(),
-                null
-        );
-
-        return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .body(response);
-    }
-
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ErrorResponse> handleBadCredentials(
-            BadCredentialsException ex,
-            HttpServletRequest request
-    ) {
-        log.warn("Invalid credentials: method={}, path={}", request.getMethod(), request.getRequestURI(), ex);
-        ErrorResponse response = new ErrorResponse(
-                Instant.now(),
-                HttpStatus.UNAUTHORIZED.value(),
-                "AUTH_INVALID_CREDENTIALS",
-                "auth.error.invalid_credentials",
-                request.getRequestURI(),
-                ex.getMessage(),
-                null
-        );
-
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(response);
+    public ResponseEntity<ErrorResponse> handleDenied(AccessDeniedException exception,
+                                                      HttpServletRequest request) {
+        return build(HttpStatus.FORBIDDEN, "ACCESS_DENIED", "common.error.access_denied", request, null);
     }
 
     @ExceptionHandler(LanguageNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleLanguageNotFound(
-            LanguageNotFoundException ex,
-            HttpServletRequest request
-    ) {
-        log.warn("Language not found: method={}, path={}", request.getMethod(), request.getRequestURI());
-        ErrorResponse response = new ErrorResponse(
-                Instant.now(),
-                HttpStatus.NOT_FOUND.value(),
-                "TRANSLATION_LANGUAGE_NOT_FOUND",
-                "translation.error.language_not_found",
-                request.getRequestURI(),
-                ex.getMessage(),
-                null
-        );
+    public ResponseEntity<ErrorResponse> handleLanguage(LanguageNotFoundException exception,
+                                                        HttpServletRequest request) {
+        return build(HttpStatus.NOT_FOUND, "TRANSLATION_LANGUAGE_NOT_FOUND",
+                "translation.error.language_not_found", request, null);
+    }
 
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(response);
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ErrorResponse> handleStatus(ResponseStatusException exception,
+                                                      HttpServletRequest request) {
+        HttpStatus status = HttpStatus.resolve(exception.getStatusCode().value());
+        if (status == null) status = HttpStatus.INTERNAL_SERVER_ERROR;
+        String code = status == HttpStatus.NOT_FOUND ? "RESOURCE_NOT_FOUND" : "REQUEST_REJECTED";
+        return build(status, code, "common.error." + code.toLowerCase(java.util.Locale.ROOT), request, null);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleUnexpectedException(
-            Exception ex,
-            HttpServletRequest request
-    ) {
-        log.error("Unhandled backend exception", ex);
-
-        ErrorResponse response = new ErrorResponse(
-                Instant.now(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "INTERNAL_SERVER_ERROR",
-                "common.error.internal_server",
-                request.getRequestURI(),
-                ex.getMessage(),
-                null
-        );
-
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(response);
+    public ResponseEntity<ErrorResponse> handleUnexpected(Exception exception, HttpServletRequest request) {
+        log.error("Unhandled backend exception at {} {}", request.getMethod(), request.getRequestURI(), exception);
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR",
+                "common.error.internal_server", request, null);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> ChipCodeNotFoundException(Exception ex, HttpServletRequest request) {
-        log.error("Chip code not found", ex);
-        ErrorResponse response = new ErrorResponse(
-                Instant.now(),
-                HttpStatus.NOT_FOUND.value(),
-                "CHIP_CODE_NOT_FOUND",
-                "auth.error.chip_code_not_found",
-                request.getRequestURI(),
-                ex.getMessage(),
-                null
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    private ResponseEntity<ErrorResponse> build(HttpStatus status, String code, String messageKey,
+                                                HttpServletRequest request, List<ValidationError> validationErrors) {
+        ErrorResponse response = new ErrorResponse(Instant.now(), status.value(), code,
+                messageKey, null, request.getRequestURI(), validationErrors);
+        return ResponseEntity.status(status).header("Cache-Control", "no-store").body(response);
     }
-
-    @ExceptionHandler(DisabledException.class)
-    public ResponseEntity<ErrorResponse> DisableException(Exception exception,  HttpServletRequest request) {
-
-        ErrorResponse response = new ErrorResponse(
-                Instant.now(),
-                HttpStatus.FORBIDDEN.value(),
-                "DISABLED_USER",
-                "auth.error.disabled_user",
-                request.getRequestURI(),
-                exception.getMessage(),
-                null
-        );
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-    }
-
 }

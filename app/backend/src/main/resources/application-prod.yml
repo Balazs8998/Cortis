@@ -13,3 +13,12 @@ management:
     web:
       exposure:
         include: health,info
+# Production must be served only via HTTPS, with trusted proxy headers configured.
+server:
+  servlet:
+    session:
+      cookie:
+        secure: true
+security:
+  session:
+    secure-csrf-cookie: true
