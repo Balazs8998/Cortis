@@ -1,3 +1,4 @@
+import { UiTranslationService } from '../../shared/i18n/ui-translation.service';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -15,6 +16,7 @@ import type { Master, InventoryItem } from '../../cortis/business-api.service';
   styleUrls: ['../../shared/workspace.css', './inventory-page.css']
 })
 export class InventoryPage implements OnInit {
+  readonly tr = inject(UiTranslationService);
   private readonly data = inject(WorkspaceDataService);
   private readonly fb = inject(FormBuilder);
   private requestGeneration = 0;
@@ -85,7 +87,7 @@ export class InventoryPage implements OnInit {
   refresh(): void {
     const generation = ++this.requestGeneration;
     const kind = this.selectedCategory().kind;
-    if (!this.canRead()) { this.error.set('A raktárhoz CORTIS_CATALOG_READ és CORTIS_INVENTORY_READ szükséges.'); return; }
+    if (!this.canRead()) { this.error.set(this.tr.t('errors.missing_permission_inventory')); return; }
     this.loading.set(true); this.error.set('');
     forkJoin({
       types: this.data.types(kind),
@@ -124,15 +126,15 @@ export class InventoryPage implements OnInit {
     if (!item || !this.selectedCategory().stocked || !this.canWrite() || this.quantityForm.invalid || this.saving()) return;
     const {amount, reason} = this.quantityForm.getRawValue();
     const current = item.quantity ?? 0;
-    if (this.action() !== 'CORRECTION' && amount <= 0) { this.error.set('Pozitív mennyiség szükséges.'); return; }
+    if (this.action() !== 'CORRECTION' && amount <= 0) { this.error.set(this.tr.t('inventory.stock_need_positive')); return; }
     const delta = this.action() === 'IN' ? amount : this.action() === 'OUT' ? -amount : amount - current;
-    if (!delta) { this.error.set('A készlet mennyisége nem változna.'); return; }
-    if (current + delta < 0) { this.error.set('Negatív készlet nem engedélyezett.'); return; }
+    if (!delta) { this.error.set(this.tr.t('inventory.stock_no_change')); return; }
+    if (current + delta < 0) { this.error.set(this.tr.t('inventory.stock_negative')); return; }
     this.saving.set(true); this.error.set(''); this.success.set('');
     this.data.adjust(kind, item.id, delta, reason).subscribe({
       next: updated => {
         this.selectedStock.set(updated);
-        this.success.set(`Készletmozgás rögzítve: ${updated.code}`);
+        this.success.set(this.tr.t('inventory.stock_adjusted', { code: updated.code }));
         this.saving.set(false); this.refresh(); this.select(updated);
       },
       error: e => { this.saving.set(false); this.error.set(this.message(e)); }
@@ -146,7 +148,7 @@ export class InventoryPage implements OnInit {
         this.catalogTypes.update(types => [...types, created]);
         this.masterForm.controls.typeId.setValue(created.id);
         this.typeForm.reset(); this.saving.set(false);
-        this.success.set('Típus létrehozva.');
+        this.success.set(this.tr.t('inventory.type_created'));
       }, error: e => { this.saving.set(false); this.error.set(this.message(e)); }
     });
   }
@@ -158,7 +160,7 @@ export class InventoryPage implements OnInit {
         this.masters.update(rows => [...rows, created]);
         this.newStockForm.controls.masterId.setValue(created.id);
         this.masterForm.reset(); this.saving.set(false);
-        this.success.set('Törzsadat létrehozva. Most felvehetsz egy raktári tételt.');
+        this.success.set(this.tr.t('inventory.master_created'));
       }, error: e => { this.saving.set(false); this.error.set(this.message(e)); }
     });
   }
@@ -173,7 +175,7 @@ export class InventoryPage implements OnInit {
       next: created => {
         this.saving.set(false); this.newStockForm.reset();
         this.newStockForm.controls.location.setValue('pending');
-        this.success.set(`Tétel létrehozva: ${created.code} (a backend osztotta ki).`);
+        this.success.set(this.tr.t('inventory.stock_created', { code: created.code }));
         this.refresh(); this.select(created);
       }, error: e => { this.saving.set(false); this.error.set(this.message(e)); }
     });
@@ -186,18 +188,18 @@ export class InventoryPage implements OnInit {
       next: () => {
         this.saving.set(false); this.confirmingArchive.set(false);
         this.selectedStock.set(null); this.movements.set([]);
-        this.success.set(`Archiválva: ${item.code}. A mozgásnapló megmaradt.`);
+        this.success.set(this.tr.t('inventory.archived', { code: item.code }));
         this.refresh();
       }, error: e => { this.saving.set(false); this.error.set(this.message(e)); }
     });
   }
   private message(error: unknown): string {
     const status = error instanceof HttpErrorResponse ? error.status : 0;
-    if (status === 401) return 'A munkamenet lejárt. Jelentkezz be újra.';
-    if (status === 403) return 'A művelethez nincs megfelelő jogosultság.';
-    if (status === 409) return 'Ütközés: már létező adat, nem üres készlet vagy érvénytelen mennyiség.';
-    if (status === 400) return 'Hibás vagy hiányos adatok. Ellenőrizd a mezőket.';
-    if (status === 0) return 'A backend nem érhető el. Ellenőrizd az Angular proxyt.';
-    return `Kérés sikertelen (HTTP ${status}).`;
+    if (status === 401) return this.tr.t('errors.session_expired');
+    if (status === 403) return this.tr.t('errors.forbidden');
+    if (status === 409) return this.tr.t('errors.conflict');
+    if (status === 400) return this.tr.t('errors.bad_request');
+    if (status === 0) return this.tr.t('errors.backend_unreachable');
+    return this.tr.t('errors.request_failed', { status });
   }
 }

@@ -22,6 +22,8 @@ public interface TextRepository
         JOIN text.keyword keywordEntity
         JOIN text.language languageEntity
         WHERE languageEntity.code = :languageCode
+          AND text.deletedAt IS NULL AND categoryEntity.deletedAt IS NULL
+          AND keywordEntity.deletedAt IS NULL AND languageEntity.deletedAt IS NULL
         """)
     List<TranslationProjection> findTranslationsByLanguageCode(
             @Param("languageCode") String languageCode

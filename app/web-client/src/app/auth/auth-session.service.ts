@@ -1,3 +1,4 @@
+import { UiTranslationService } from '../shared/i18n/ui-translation.service';
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -15,20 +16,21 @@ interface CsrfResponse {
   token: string;
 }
 
-function authErrorMessage(error: unknown): string {
-  if (!(error instanceof HttpErrorResponse)) return 'Váratlan hiba történt.';
+function authErrorMessage(error: unknown, tr: UiTranslationService): string {
+  if (!(error instanceof HttpErrorResponse)) return tr.t('login.error.unexpected');
   switch (error.status) {
-    case 0: return 'A CORTIS backend nem érhető el. Ellenőrizd a Spring Bootot és az Angular proxyt.';
-    case 400: return 'Hibás bejelentkezési adatok.';
-    case 401: return 'Hibás felhasználónév vagy jelszó, vagy lejárt a munkamenet.';
-    case 403: return 'A kérés elutasítva (CSRF vagy jogosultsági hiba).';
-    case 429: return 'Túl sok próbálkozás. Próbáld újra később.';
+    case 0: return tr.t('errors.backend_unreachable_login');
+    case 400: return tr.t('errors.login_invalid');
+    case 401: return tr.t('errors.login_unauthorized');
+    case 403: return tr.t('errors.csrf_forbidden');
+    case 429: return tr.t('errors.too_many_attempts');
     default: return `Szerverhiba (HTTP ${error.status}).`;
   }
 }
 
 @Injectable({ providedIn: 'root' })
 export class AuthSessionService {
+  readonly tr = inject(UiTranslationService);
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
 
@@ -81,7 +83,7 @@ export class AuthSessionService {
         // A future /me call reconciles state with the server; never fabricate auth state.
         this.user.set(null);
         this.checked.set(false);
-        this.error.set(authErrorMessage(error));
+        this.error.set(authErrorMessage(error, this.tr));
         return throwError(() => error);
       }),
       finalize(() => this.loading.set(false))
@@ -105,7 +107,7 @@ export class AuthSessionService {
           this.forgetLocalSession();
           return of(void 0);
         }
-        this.error.set(authErrorMessage(error));
+        this.error.set(authErrorMessage(error, this.tr));
         return throwError(() => error);
       }),
       finalize(() => this.loading.set(false))

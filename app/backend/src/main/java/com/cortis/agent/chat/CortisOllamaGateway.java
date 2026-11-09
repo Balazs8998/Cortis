@@ -51,12 +51,26 @@ public class CortisOllamaGateway {
     public String model() { return model; }
 
     JsonNode chat(List<StoredMessage> history, List<Map<String, Object>> tools) {
+        return chat(history, tools, "hu");
+    }
+
+    static String languageDirective(String requested) {
+        String value = requested == null ? "hu" : requested.strip().toLowerCase(java.util.Locale.ROOT);
+        String code = value.split("[-,;]", 2)[0];
+        return switch (code) {
+            case "de" -> "Respond in German (Deutsch) to the current user.";
+            case "en" -> "Respond in English to the current user.";
+            default -> "Respond in Hungarian (magyar) to the current user.";
+        };
+    }
+
+    JsonNode chat(List<StoredMessage> history, List<Map<String, Object>> tools, String language) {
         ObjectNode payload = mapper.createObjectNode();
         payload.put("model", model);
         payload.put("stream", false);
         payload.put("think", false);
         ArrayNode messages = payload.putArray("messages");
-        messages.addObject().put("role", "system").put("content", SYSTEM_PROMPT);
+        messages.addObject().put("role", "system").put("content", SYSTEM_PROMPT + "\n" + languageDirective(language));
         for (StoredMessage entry : history) {
             ObjectNode message = messages.addObject().put("role", entry.role());
             if (entry.content() != null) message.put("content", entry.content());

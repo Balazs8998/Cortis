@@ -38,6 +38,10 @@ public class CortisAgentService {
     }
 
     public Answer send(UUID id, String message, Authentication authentication) {
+        return send(id, message, authentication, "hu");
+    }
+
+    public Answer send(UUID id, String message, Authentication authentication, String language) {
         repository.verify(id, authentication);
         if (!(authentication.getPrincipal() instanceof CortisUserPrincipal principal)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authentication required");
@@ -59,7 +63,7 @@ public class CortisAgentService {
             boolean finalOnly = false;
             for (int iteration = 0; iteration < MAX_ITERATIONS; iteration++) {
                 iterations++;
-                JsonNode reply = ollama.chat(repository.modelHistory(id), (budgetExceeded || finalOnly) ? List.of() : permittedTools);
+                JsonNode reply = ollama.chat(repository.modelHistory(id), (budgetExceeded || finalOnly) ? List.of() : permittedTools, language);
                 String content = reply.path("content").asText("").strip();
                 JsonNode requested = reply.path("tool_calls");
                 boolean hasCalls = requested.isArray() && !requested.isEmpty();

@@ -1,3 +1,4 @@
+import { UiTranslationService } from '../../shared/i18n/ui-translation.service';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -33,16 +34,16 @@ function freshDraft(): DraftOrder {
     { itemCode: '', description: '', quantity: 1, unit: 'PCS' }
   ] };
 }
-function orderError(error: unknown): string {
+function orderError(error: unknown, tr: UiTranslationService): string {
   const status = error instanceof HttpErrorResponse ? error.status : 0;
   switch (status) {
-    case 0: return 'A szerver nem érhető el. Ellenőrizd a proxyt és a Spring Bootot.';
-    case 400: return 'Érvénytelen adat vagy kérés. Ellenőrizd a mezőket és a dátumot.';
-    case 401: return 'A munkamenet lejárt. Jelentkezz be újra.';
-    case 403: return 'Nincs megfelelő megrendelési jogosultság, vagy CSRF-hiba történt.';
-    case 404: return 'A megrendelési API vagy a keresett rekord nem található. Ellenőrizd a Phase 4B backend telepítését.';
-    case 409: return 'Ütközés: a megrendelés állapota nem módosítható így.';
-    default: return `A megrendelési művelet sikertelen (HTTP ${status}).`;
+    case 0: return tr.t('errors.network_orders');
+    case 400: return tr.t('errors.invalid_order');
+    case 401: return tr.t('errors.session_expired');
+    case 403: return tr.t('errors.orders_forbidden');
+    case 404: return tr.t('errors.orders_not_found');
+    case 409: return tr.t('errors.orders_conflict');
+    default: return tr.t('errors.orders_failed', { status });
   }
 }
 
@@ -54,6 +55,7 @@ function orderError(error: unknown): string {
   styleUrls: ['../../shared/workspace.css', './orders-page.css']
 })
 export class OrdersPage implements OnInit {
+  readonly tr = inject(UiTranslationService);
   private readonly http = inject(HttpClient);
   readonly auth = inject(AuthSessionService);
   readonly query = signal('');
@@ -85,7 +87,7 @@ export class OrdersPage implements OnInit {
     if (resetPage) this.page.set(0);
     if (!this.canRead()) {
       this.records.set([]);
-      this.error.set('Nincs CORTIS_ORDERS_READ jogosultság a megrendelések megtekintéséhez.');
+      this.error.set(this.tr.t('errors.missing_permission_orders'));
       return;
     }
     this.error.set(''); this.success.set('');
@@ -98,7 +100,7 @@ export class OrdersPage implements OnInit {
       },
       error: error => {
         this.records.set([]); this.loading.set(false); this.available.set(false);
-        this.error.set(orderError(error));
+        this.error.set(orderError(error, this.tr));
       }
     });
   }
@@ -116,7 +118,7 @@ export class OrdersPage implements OnInit {
     this.detailsLoading.set(true); this.error.set('');
     this.http.get<OrderDetail>(`/api/v1/orders/${order.id}`).subscribe({
       next: detail => { this.details.set(detail); this.detailsLoading.set(false); },
-      error: error => { this.detailsLoading.set(false); this.error.set(orderError(error)); }
+      error: error => { this.detailsLoading.set(false); this.error.set(orderError(error, this.tr)); }
     });
   }
   closeDetails(): void { this.details.set(null); }
@@ -143,9 +145,9 @@ export class OrdersPage implements OnInit {
       next: created => {
         this.creating.set(false); this.newOrder = freshDraft();
         this.scope.set('all'); this.query.set(created.orderCode); this.page.set(0);
-        this.search(); this.success.set(`Megrendelés létrehozva: ${created.orderCode}`);
+        this.search(); this.success.set(this.tr.t('orders.created', { code: created.orderCode }));
       },
-      error: error => { this.creating.set(false); this.error.set(orderError(error)); }
+      error: error => { this.creating.set(false); this.error.set(orderError(error, this.tr)); }
     });
   }
   transitionOptions(status: OrderStatus): OrderStatus[] {
@@ -168,7 +170,7 @@ export class OrdersPage implements OnInit {
         if (this.details()?.order.id === order.id) this.openDetails(updated);
         this.search(); this.success.set(`${updated.orderCode}: ${updated.status}`);
       },
-      error: error => { this.changing.set(false); this.error.set(orderError(error)); }
+      error: error => { this.changing.set(false); this.error.set(orderError(error, this.tr)); }
     });
   }
 }

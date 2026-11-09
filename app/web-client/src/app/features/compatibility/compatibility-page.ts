@@ -1,3 +1,4 @@
+import { UiTranslationService } from '../../shared/i18n/ui-translation.service';
 import { Component, computed, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -25,6 +26,7 @@ const STATION_TYPES = [
   styleUrls:['../../shared/workspace.css','./compatibility-page.css']
 })
 export class CompatibilityPage {
+  readonly tr = inject(UiTranslationService);
   private readonly api = inject(EngineeringApiService);
   private readonly legacy = inject(BusinessApiService);
   private readonly fb = inject(FormBuilder);
@@ -76,13 +78,13 @@ export class CompatibilityPage {
 
   private fail(err:unknown): void {
     const status=err instanceof HttpErrorResponse ? err.status : 0;
-    this.error.set(status === 401 ? 'Lejárt a munkamenet.' :
+    this.error.set(status === 401 ? this.tr.t('errors.session_expired_short') :
       status === 403 ? 'Nincs megfelelő jogosultságod, vagy a CSRF token hiányzik.' :
       status === 404 ? 'A megadott kódhoz nem található aktív tétel.' :
       status === 409 ? 'Az adat már létezik vagy egy adatbázis-szabályt sért.' :
       status === 400 ? 'Érvénytelen mező vagy üzleti kód.' :
       status === 0 ? 'Nem érhető el a backend. Indítsd az Angulart proxyval.' :
-      `Kérés sikertelen (HTTP ${status}).`);
+      this.tr.t('errors.request_failed', { status }));
     this.busy.set(false);
   }
   private start(): boolean {
@@ -126,7 +128,7 @@ export class CompatibilityPage {
       this.error.set('A megadott értéknek pozitív számnak kell lennie (legfeljebb 3 tizedes).');this.busy.set(false);return;
     }
     this.api.saveFeature(kind,code,f.entityFeatureId,numeric?Number(value):null,numeric?null:value).subscribe({
-      next:features=>{this.features.set(features);this.selectFeature(f.entityFeatureId);this.notice.set('Feature érték elmentve.');this.busy.set(false);},
+      next:features=>{this.features.set(features);this.selectFeature(f.entityFeatureId);this.notice.set(this.tr.t('compatibility.feature_saved'));this.busy.set(false);},
       error:e=>this.fail(e)
     });
   }
@@ -143,10 +145,10 @@ export class CompatibilityPage {
       maxToolLength:this.optionalNumber(v.maxToolLength),
       maxHolderLength:this.optionalNumber(v.maxHolderLength)};
     if([data.maxToolDiameter,data.maxToolLength,data.maxHolderLength].some(n=>Number.isNaN(n))){
-      this.busy.set(false);this.error.set('A gépállomás-korlátok pozitív számok legyenek.');return;
+      this.busy.set(false);this.error.set(this.tr.t('compatibility.invalid_geometry'));return;
     }
     this.api.createStation(this.planForm.getRawValue().machineCode,data).subscribe({
-      next:()=>{this.busy.set(false);this.notice.set('Gépállomás felvéve. Futtasd újra az ellenőrzést.');this.checkPlan();},
+      next:()=>{this.busy.set(false);this.notice.set(this.tr.t('compatibility.station_created'));this.checkPlan();},
       error:e=>this.fail(e)
     });
   }
@@ -159,7 +161,7 @@ export class CompatibilityPage {
     const v=this.mountForm.getRawValue();
     this.api.approveMount(v.stationId,{holderCode:v.holderCode,interfaceCode:v.interfaceCode||null,
       evidence:v.evidence,reference:v.reference}).subscribe({
-      next:()=>{this.busy.set(false);this.notice.set('Dokumentált gépállomás–tartó kapcsolat rögzítve.');
+      next:()=>{this.busy.set(false);this.notice.set(this.tr.t('compatibility.mount_created'));
         this.loadMounts(v.stationId);this.checkPlan();},error:e=>this.fail(e)
     });
   }
@@ -178,7 +180,7 @@ export class CompatibilityPage {
       holder:this.api.asset('holders',v.holderCode)}).subscribe({
       next:assets=>this.legacy.review(assets.tool.masterId,assets.holder.masterId,
         v.verdict,v.evidence,v.reference).subscribe({
-        next:r=>{this.pairResult.set(r);this.notice.set('Dokumentált szerszám–tartó döntés elmentve.');this.busy.set(false);},
+        next:r=>{this.pairResult.set(r);this.notice.set(this.tr.t('compatibility.pair_created'));this.busy.set(false);},
         error:e=>this.fail(e)}),error:e=>this.fail(e)
     });
   }

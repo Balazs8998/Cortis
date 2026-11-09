@@ -1,3 +1,5 @@
+import { UiTranslationService } from '../shared/i18n/ui-translation.service';
+import { CortisLanguagePicker } from '../shared/i18n/language-picker';
 import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -7,11 +9,12 @@ import { AuthSessionService } from './auth-session.service';
 @Component({
   selector: 'app-cortis-login',
   standalone: true,
-  imports: [FormsModule],
+  imports: [CortisLanguagePicker, FormsModule],
   templateUrl: './login-page.html',
   styleUrl: './login-page.css'
 })
 export class LoginPage {
+  readonly tr = inject(UiTranslationService);
   readonly auth = inject(AuthSessionService);
   private readonly router = inject(Router);
   readonly userName = signal('');
@@ -25,6 +28,7 @@ export class LoginPage {
 
   // A valid browser session should lead directly to the protected area.
   ngOnInit(): void {
+    this.tr.ensureLoaded();
     this.auth.loadMe().subscribe({
       next: () => void this.router.navigateByUrl('/dashboard'),
       error: () => { /* Anonymous visitor: show the login form. */ }

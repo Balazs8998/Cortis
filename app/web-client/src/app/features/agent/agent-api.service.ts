@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { UiTranslationService } from '../../shared/i18n/ui-translation.service';
 
 export interface AgentConversation {
   id: string;
@@ -28,6 +29,7 @@ export interface AgentAnswer {
 @Injectable({ providedIn: 'root' })
 export class AgentApiService {
   private readonly http = inject(HttpClient);
+  private readonly locale = inject(UiTranslationService);
   private readonly base = '/api/agent/conversations';
 
   list(): Observable<AgentConversation[]> { return this.http.get<AgentConversation[]>(this.base); }
@@ -36,6 +38,8 @@ export class AgentApiService {
     return this.http.get<AgentMessage[]>(`${this.base}/${encodeURIComponent(id)}/messages`);
   }
   send(id: string, message: string): Observable<AgentAnswer> {
-    return this.http.post<AgentAnswer>(`${this.base}/${encodeURIComponent(id)}/messages`, { message });
+    return this.http.post<AgentAnswer>(`${this.base}/${encodeURIComponent(id)}/messages`, { message }, {
+      headers: { 'Accept-Language': this.locale.language() }
+    });
   }
 }

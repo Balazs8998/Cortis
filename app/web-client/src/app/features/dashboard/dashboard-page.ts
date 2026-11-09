@@ -1,3 +1,4 @@
+import { UiTranslationService } from '../../shared/i18n/ui-translation.service';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -17,6 +18,7 @@ interface StockMetric { kind: Kind; label: string; rows: number; quantity: numbe
   styleUrls: ['../../shared/workspace.css', './dashboard-page.css']
 })
 export class DashboardPage implements OnInit {
+  readonly tr = inject(UiTranslationService);
   private readonly data = inject(WorkspaceDataService);
   private readonly http = inject(HttpClient);
   readonly auth = inject(AuthSessionService);

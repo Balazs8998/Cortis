@@ -1,17 +1,17 @@
-<div class="page-heading"><div><p class="eyebrow">AUSWERTUNGEN</p><h2>Statisztikák</h2><p class="muted">Készletmegoszlás a jelenleg elérhető, valós API-adatok alapján.</p></div>
-  <span class="tag neutral">Előzetes áttekintés · max. 100 tétel/kategória</span></div>
+<div class="page-heading"><div><p class="eyebrow">{{ tr.t('statistics.eyebrow') }}</p><h2>{{ tr.t('statistics.title') }}</h2><p class="muted">{{ tr.t('statistics.subtitle') }}</p></div>
+  <span class="tag neutral">{{ tr.t('statistics.preliminary') }}</span></div>
 @if (error()) {<p class="error" role="alert">{{ error() }}</p>}
-@if (loading()) {<p class="notice" role="status">Statisztika betöltése…</p>}
-<section class="panel"><h3>Raktári készlet kategóriánként</h3>
-  <p class="hint">Az oszlopok csak az első 100 tétel mennyiségét összegzik. Nem teljes készletstatisztika, ha több tétel található egy kategóriában.</p>
+@if (loading()) {<p class="notice" role="status">{{ tr.t('statistics.loading') }}</p>}
+<section class="panel"><h3>{{ tr.t('statistics.stock_by_category') }}</h3>
+  <p class="hint">{{ tr.t('statistics.partial_notice') }}</p>
   @for (bar of bars(); track bar.code) {
     <div class="stat-line"><div class="line-heading"><strong>{{ bar.label }}</strong><span>{{ bar.total }} db · {{ bar.count }} tétel</span></div>
       <div class="bar-track"><div class="bar-fill" [style.width.%]="bar.percentage"></div></div>
-      @if (bar.truncated) {<span class="hint">100 tételes korlát · az összeg részleges</span>}
+      @if (bar.truncated) {<span class="hint">{{ tr.t('statistics.limit_notice') }}</span>}
     </div>
-  } @empty { @if (!loading()) {<p class="empty">Nincs elérhető készletstatisztika.</p>} }
+  } @empty { @if (!loading()) {<p class="empty">{{ tr.t('statistics.empty') }}</p>} }
 </section>
-<section class="panel"><h3>Tervezett kimutatások</h3>
-  <p class="muted">Havi bevételezés / kivételezés, legtöbbet használt szerszámok, rendelések kiszállítási trendje és alacsony készletjelzés.</p>
-  <p class="notice">A teljes kimutatásokhoz szerveroldali aggregációs API és alacsony készletszint-küszöb szükséges. Addig nem jelenítünk meg hamis grafikonokat.</p>
+<section class="panel"><h3>{{ tr.t('statistics.planned') }}</h3>
+  <p class="muted">{{ tr.t('statistics.planned_details') }}</p>
+  <p class="notice">{{ tr.t('statistics.full_report_notice') }}</p>
 </section>

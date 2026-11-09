@@ -43,7 +43,8 @@ public class CortisAgentController {
 
     @PostMapping("/{id}/messages")
     public Answer send(@PathVariable UUID id, @Valid @RequestBody Send body,
+                       @RequestHeader(name="Accept-Language", required=false) String language,
                        Authentication authentication) {
-        return agent.send(id, body.message(), authentication);
+        return agent.send(id, body.message(), authentication, language);
     }
 }

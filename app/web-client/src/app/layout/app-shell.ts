@@ -1,3 +1,4 @@
+import { UiTranslationService } from '../shared/i18n/ui-translation.service';
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
@@ -13,6 +14,7 @@ import { AgentDrawerComponent } from '../features/agent/agent-drawer';
   styleUrl: './app-shell.css'
 })
 export class AppShell {
+  readonly tr = inject(UiTranslationService);
   readonly auth = inject(AuthSessionService);
   private readonly router = inject(Router);
   readonly navigation = NAVIGATION;
@@ -20,11 +22,12 @@ export class AppShell {
   readonly mobileMenu = signal(false);
   readonly agentOpen = signal(false);
   readonly currentUrl = signal(this.router.url);
-  readonly currentTitle = computed(() => NAVIGATION.find(entry => this.currentUrl().startsWith(entry.path))?.label ?? 'CORTIS');
+  readonly currentTitle = computed(() => { const item = NAVIGATION.find(entry => this.currentUrl().startsWith(entry.path)); return item ? this.tr.t('navigation.' + item.path.slice(1)) : 'CORTIS'; });
   readonly isAdmin = computed(() => hasAuthority(this.auth.user(), 'CORTIS_ADMIN'));
   readonly logoutError = signal('');
 
   constructor() {
+    this.tr.ensureLoaded();
     this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd)).subscribe(event => {
       this.currentUrl.set(event.urlAfterRedirects);
       this.mobileMenu.set(false);
@@ -41,7 +44,7 @@ export class AppShell {
     this.logoutError.set('');
     this.auth.signOut().subscribe({
       next: () => void this.router.navigateByUrl('/'),
-      error: () => this.logoutError.set(this.auth.error() || 'A kijelentkezés sikertelen.')
+      error: () => this.logoutError.set(this.auth.error() || this.tr.t('navigation.logout_failed'))
     });
   }
 }

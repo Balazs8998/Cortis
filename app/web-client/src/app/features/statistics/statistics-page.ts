@@ -1,3 +1,4 @@
+import { UiTranslationService } from '../../shared/i18n/ui-translation.service';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { AuthSessionService } from '../../auth/auth-session.service';
@@ -14,6 +15,7 @@ interface CategoryBar { label: string; code: string; total: number; percentage: 
   styleUrls: ['../../shared/workspace.css', './statistics-page.css']
 })
 export class StatisticsPage implements OnInit {
+  readonly tr = inject(UiTranslationService);
   private readonly data = inject(WorkspaceDataService);
   private readonly auth = inject(AuthSessionService);
   readonly loading = signal(false);
@@ -35,7 +37,7 @@ export class StatisticsPage implements OnInit {
         })));
         this.loading.set(false);
       },
-      error: () => { this.error.set('Nem sikerült betölteni a raktári statisztikát.'); this.loading.set(false); }
+      error: () => { this.error.set(this.tr.t('statistics.error')); this.loading.set(false); }
     });
   }
 }

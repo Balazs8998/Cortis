@@ -1,0 +1,106 @@
+[
+  {
+    "file": "app/web-client/src/app/auth/auth-session.service.ts",
+    "text": "Add meg a felhasználónevet és a jelszót."
+  },
+  {
+    "file": "app/web-client/src/app/auth/login-page.html",
+    "text": "Version 1.0"
+  },
+  {
+    "file": "app/web-client/src/app/features/compatibility/compatibility-page.html",
+    "text": "Bizonyíték"
+  },
+  {
+    "file": "app/web-client/src/app/features/compatibility/compatibility-page.html",
+    "text": "Bizonyíték"
+  },
+  {
+    "file": "app/web-client/src/app/features/compatibility/compatibility-page.ts",
+    "text": "Fix esztergaszerszám-állomás"
+  },
+  {
+    "file": "app/web-client/src/app/features/compatibility/compatibility-page.ts",
+    "text": "Radiális hajtott állomás"
+  },
+  {
+    "file": "app/web-client/src/app/features/compatibility/compatibility-page.ts",
+    "text": "Homlokoldali axiális állomás"
+  },
+  {
+    "file": "app/web-client/src/app/features/compatibility/compatibility-page.ts",
+    "text": "Hátoldali axiális állomás"
+  },
+  {
+    "file": "app/web-client/src/app/features/compatibility/compatibility-page.ts",
+    "text": "Nincs megfelelő jogosultságod, vagy a CSRF token hiányzik."
+  },
+  {
+    "file": "app/web-client/src/app/features/compatibility/compatibility-page.ts",
+    "text": "A megadott kódhoz nem található aktív tétel."
+  },
+  {
+    "file": "app/web-client/src/app/features/compatibility/compatibility-page.ts",
+    "text": "Az adat már létezik vagy egy adatbázis-szabályt sért."
+  },
+  {
+    "file": "app/web-client/src/app/features/compatibility/compatibility-page.ts",
+    "text": "Érvénytelen mező vagy üzleti kód."
+  },
+  {
+    "file": "app/web-client/src/app/features/compatibility/compatibility-page.ts",
+    "text": "Nem érhető el a backend. Indítsd az Angulart proxyval."
+  },
+  {
+    "file": "app/web-client/src/app/features/compatibility/compatibility-page.ts",
+    "text": "A megadott értéknek pozitív számnak kell lennie (legfeljebb 3 tizedes)."
+  },
+  {
+    "file": "app/web-client/src/app/features/dashboard/dashboard-page.ts",
+    "text": "A raktári áttekintéshez CORTIS_INVENTORY_READ jogosultság kell."
+  },
+  {
+    "file": "app/web-client/src/app/features/dashboard/dashboard-page.ts",
+    "text": "A raktári adatok nem tölthetők be. Ellenőrizd a jogosultságokat és a backend kapcsolatát."
+  },
+  {
+    "file": "app/web-client/src/app/features/dashboard/dashboard-page.ts",
+    "text": "Megrendelés-áttekintéshez CORTIS_ORDERS_READ jogosultság kell."
+  },
+  {
+    "file": "app/web-client/src/app/features/dashboard/dashboard-page.ts",
+    "text": "A megrendelési áttekintés nem tölthető be."
+  },
+  {
+    "file": "app/web-client/src/app/features/inventory/inventory-page.html",
+    "text": "Gyártói cikkszám"
+  },
+  {
+    "file": "app/web-client/src/app/features/inventory/inventory-page.html",
+    "text": "Törzsadat"
+  },
+  {
+    "file": "app/web-client/src/app/features/inventory/inventory-page.html",
+    "text": "Eltérés"
+  },
+  {
+    "file": "app/web-client/src/app/features/orders/orders-page.html",
+    "text": "AU000001 · Auftrag"
+  },
+  {
+    "file": "app/web-client/src/app/features/orders/orders-page.html",
+    "text": "Töröl"
+  },
+  {
+    "file": "app/web-client/src/app/features/statistics/statistics-page.ts",
+    "text": "Raktári statisztikákhoz CORTIS_INVENTORY_READ jogosultság szükséges."
+  },
+  {
+    "file": "app/web-client/src/app/layout/app-shell.html",
+    "text": "Intelligence console"
+  },
+  {
+    "file": "app/web-client/src/app/layout/app-shell.html",
+    "text": "CORTIS V1 · Agent Phase 5"
+  }
+]

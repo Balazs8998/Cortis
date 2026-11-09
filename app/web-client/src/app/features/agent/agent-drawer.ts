@@ -1,3 +1,4 @@
+import { UiTranslationService } from '../../shared/i18n/ui-translation.service';
 import { Component, EventEmitter, HostListener, OnInit, Output, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -12,6 +13,7 @@ import { AgentApiService, AgentConversation, AgentMessage, AgentToolEvent } from
   styleUrl: './agent-drawer.css'
 })
 export class AgentDrawerComponent implements OnInit {
+  readonly tr = inject(UiTranslationService);
   @Output() readonly closed = new EventEmitter<void>();
   private readonly api = inject(AgentApiService);
   private generation = 0;
@@ -120,12 +122,12 @@ export class AgentDrawerComponent implements OnInit {
   }
 
   private errorText(e: unknown): string {
-    if (!(e instanceof HttpErrorResponse)) return 'Ismeretlen kommunikációs hiba.';
-    if (e.status === 0) return 'A CORTIS backend nem érhető el. Ellenőrizd a proxyt.';
-    if (e.status === 503) return 'Az Ollama nem érhető el, vagy a konfigurált modell nem válaszol.';
-    if (e.status === 403) return 'Nincs jogosultságod ehhez a művelethez.';
-    if (e.status === 409) return 'Ebben a beszélgetésben még fut egy korábbi válasz.';
-    if (e.status === 429) return 'Túl sok agentkérés. Próbáld újra később.';
-    return `Az agentkérés sikertelen (HTTP ${e.status}).`;
+    if (!(e instanceof HttpErrorResponse)) return this.tr.t('errors.agent_generic');
+    if (e.status === 0) return this.tr.t('errors.agent_unreachable');
+    if (e.status === 503) return this.tr.t('errors.agent_ollama');
+    if (e.status === 403) return this.tr.t('errors.agent_forbidden');
+    if (e.status === 409) return this.tr.t('errors.agent_conflict');
+    if (e.status === 429) return this.tr.t('errors.agent_limit');
+    return this.tr.t('errors.agent_failed', { status: e.status });
   }
 }

@@ -1,4 +1,5 @@
 <main class="cortis-page">
+  <div class="cortis-lang-select" style="padding:14px 24px"><app-cortis-language-picker /></div>
 
   <section class="login-layout">
 
@@ -10,12 +11,12 @@
 
         <div>
           <h1>CORTIS</h1>
-          <p>Tooling & compatibility system</p>
+          <p>{{ tr.t('login.brand_subtitle') }}</p>
         </div>
       </div>
 
       <div class="brand-content">
-        <h2>Üdv a rendszerben</h2>
+        <h2>{{ tr.t('login.welcome') }}</h2>
 
         <p>
           Szerszámok, holderek, interface-ek és gépkompatibilitások
@@ -23,16 +24,16 @@
         </p>
 
         <ul class="feature-list">
-          <li>Tool management</li>
-          <li>Machine compatibility</li>
-          <li>Warehouse overview</li>
-          <li>Role based access</li>
+          <li>{{ tr.t('login.feature_tool') }}</li>
+          <li>{{ tr.t('login.feature_machine') }}</li>
+          <li>{{ tr.t('login.feature_warehouse') }}</li>
+          <li>{{ tr.t('login.feature_roles') }}</li>
         </ul>
       </div>
 
       <footer class="brand-footer">
         <span>Version 1.0</span>
-        <span>Internal system</span>
+        <span>{{ tr.t('login.internal_system') }}</span>
       </footer>
     </aside>
 
@@ -41,8 +42,8 @@
       <div class="login-card">
 
         <header class="login-header">
-          <h2>Bejelentkezés</h2>
-          <p>Add meg a felhasználóneved és a jelszavad.</p>
+          <h2>{{ tr.t('login.title') }}</h2>
+          <p>{{ tr.t('login.form_intro') }}</p>
         </header>
 
         @if (auth.error()) {
@@ -54,30 +55,30 @@
         <form class="login-form" (submit)="login($event)">
 
           <div class="form-group">
-            <label for="username">Felhasználónév</label>
+            <label for="username">{{ tr.t('login.username.label') }}</label>
 
             <input
               id="username"
               name="username"
               type="text"
               autocomplete="username"
-              placeholder="pl. balazs" [value]="userName()" (input)="userName.set($any($event.target).value)"/>
+              [placeholder]="tr.t('login.username_example')" [value]="userName()" (input)="userName.set($any($event.target).value)"/>
           </div>
 
           <div class="form-group">
-            <label for="password">Jelszó</label>
+            <label for="password">{{ tr.t('login.password.label') }}</label>
 
             <div class="password-field">
             <input
               id="password"
               name="password"
               autocomplete="current-password"
-              placeholder="Jelszó" [type]="passwordVisible() ? 'text' : 'password'" [value]="password()" (input)="password.set($any($event.target).value)"/>
+              [placeholder]="tr.t('login.password.label')" [type]="passwordVisible() ? 'text' : 'password'" [value]="password()" (input)="password.set($any($event.target).value)"/>
 
             <button
               class="password-toggle"
               type="button"
-              aria-label="Jelszó megjelenítése"
+              [attr.aria-label]="tr.t('login.show_password')"
               (pointerdown)="passwordVisible.set(true)"
               (pointerup)="passwordVisible.set(false)"
               (pointerleave)="passwordVisible.set(false)"
@@ -92,14 +93,14 @@
             <label class="checkbox-row">
               <input type="checkbox" disabled />
 
-              <span>Emlékezz rám (hamarosan)</span>
+              <span>{{ tr.t('login.remember_soon') }}</span>
             </label>
 
             <button
               class="text-button"
               type="button" disabled
             >
-              Elfelejtett jelszó (hamarosan)
+              {{ tr.t('login.forgot_soon') }}
             </button>
           </div>
 
@@ -117,7 +118,7 @@
 
         <footer class="login-footer">
           <p>
-            Nincs publikus regisztráció. Felhasználót csak admin hozhat létre.
+            {{ tr.t('login.no_registration') }}
           </p>
         </footer>
 
@@ -131,4 +132,4 @@
 
 @if (auth.error()) { <p class="cortis-auth-error" role="alert">{{ auth.error() }}</p> }
 
-@if (auth.loading()) { <p class="cortis-auth-busy" role="status">Bejelentkezés...</p> }
+@if (auth.loading()) { <p class="cortis-auth-busy" role="status">{{ tr.t('login.loading') }}</p> }

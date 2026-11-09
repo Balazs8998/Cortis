@@ -1,3 +1,4 @@
+import { UiTranslationService } from '../shared/i18n/ui-translation.service';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -14,7 +15,7 @@ import { Router } from '@angular/router';
     <header><h1>CORTIS · V1</h1><span>Catalog / Inventory / Engineering evidence</span></header>
     <section class="panel auth">
       <strong>Bejelentkezve: {{ auth.user()?.userName }}</strong>
-      <button type="button" (click)="signOut()" [disabled]="auth.loading()">Kijelentkezés</button>
+      <button type="button" (click)="signOut()" [disabled]="auth.loading()">{{ tr.t('navigation.logout') }}</button>
     </section>
     @if (error()) { <p class="error" role="alert">{{ error() }}</p> }
     <section class="panel">
@@ -87,6 +88,7 @@ import { Router } from '@angular/router';
   `]
 })
 export class BusinessPage {
+  readonly tr = inject(UiTranslationService);
   readonly api = inject(BusinessApiService);
   readonly auth = inject(AuthSessionService);
   private readonly router = inject(Router);

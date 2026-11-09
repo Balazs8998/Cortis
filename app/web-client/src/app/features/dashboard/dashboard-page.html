@@ -1,45 +1,45 @@
 <div class="page-heading">
-  <div><p class="eyebrow">OPERÁCIÓS ÁTTEKINTÉS</p><h2>Jó munkát, {{ auth.user()?.userName }}!</h2>
-    <p class="muted">A CORTIS munkaterület jelenlegi, valódi készletadatai.</p></div>
-  <button class="action" type="button" (click)="refresh()" [disabled]="loading()">Adatok frissítése</button>
+  <div><p class="eyebrow">{{ tr.t('dashboard.eyebrow') }}</p><h2>{{ tr.t('dashboard.title', { user: auth.user()?.userName ?? '' }) }}</h2>
+    <p class="muted">{{ tr.t('dashboard.subtitle') }}</p></div>
+  <button class="action" type="button" (click)="refresh()" [disabled]="loading()">{{ tr.t('dashboard.refresh') }}</button>
 </div>
 @if (error()) { <p class="error" role="alert">{{ error() }}</p> }
-@if (loading()) { <p class="notice" role="status">Raktári adatok betöltése…</p> }
+@if (loading()) { <p class="notice" role="status">{{ tr.t('dashboard.inventory_loading') }}</p> }
 <div class="grid-cards">
   @for (metric of metrics(); track metric.kind) {
     <article class="metric">
-      <span>{{ metric.label }}</span>
+      <span>{{ tr.t('inventory.category.' + metric.kind) }}</span>
       <strong>{{ metric.quantity === null ? metric.rows : metric.quantity }}</strong>
-      <small>{{ metric.quantity === null ? 'nyilvántartott gép' : 'db · teljes adatbázis-összesítés' }}</small>
+      <small>{{ metric.quantity === null ? tr.t('dashboard.registered_machines') : tr.t('dashboard.full_db_quantity') }}</small>
     </article>
   }
 </div>
 <div class="two-col">
   <section class="panel">
-    <h3>Raktári műveletek</h3>
-    <p class="muted">Szerszámok, tartók, interfészek, gépek, alapanyagok, kiegészítők és gépalkatrészek kezelése. Valós adatokat használ, a módosításokhoz külön jogosultság szükséges.</p>
-    <a routerLink="/inventory" class="button-link">Raktár megnyitása <span aria-hidden="true">→</span></a>
+    <h3>{{ tr.t('dashboard.inventory_operations') }}</h3>
+    <p class="muted">{{ tr.t('dashboard.inventory_description') }}</p>
+    <a routerLink="/inventory" class="button-link">{{ tr.t('dashboard.open_inventory') }} <span aria-hidden="true">→</span></a>
   </section>
   <section class="panel">
-    <h3>Megrendelések · Aufträge</h3>
-    @if (ordersLoading()) { <p class="muted">Megrendelési mutatók betöltése…</p> }
+    <h3>{{ tr.t('dashboard.orders_heading') }}</h3>
+    @if (ordersLoading()) { <p class="muted">{{ tr.t('dashboard.orders_loading') }}</p> }
     @if (ordersOverview(); as orders) {
       <div class="order-widget-grid">
-        <div><span>Ebben a hónapban esedékes</span><strong>{{ orders.thisMonth }}</strong></div>
-        <div><span>Késésben</span><strong>{{ orders.overdue }}</strong></div>
-        <div><span>Folyamatban</span><strong>{{ orders.inProgress }}</strong></div>
+        <div><span>{{ tr.t('dashboard.due_this_month') }}</span><strong>{{ orders.thisMonth }}</strong></div>
+        <div><span>{{ tr.t('dashboard.overdue') }}</span><strong>{{ orders.overdue }}</strong></div>
+        <div><span>{{ tr.t('dashboard.in_progress') }}</span><strong>{{ orders.inProgress }}</strong></div>
       </div>
     } @else if (ordersError()) { <p class="notice">{{ ordersError() }}</p> }
-    <a routerLink="/orders" class="button-link">Megrendelések <span aria-hidden="true">→</span></a>
+    <a routerLink="/orders" class="button-link">{{ tr.t('navigation.orders') }} <span aria-hidden="true">→</span></a>
   </section>
   <section class="panel">
-    <h3>Kompatibilitásellenőrzés</h3>
-    <p class="muted">Csak műszakilag dokumentált döntés adhat COMPATIBLE vagy INCOMPATIBLE eredményt.</p>
-    <a routerLink="/compatibility" class="button-link">Ellenőrzés <span aria-hidden="true">→</span></a>
+    <h3>{{ tr.t('dashboard.compatibility_heading') }}</h3>
+    <p class="muted">{{ tr.t('dashboard.compatibility_description') }}</p>
+    <a routerLink="/compatibility" class="button-link">{{ tr.t('common.button.check') }} <span aria-hidden="true">→</span></a>
   </section>
   <section class="panel">
-    <h3>Következő modulok</h3>
-    <p class="muted">Globális készletmozgás-napló, anyagmértékegységek és megrendeléshez kötött raktárfoglalás.</p>
-    <div class="not-ready">A további üzleti folyamatok fejlesztés alatt állnak</div>
+    <h3>{{ tr.t('dashboard.next_modules') }}</h3>
+    <p class="muted">{{ tr.t('dashboard.next_modules_description') }}</p>
+    <div class="not-ready">{{ tr.t('dashboard.not_ready') }}</div>
   </section>
 </div>
