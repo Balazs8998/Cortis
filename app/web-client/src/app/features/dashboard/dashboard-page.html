@@ -23,8 +23,14 @@
   </section>
   <section class="panel">
     <h3>Megrendelések · Aufträge</h3>
-    <p class="muted">A havi kiszállítások widget az orders backend elkészültével mutathat valós adatot.</p>
-    <div class="not-ready">Még nincs megrendelés API · nincs fiktív darabszám</div>
+    @if (ordersLoading()) { <p class="muted">Megrendelési mutatók betöltése…</p> }
+    @if (ordersOverview(); as orders) {
+      <div class="order-widget-grid">
+        <div><span>Ebben a hónapban esedékes</span><strong>{{ orders.thisMonth }}</strong></div>
+        <div><span>Késésben</span><strong>{{ orders.overdue }}</strong></div>
+        <div><span>Folyamatban</span><strong>{{ orders.inProgress }}</strong></div>
+      </div>
+    } @else if (ordersError()) { <p class="notice">{{ ordersError() }}</p> }
     <a routerLink="/orders" class="button-link">Megrendelések <span aria-hidden="true">→</span></a>
   </section>
   <section class="panel">

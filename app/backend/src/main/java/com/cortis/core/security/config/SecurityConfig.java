@@ -120,6 +120,14 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/loginWithChip").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/translation/{languageCode}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/actuator/health", "/actuator/info").permitAll()
+                // AuthorizationFilter runs before MVC request-body binding / @Valid.
+                // Keep @PreAuthorize on OrdersController as an additional safeguard.
+                .requestMatchers(HttpMethod.GET, "/api/v1/orders", "/api/v1/orders/**")
+                    .hasAuthority("CORTIS_ORDERS_READ")
+                .requestMatchers(HttpMethod.POST, "/api/v1/orders")
+                    .hasAuthority("CORTIS_ORDERS_WRITE")
+                .requestMatchers(HttpMethod.PATCH, "/api/v1/orders/*/status")
+                    .hasAuthority("CORTIS_ORDERS_WRITE")
                 .anyRequest().authenticated()
             )
             .exceptionHandling(handler -> handler

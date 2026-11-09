@@ -1,22 +1,65 @@
 <div class="page-heading"><div><p class="eyebrow">AUFTRAGSVERWALTUNG</p><h2>Megrendelések</h2>
-<p class="muted">Megrendelési kód szerinti keresés és havi kiszállítási áttekintés.</p></div>
-<span class="tag neutral">Orders backend: következő fázis</span></div>
+<p class="muted">Keresés rendelési kód alapján, havi kiszállítások és határidők.</p></div>
+<span class="tag">AU000001 · Auftrag</span></div>
 <section class="panel">
-  <form (ngSubmit)="search()">
+  <form (ngSubmit)="search(true)">
     <div class="toolbar"><label class="field order-search"><span>Megrendelési kód</span>
       <input type="search" name="orderCode" [ngModel]="query()" (ngModelChange)="query.set($event)" maxlength="100" placeholder="Például AU000001"></label>
-      <button type="submit" class="action primary" [disabled]="loading()">Keresés</button></div>
+      <button type="submit" class="action primary" [disabled]="loading() || !canRead()">Keresés</button></div>
   </form>
   <div class="tabs">
     <button type="button" [class.active]="scope() === 'thisMonth'" (click)="setScope('thisMonth')">Ebben a hónapban kiszállítandó</button>
     <button type="button" [class.active]="scope() === 'overdue'" (click)="setScope('overdue')">Késésben lévő</button>
     <button type="button" [class.active]="scope() === 'all'" (click)="setScope('all')">Összes megrendelés</button>
   </div>
-  @if (!checked()) {<p class="notice">A kereső elrendezése kész. A megrendelési API hiányzik a jelenlegi backendből; az első keresés ennek meglétét is ellenőrzi.</p>}
-  @if (loading()) {<p class="muted">Megrendelések betöltése…</p>}
-  @if (error()) {<p class="error" role="alert">{{ error() }}</p>}
-  <div class="scroll-table"><table class="data-table"><thead><tr><th>Kód</th><th>Partner</th><th>Megrendelés</th><th>Kiszállítás</th><th>Státusz</th><th>Tételek</th></tr></thead>
-    <tbody>@for (order of records(); track order.id) {<tr><td class="mono">{{ order.orderCode }}</td><td>{{ order.customer }}</td><td>{{ order.orderDate }}</td><td>{{ order.deliveryDate }}</td><td>{{ order.status }}</td><td>{{ order.itemCount }}</td></tr>}
-    @empty {<tr><td colspan="6" class="empty">{{ available() ? 'Nincs találat a szűrésre.' : 'Még nincs betölthető megrendelési adat.' }}</td></tr>}</tbody>
+  @if (loading()) { <p class="muted">Megrendelések betöltése…</p> }
+  @if (error()) { <p class="error" role="alert">{{ error() }}</p> }
+  @if (success()) { <p class="success" role="status">{{ success() }}</p> }
+  <div class="scroll-table"><table class="data-table"><thead><tr><th>Kód</th><th>Partner</th><th>Megrendelés</th><th>Kiszállítás</th><th>Státusz</th><th>Tételek</th><th>Művelet</th></tr></thead>
+    <tbody>@for (order of records(); track order.id) {
+      <tr><td class="mono">{{ order.orderCode }}</td><td>{{ order.customer }}</td><td>{{ order.orderDate }}</td><td>{{ order.deliveryDate }}</td><td>{{ order.status }}</td><td>{{ order.itemCount }}</td><td><button type="button" class="action" (click)="openDetails(order)">Részletek</button></td></tr>
+    } @empty {<tr><td colspan="7" class="empty">{{ available() ? 'Nincs megrendelés a megadott feltételekkel.' : 'Nincs betöltött megrendelési adat.' }}</td></tr>}</tbody>
   </table></div>
+  <div class="toolbar order-pagination"><button type="button" class="action" [disabled]="page() === 0 || loading()" (click)="previous()">Előző</button>
+    <span class="small muted">{{ page() + 1 }}. oldal · maximum 50 rendelés / oldal</span>
+    <button type="button" class="action" [disabled]="records().length < pageSize || loading()" (click)="next()">Következő</button></div>
 </section>
+@if (detailsLoading()) {<section class="panel"><p class="muted">Rendelés részletei betöltése…</p></section>}
+@if (details(); as detail) {
+  <section class="panel"><div class="toolbar"><h3>{{ detail.order.orderCode }} · {{ detail.order.customer }}</h3>
+    <button type="button" class="action" (click)="closeDetails()">Bezárás</button></div>
+    <p class="muted">Rendelés: {{ detail.order.orderDate }} · Szállítás: {{ detail.order.deliveryDate }} · {{ detail.order.status }}</p>
+    @if (detail.order.note) {<p>{{ detail.order.note }}</p>}
+    <div class="scroll-table"><table class="data-table"><thead><tr><th>#</th><th>Tételkód</th><th>Megnevezés</th><th>Mennyiség</th><th>Egység</th></tr></thead>
+      <tbody>@for (line of detail.lines; track line.id) {<tr><td>{{ line.position }}</td><td class="mono">{{ line.itemCode ?? '–' }}</td><td>{{ line.description }}</td><td>{{ line.quantity }}</td><td>{{ line.unit }}</td></tr>}</tbody>
+    </table></div>
+    @if (canWrite() && transitionOptions(detail.order.status).length > 0) {
+      <div class="toolbar order-actions"><label class="field">Új státusz<select [ngModel]="statusDraft[detail.order.id] ?? transitionOptions(detail.order.status)[0]" (ngModelChange)="statusDraft[detail.order.id] = $event">
+        @for (value of transitionOptions(detail.order.status); track value) {<option [value]="value">{{ value }}</option>}
+      </select></label><button type="button" class="action primary" [disabled]="changing()" (click)="changeStatus(detail.order)">Státusz módosítása</button></div>
+    }
+  </section>
+}
+@if (canWrite()) {
+  <section class="panel"><details><summary class="order-disclosure">Új megrendelés rögzítése</summary>
+    <form (ngSubmit)="createOrder()" #orderForm="ngForm">
+      <div class="order-form-grid"><label class="field">Partner
+        <input name="customer" [(ngModel)]="newOrder.customer" required maxlength="200" placeholder="Vevő neve"></label>
+        <label class="field">Kiszállítás tervezett dátuma
+          <input type="date" name="deliveryDate" [(ngModel)]="newOrder.deliveryDate" required></label></div>
+      <label class="field">Megjegyzés<textarea name="note" [(ngModel)]="newOrder.note" maxlength="2000" rows="2"></textarea></label>
+      <h3 class="order-line-title">Megrendelési tételek</h3>
+      @for (line of newOrder.lines; track $index) {
+        <div class="order-line-grid">
+          <label class="field">Termékkód<input [name]="'itemCode' + $index" [(ngModel)]="line.itemCode" maxlength="100" placeholder="Opcionális"></label>
+          <label class="field">Megnevezés<input [name]="'description' + $index" [(ngModel)]="line.description" maxlength="500" required></label>
+          <label class="field">Mennyiség<input type="number" min="0.001" step="0.001" [name]="'quantity' + $index" [(ngModel)]="line.quantity" required></label>
+          <label class="field">Egység<select [name]="'unit' + $index" [(ngModel)]="line.unit"><option value="PCS">PCS</option><option value="KG">KG</option><option value="M">M</option><option value="MM">MM</option></select></label>
+          <button type="button" class="action" (click)="removeLine($index)" [disabled]="newOrder.lines.length === 1">Töröl</button>
+        </div>
+      }
+      <div class="toolbar"><button type="button" class="action" (click)="addLine()" [disabled]="newOrder.lines.length >= 100">+ Tétel</button>
+        <button type="submit" class="action primary" [disabled]="orderForm.invalid || creating()">{{ creating() ? 'Mentés…' : 'Megrendelés létrehozása' }}</button></div>
+    </form>
+  </details></section>
+}
